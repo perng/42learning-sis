@@ -19,9 +19,18 @@
         <script src="{% static_path %}/js/jquery.min.js" type="text/javascript"></script>
         <script src="{% static_path %}/js/jquery-ui.min.js" type="text/javascript"></script>
         <script src="{% static_path %}/js/jquery.bgiframe-2.1.2.js" type="text/javascript"></script>
-        {#    <script src="{% static_path %}/js/jquery-ui-i18n.min.js" type="text/javascript"></script> #}
         {% block theme%}{% endblock %}
         <title>NWCS Student Information System {% block title %}{% endblock %}</title>
+
+	<script type="text/javascript">
+		$(document).ready ( function(){
+			var path = location.pathname.substring(1);
+   			if ( path )
+     				$('#menu_secondary a[href$="' + path + '"]').attr('class', 'selected');
+console.log($('#menu_secondary a[href$="' + path + '"]'));
+		
+		})
+	</script>
     </head>
 
     <body class="home blog">
@@ -56,9 +65,9 @@
 
                 <div class="clearfix">
                     <div class="menu-secondary-container">
-                        <ul class="menus menu-secondary"> 
+                        <ul class="menus menu-secondary" id="menu_secondary"> 
                             <li class="menu-item menu-item-type-post_type"> 
-                            <a href="{% url change_view view='parent'%}"> Parents' View </a></li>
+                            <a href="{% url change_view view='parent'%}"> Parents' View</a></li>
                             {% if request.user.get_profile.is_teacher %}
                             <li class="menu-item menu-item-type-post_type">
                             <a href="{% url change_view view='teacher'%}"> Teacher's View </a></li>
