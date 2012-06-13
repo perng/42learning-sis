@@ -1,0 +1,60 @@
+a.button, a.button:visited, a.adminbutton, a.adminbutton:visited, a.teacherbutton, a.teacherbutton:visited{  
+	display:inline-block; 
+	background-color:#32745E; 
+	width: 200px;  
+	padding:10px 0;  
+	text-align:center;  
+	border:1px solid #2B6652;  
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.8);  
+	font-weight:bold;  
+	text-transform:uppercase;  
+	border-radius: 5px;  
+	-moz-border-radius: 5px;  
+	-webkit-border-radius: 5px;  
+	color:#FFF;  
+	text-decoration: none;  
+}  
+  
+a.button:hover {  
+	border-color:#49671d;  
+}  
+  
+a.button:active {  
+	background-position:  0 -200px;  
+	padding:11px 0 9px;  
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);  
+}
+
+a.adminbutton, a.adminbutton:visited {
+        /*background-color:#91219E;*/
+        background-color:#1D83AB;
+        width: 350px;
+        border:1px solid #00688B;
+}
+
+a.adminbutton:hover {
+        border-color:#00688B;
+}
+
+a.adminbutton:active {
+        background-position:  0 -200px;
+        padding:11px 0 9px;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
+} 
+  
+a.teacherbutton, a.teacherbutton:visited {
+        background-color:#802A2A;
+        width: 350px;
+        border:1px solid #AA4E57;
+}
+
+a.teacherbutton:hover {
+        border-color:#AA4E57;
+}
+
+a.teacherbutton:active {
+        background-position:  0 -200px;
+        padding:11px 0 9px;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
+}
+

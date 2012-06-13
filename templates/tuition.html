@@ -1,0 +1,51 @@
+<div class="parent">
+    <h3> Family Head: {{family.parent1}}
+    </h3> 
+    <table border=1>
+        <tr>
+            <th>Student</th><th>Class</th><th>Base</th>
+            <th>Books</th><th>Material</th><th> Misc. </th><th>SubTotal</th>
+        </tr>
+        {% for s in students %}
+        {% if s.classes %}
+        <tr>
+            <td rowspan={{s.numClass}}>{{s}}</td>
+            {% for c in s.classes %}
+            <td> {{c}} </td>
+            <td>${{c.base}}</td>
+            <td>${{c.fee.book}}</td>
+            <td>${{c.fee.material}}</td>
+            <td>${{c.fee.misc}}</td>
+            <td>${{c.total}}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+        <tr>
+            <td colspan=6>Registration Fee per Family</td>
+            <td>${{reg_fee}}</td>
+        </tr>
+        {% if num_enrolled %}
+        <tr>
+            <td colspan=6>Mutiple student discount ({{num_enrolled}} students)</td>
+            <td>${{discount}}</td>
+        </tr>
+        {% if lateFee %}
+        <td colspan=6> Late fee (after {{semester.feeconfig.lateDate}}) </td> 
+        <td> {{lateFee}} </td> 
+    </tr>  
+    {% endif %}
+    {% endif %}
+    <tr>
+        <td colspan=6><h3>Total 
+                {% if paypal %}
+                (Pay by Credit Card) 
+                {% else %} 
+                (Pay by Check/Cash)
+                {% endif %}
+
+        </h3> </td>
+        <td><h3>${{total}}</h3></td>
+    </tr>
+</table>
+</div>

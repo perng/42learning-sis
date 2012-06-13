@@ -1,0 +1,45 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Class Roaster {% endblock %}
+{% block content %} 
+<div class="teacher">
+    <h2 class="title">Class Roster</h2>
+    {% if students %}
+    <div class="tbody">
+        <table class="red_table"> 
+            <tr align='center'> 
+                <th> Student </th> 
+                <th> Phone </th> 
+                <th> Birthday </th> 
+                <th> Gender </th> 
+                <th> Home <br/> Lang.</th> 
+
+                <th> Parents </th> 
+                <th> eMail </th>
+            </tr>
+            {% for s in students %}
+            <tr align='center'> 
+                <td> {{s}} </td>
+                <td> {{s.family.homePhone}} </td> 
+                <td> {{s.birthday.isoformat}} </td>
+                <td> {{s.gender}} </td>
+                <td> {{s.homeLanguage}} </td>
+                <td> {{s.family.parent1FirstName}} {{s.family.parent1LastName}},<br/>{{s.family.parent2FirstName}} {{s.family.parent2LastName}}  </td> 
+                <td> <a href='mailto:{{s.family.user.email}}'> {{s.family.user.email}}</a>   </td> 
+            </tr>
+            {% endfor %}
+        </table> 
+        <br/>
+        <a href='mailto:{% for s in students %}{{s.family.user.email}},{% endfor %}'> Email all students </a> 
+        <div> 
+            All emails: {% for s in students %}{{s.family.user.email}},{% endfor %}
+        </div> 
+    </div>
+    {% else %}
+
+    <h2> No student enrolled yet.  </h2> 
+    {% endif %}
+</div>
+{% endblock %}

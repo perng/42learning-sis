@@ -1,0 +1,23 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Semester Setup {% endblock %}
+{% block content %} 
+<div class="admin2">
+    <h2 class="title">Managed Semesters and Classes</h2>
+    <table class="blue_table">
+        <tr>
+            <th>Added Semesters</th><th></th><th></th>
+        </tr>
+        {% for sem in semesters %}
+        <tr>
+            <td> {{sem.schoolYear }} {{sem.semester}} </td> 
+            <td><a href='{% url edit_semester sem_id=sem.id %}'> Edit Semester </a> </td> 
+            <td><a href='{% url classlist sem_id=sem.id %}'> Manage Classes </a> </td> 
+        </tr>{% endfor %}
+    </table>
+    <a class="adminbutton" href='{% url edit_semester %}'> Add new semester </a>
+</div>
+{% endblock %} 
+

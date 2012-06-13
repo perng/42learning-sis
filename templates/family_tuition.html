@@ -1,0 +1,18 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block title %}  Review Tuition {% endblock %}
+{% block content %} 
+{% if error %}
+{{error}}
+
+{% else %}
+
+{% include "tuition.html" %}
+{% endif %}
+
+
+{% endblock %} 
+
+
+

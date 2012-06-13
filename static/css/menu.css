@@ -1,0 +1,231 @@
+/* ================================================================ 
+This copyright notice must be untouched at all times.
+
+The original version of this stylesheet and the associated (x)html
+is available at http://www.cssplay.co.uk/menus/final_drop.html
+Copyright (c) 2005-2008 Stu Nicholls. All rights reserved.
+This stylesheet and the associated (x)html may be modified in any 
+way to fit your requirements.
+=================================================================== */
+
+.menu {width:745px; height:32px; position:relative; z-index:100;border-right:1px solid #000; font-family:arial, sans-serif;}
+/* hack to correct IE5.5 faulty box model */
+* html .menu {width:746px; w\idth:745px;}
+/* remove all the bullets, borders and padding from the default list styling */
+.menu ul {padding:0;margin:0;list-style-type:none;}
+.menu ul ul {width:149px;}
+/* float the list to make it horizontal and a relative positon so that you can control the dropdown menu positon */
+.menu li {float:left;width:149px;position:relative;}
+/* style the links for the top level */
+.menu a, .menu a:visited {display:block;font-size:12px;text-decoration:none; color:#fff; width:138px; height:30px; border:1px solid #000; border-width:1px 0 1px 1px; background:#09c; padding-left:10px; line-height:29px; font-weight:bold;}
+/* a hack so that IE5.5 faulty box model is corrected */
+* html .menu a, * html .menu a:visited {width:149px; w\idth:138px;}
+
+/* style the second level background */
+.menu ul ul a.drop, .menu ul ul a.drop:visited {background:#d4d8bd url(http://www.cssplay.co.uk/menus/breadcrumbs/grey-arrow.gif) no-repeat 130px center;}
+/* style the second level hover */
+.menu ul ul a.drop:hover{background:#c9ba65 url(http://www.cssplay.co.uk/menus/breadcrumbs/blue-arrow.gif) no-repeat 130px center;}
+.menu ul ul :hover > a.drop {background:#c9ba65 url(http://www.cssplay.co.uk/menus/breadcrumbs/blue-arrow.gif) no-repeat 130px center;}
+/* style the third level background */
+.menu ul ul ul a, .menu ul ul ul a:visited {background:#e2dfa8;}
+/* style the third level hover */
+.menu ul ul ul a:hover {background:#b2ab9b;}
+
+
+/* hide the sub levels and give them a positon absolute so that they take up no room */
+.menu ul ul {visibility:hidden;position:absolute;height:0;top:31px;left:0; width:149px;border-top:1px solid #000;}
+/* another hack for IE5.5 */
+* html .menu ul ul {top:30px;t\op:31px;}
+
+/* position the third level flyout menu */
+.menu ul ul ul{left:149px; top:-1px; width:149px;}
+
+/* position the third level flyout menu for a left flyout */
+.menu ul ul ul.left {left:-149px;}
+
+/* style the table so that it takes no ppart in the layout - required for IE to work */
+.menu table {position:absolute; top:0; left:0; border-collapse:collapse;;}
+
+/* style the second level links */
+.menu ul ul a, .menu ul ul a:visited {background:#d4d8bd; color:#000; height:auto; line-height:1em; padding:5px 10px; width:128px;border-width:0 1px 1px 1px;}
+/* yet another hack for IE5.5 */
+* html .menu ul ul a, * html .menu ul ul a:visited {width:150px;w\idth:128px;}
+
+/* style the top level hover */
+.menu a:hover, .menu ul ul a:hover{color:#000; background:#b7d186;}
+.menu :hover > a, .menu ul ul :hover > a {color:#000; background:#b7d186;}
+
+/* make the second level visible when hover on first level list OR link */
+.menu ul li:hover ul,
+.menu ul a:hover ul{visibility:visible; }
+/* keep the third level hidden when you hover on first level list OR link */
+.menu ul :hover ul ul{visibility:hidden;}
+/* make the third level visible when you hover over second level list OR link */
+.menu ul :hover ul :hover ul{ visibility:visible;}
+
+
+
+/* ================================================================ 
+   This CSS is further CSS I have created specifically for Wordpress
+   so that the current page is highlighted in two levels.
+   If you want it in three levels let me know.
+
+   Author: Isaac Rowntree
+   Website: www.zackdesign.biz
+=================================================================== */
+
+
+.menu ul ul .current_page a {
+  color: red;
+  background: white;
+  border-left: 1px solid black;
+}
+
+.menu .current_page a {
+  color: red;
+  font-weight: bold;
+  background: white;
+}
+
+.menu ul .current_page ul a {
+  color: white;
+  font-weight: normal;
+  background: black;
+}
+
+.menu ul .current_page ul a:hover {
+  background: gray;
+}
+
+.menu .current_page a:hover {
+  background: white;
+}
+
+/* ================================================================ 
+This copyright notice must be untouched at all times.
+
+The original version of this stylesheet and the associated (x)html
+is available at http://www.cssplay.co.uk/menus/flyout3.html
+Copyright (c) 2005-2009 Stu Nicholls. All rights reserved.
+This stylesheet and the associated (x)html may be modified in any 
+way to fit your requirements.
+=================================================================== */
+
+.right-menu {
+z-index:1000;
+font-size:90%;
+float:right;
+margin:0 25px 50px 0; /* this page only */
+}
+
+/* remove all the bullets, borders and padding from the default list styling */
+.right-menu ul {
+padding:0;
+margin:0;
+list-style-type:none;
+width:150px;
+}
+/* hack for IE5.5 */
+* html .right-menu ul {margin-left:-16px; ma\rgin-left:0;}
+/* position relative so that you can position the sub levels */
+.right-menu li {
+position:relative;
+background:#d4d8bd;
+height:26px;
+}
+
+/* get rid of the table */
+.right-menu table {position:absolute; border-collapse:collapse; top:0; left:0; z-index:100; font-size:1em;}
+
+/* style the links */
+.right-menu a, .right-menu a:visited {
+font-family:verdana, sans-serif;
+display:block; 
+text-decoration:none;
+height:25px;
+line-height:25px;
+width:149px;
+color:#000;
+text-indent:5px;
+border:1px solid #fff;
+border-width:0 1px 1px 0;
+}
+/* hack for IE5.5 */
+* html .right-menu a, * html .right-menu a:visited {background:#d4d8bd; width:150px; w\idth:149px;}
+/* style the link hover */
+* html .right-menu a:hover {color:#fff; background:#949e7c;}
+
+.right-menu :hover > a{
+color:#fff; 
+background:#949e7c;
+}
+
+/* hide the sub levels and give them a positon absolute so that they take up no room */
+.right-menu ul ul {
+visibility:hidden;
+position:absolute;
+top:0;
+left:-150px; 
+}
+/* make the second level visible when hover on first level list OR link */
+.right-menu ul li:hover ul,
+.right-menu ul a:hover ul {
+visibility:visible;
+}
+/* keep the third level hidden when you hover on first level list OR link */
+.right-menu ul :hover ul ul{
+visibility:hidden;
+}
+/* keep the fourth level hidden when you hover on second level list OR link */
+.right-menu ul :hover ul :hover ul ul{
+visibility:hidden;
+}
+/* make the third level visible when you hover over second level list OR link */
+.right-menu ul :hover ul :hover ul{ 
+visibility:visible;
+}
+/* make the fourth level visible when you hover over third level list OR link */
+.right-menu ul :hover ul :hover ul :hover ul { 
+visibility:visible;
+}
+/*
+<!--[if IE 7]>
+<style type="text/css">
+.right-menu li {float:left;}
+</style>
+<![endif]-->
+*/
+
+/* ================================================================ 
+This copyright notice must be untouched at all times.
+
+The original version of this stylesheet and the associated (x)html
+is available at http://www.cssplay.co.uk/menus/latest-flyout.html
+Copyright (c) 2005-2009 Stu Nicholls. All rights reserved.
+This stylesheet and the associated (x)html may be modified in any 
+way to fit your requirements.
+=================================================================== */
+.left-menu {height:132px; width:132px; position:relative;}
+
+.left-menu ul {margin:0; padding:0; list-style:none; white-space:nowrap; text-align:left; padding:1px 1px 0 1px; background:#fff;}
+
+.left-menu li {margin:0; padding:0; list-style:none;}
+.left-menu li {display:inline;}
+.left-menu ul ul {position:absolute; left:-9999px;}
+.left-menu ul#toplevel {position:absolute; left:0; top:0;}
+
+.left-menu a {display:block; font:normal 11px verdana,arial,sans-serif; color:#000; line-height:22px; text-decoration:none;padding:0 20px 0 10px;} 
+.left-menu li a.fly {background: url(anywidth/arrow.gif) no-repeat right top;}
+
+.left-menu li a:hover {background-color:#09c; color:#fff;} 
+.left-menu li:hover > a {background-color:#09c; color:#fff;}
+
+.left-menu ul li:hover > ul {left:100%; margin-top:-23px; margin-left:-1px;}
+
+.left-menu a:hover ul,
+.left-menu a:hover a:hover ul, 
+.left-menu a:hover a:hover a:hover ul {left:100%;}
+.left-menu a:hover ul ul, 
+.left-menu a:hover a:hover ul ul {left:-9999px;}
+
+.left-menu table {position:absolute; left:99%; height:0; width:0; border-collapse:collapse; margin-top:-7px; margin-left:-1px;}

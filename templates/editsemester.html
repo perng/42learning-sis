@@ -1,0 +1,46 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Semester Setup {% endblock %}
+{% block content %} 
+<script>
+    $(function() {
+        var regStart = $("#id_regStart").val();
+        $( "#id_regStart" ).datepicker();
+        $( "#id_regStart" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+        $( "#id_regStart").width(100);
+        $( "#id_regStart").val(regStart);
+        var regEnd = $("#id_regEnd").val();
+        $( "#id_regEnd" ).datepicker();
+        $( "#id_regEnd" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+        $( "#id_regEnd").width(100);
+        $( "#id_regEnd").val(regEnd);
+
+        var recordStart = $("#id_recordStart").val();
+        $( "#id_recordStart" ).datepicker();
+        $( "#id_recordStart" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+        $( "#id_recordStart").width(100);
+        $( "#id_recordStart").val(recordStart);
+
+        var recordEnd = $("#id_recordEnd").val();
+        $( "#id_recordEnd" ).datepicker();
+        $( "#id_recordEnd" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+        $( "#id_recordEnd").width(100);
+        $( "#id_recordEnd").val(recordEnd);
+
+
+    });
+</script>
+<div class="admin2"
+    <br/>
+    <form method='post' action='/edit_semester{%if sem %}/{{sem.id}}{% endif %}'> 
+        {{ sform.as_p }}
+        {% csrf_token %}
+        <input type="submit" name="Add Semester" value="Update" />
+
+
+    </form> 
+</div>
+{% endblock %} 
+

@@ -1,0 +1,159 @@
+form {  /* set width in form, not fieldset (still takes up more room w/ fieldset width */
+  font:100% verdana,arial,sans-serif;
+  margin: 0;
+  padding: 15px;
+}
+
+form fieldset {
+  float: left;
+  display: block;
+  border:solid 2px #b7ddf2;
+  -moz-border-radius:0.4em;
+  -khtml-border-radius:0.4em;
+  background:#ebf4fb;
+  border-width: 1px;
+  border-style: solid;
+  padding: 10px 10px 10px 10px;        /* padding in fieldset support spotty in IE */
+  width: 580px; 
+}
+
+form fieldset legend {
+	font-size:1.0em; /* bump up legend font size, not too large or it'll overwrite border on left */
+                       /* be careful with padding, it'll shift the nice offset on top of border  */
+}
+
+form label { 
+	display: block;  /* block float the labels to left column, set a width */
+	float: left; 
+	width: 105px;
+	padding: 1px 1px 1px 2px; 
+	margin: 5px 0 0; /* set top margin same as form input - textarea etc. elements */
+	text-align: right; 
+}
+
+form input, form select, form textarea {
+	/* display: inline; inline display must not be set or will hide submit buttons in IE 5x mac */
+	width:auto;        /* set width of form elements to auto-size, otherwise watch for wrap on resize */
+	margin:5px 0 0 10px; /* set margin on left of form elements rather than right of
+                              label aligns textarea better in IE */
+	padding:4px 2px;
+	border:solid 1px #aacfe4;
+	-moz-border-radius:0.4em;
+	-khtml-border-radius:0.4em;
+	
+}
+
+form input#reset {
+	margin-left:0px; /* set margin-left back to zero on reset button (set above) */
+}
+
+textarea { overflow: auto; }
+
+form small {
+	display: block;
+	margin: 0 0 5px 160px; /* instructions/comments left margin set to align w/ right column inputs */
+	padding: 1px 3px;
+	font-size: 88%;
+}
+
+form #required{font-weight:bold;} /* uses class instead of div, more efficient */
+
+form br {
+	clear:left; /* setting clear on inputs didn't work consistently, so brs added for degrade */
+}
+
+form .button, .grade .button{
+	clear:both;
+	display:inline-block;
+	margin-left:200px;
+	width:180px;
+	text-align:center;
+	text-transform:uppercase;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+	background-color:#0092c8;
+	text-align:center;
+	line-height:31px;
+	color:#FFFFFF;
+	font-size:11px;
+	font-weight:bold;
+
+}
+
+.signform label {
+        display: block;  /* block float the labels to left column, set a width */
+        float: left;
+        width: 150px;
+        padding: 1px 1px 1px 2px;
+        margin: 8px 0 0; /* set top margin same as form input - textarea etc. elements */
+        text-align: right;
+}
+
+.signform input, .signform select, signform textarea {
+        /* display: inline; inline display must not be set or will hide submit buttons in IE 5x mac */
+        width:auto;       /* set width of form elements to auto-size, otherwise watch for wrap on resize */
+        margin:8px 0 0 10px; /* set margin on left of form elements rather than right of
+                              label aligns textarea better in IE */
+        padding:4px 2px;
+        border:solid 1px #aacfe4;
+	-moz-border-radius:0.4em;
+	-khtml-border-radius:0.4em;
+}
+
+
+
+.signform .button{
+        clear:both;
+        display:inline-block;
+	margin: 20px 0 0 120px;
+        width:200px;
+        text-align:center;
+        text-transform:uppercase;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        background-color:#666666;
+        text-align:center;
+        line-height:31px;
+        color:#FFFFFF;
+        font-size:11px;
+        font-weight:bold;
+
+}
+
+.classform input, .signform select, signform textarea {
+        /* display: inline; inline display must not be set or will hide submit buttons in IE 5x mac */
+        width:50px;       /* set width of form elements to auto-size, otherwise watch for wrap on resize */
+        margin:8px 0 0 10px; /* set margin on left of form elements rather than right of
+                              label aligns textarea better in IE */
+        padding:4px 2px;
+        border:solid 1px #aacfe4;
+        -moz-border-radius:0.4em;
+        -khtml-border-radius:0.4em;
+}
+
+.grade input, .grade textarea {
+        /* display: inline; inline display must not be set or will hide submit buttons in IE 5x mac */
+        width:93%;       /* set width of form elements to auto-size, otherwise watch for wrap on resize */
+        box-sizing: border-box;
+	border:solid 1px #6F4242;
+	margin-bottom: 2px;
+	text-align: center;	
+        -moz-border-radius:0.4em;
+        -khtml-border-radius:0.4em;
+}
+
+.grade .button {
+	background-color: #802A2A;
+	
+}
+
+.red input, .red textarea {
+ 	border:solid 1px #6F4242;
+}
+
+.red .button {
+	background-color: #802A2A;
+}
+

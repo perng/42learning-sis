@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %} Assignment  {% endblock %}
+
+{% block content %}
+
+<div class="teacher">
+    <h2> {{category.classPtr}} {{category.name}} </h2>
+
+    {% if gditems %}
+    <table  class="red_table"> 
+        <tr> <th> Due Date </th><th> Name </th>  <th> Description </th> 
+            <th> Files </th> 
+        </tr>
+
+        {% for gditem in gditems %}
+        <tr> 
+            <td> {{gditem.duedate.isoformat}} </td> 
+            <td>{{gditem.name}} </td>
+            <td> {{gditem.assignmentDescr}}</td> 
+            <td> <a href="{{gditem.download_url}}"  target="_blank" > download </a> </td> 
+        </tr> 
+
+        {% endfor %}
+    </table>
+    {% else %} 
+    <h3> No assignment yet! </h3>
+    {% endif %}
+
+</div>
+{% endblock %}

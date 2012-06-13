@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %} Student {% endblock %}
+
+{% block content %}
+<script>
+    $(function() {
+        $( "#id_birthday" ).datepicker();
+        $( "#id_birthday" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+    });
+</script>
+
+<div class="parent">
+    <h2 class="title">Student Information</h2>
+    <form class="signform" action="/edit_student{% if student.id %}/{{student.eid}}{% endif %}" method="POST"> 
+        <label {% if form.firstName.errors%} class="warning" {% endif %} > First Name:* </label>  {{form.firstName}}<br/>  
+        <label {% if form.lastName.errors%} class="warning" {% endif %} > Last Name:* </label>  {{form.lastName}}  <br/>
+        <label {% if form.chineseFullName.errors%} class="warning" {% endif %} > Chinese Full Name: </label>  {{form.chineseFullName}} <br /> 
+        <label {% if form.birthday.errors%} class="warning" {% endif %} > Birthday:* </label> {{form.birthday}}  <br />
+        <label {% if form.homelanguage.errors%} class="warning" {% endif %} > Main Language:* </label>  {{form.homeLanguage}}<br/>  
+        <label {% if form.gender.errors%} class="warning" {% endif %} > Gender:* </label>  {{form.gender}}  <br/>
+        {{ form.non_field_errors }}
+        {% csrf_token %}
+        {% if student %}
+        <input class="button" type="submit" name="Update" value="Update Student Info" />
+        {% else %}
+        <input class="button" type="submit" name="Add Student" value="Add Student" />
+        {% endif %}
+    </form> 
+    {% if form.errors %}
+    <p style="color: red;">
+    Please correct the errors{{ form.errorss|pluralize }} below.
+    </p>
+    {% for e in form.errors %}
+    {{e}}
+    {% endfor %}
+    {% endif %}
+    <br/>
+</div>
+
+{% endblock %}
+
+

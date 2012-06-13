@@ -1,0 +1,36 @@
+digraph sis_page_flow {
+	rankdir=LR;
+	size="8,5"
+	node [shape = square];
+    Register;
+    hasFamilyInfo [shape=diamond]; 
+    Login [label="Login"];
+    FamilyInfo [label="Update \n Family\n  Info"];
+    Dashboard [stype="dotted"];
+    ParentDashboard [label="Parent's\nDashboard"];
+    TeacherDashboard [label="Teacher's\nDashboard"];
+    AdminDashboard [label="Admin's\nDashboard"];
+    Attendance [shape=component] ;
+    Score [shape=component] ;
+    EnterStudentInfo [label="Enter\nStudent\nInfo"];
+    hasFamilyInfo [label="has\nFamily\nInfo"]
+    Attendance [label="Review\nAttendance &\nScore"]
+
+	Login -> hasFamilyInfo;
+    hasFamilyInfo ->FamilyInfo [ label = "N" ];
+	hasFamilyInfo -> Dashboard [ label = "Y" ];
+    Dashboard -> ParentDashboard;
+    Dashboard -> TeacherDashboard;
+    Dashboard -> AdminDashboard;
+
+    ParentDashboard -> Attendance;
+    ParentDashboard -> EnterStudentInfo;
+    ParentDashboard -> Enroll -> ReviewTuition -> PayPal;
+
+    TeacherDashboard -> ClassSetup;
+    TeacherDashboard -> StudentRoaster;
+    TeacherDashboard -> RecordScore -> RecordScore[label="enter or del\nattendance\nor score"];
+
+    AdminDashboard -> SetupSemester;
+    AdminDashboard -> SetupClass;
+}

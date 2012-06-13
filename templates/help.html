@@ -1,0 +1,44 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Enroll {% endblock %}
+{% block content %} 
+<div class="parent">
+    <h2 class="title">Instructions</h2>
+    <div>
+        <h3> How to enroll classes </h3> 
+
+        <ol> 
+            <li> Register an account for your family.   </li>
+            <li> Login to the site.   </li>
+            <li> Fill in family information.  </li>
+            <li> Click "Offered Classes", find the classes your family members would enroll. </li> 
+            <li> In "Home" page, click on "ADD STUDENT". Add all family members who will take classes.    </li>
+            <li> Go back to "Home" page, click on "ENROLL". </li> 
+            <li> Select required and elective class for each student.  </li>
+            <li> Choose the payment method you would like to use for paying tuition. </li> 
+            <li> Review tuition. </li> 
+            <li> Read the code of conduct. </li> 
+            <li> If you choose to pay by PayPal or credit card, 
+            <ul> 
+                <li> click the button in the button to indicate you agree 
+                the code of conduct. </li> 
+                <li> You will be directed to PayPal's website. Follow the instruction to complete the payment. 
+            </ul> 
+            <li> If you choose to pay by check, print the page, sign and mail with a check to the registrar. 
+        </ol>
+
+        Note: 
+        <ol> 
+
+            {% if semester.feeconfig.lateFee %}
+            <li> There is a  ${{semester.feeconfig.lateFee}} late fee for enrollments after {{semester.feeconfig.lateDate}}. </li>
+            {% endif %}
+            <li> Contact <a href="mailto:{{sis_contact}}" target=_blank> administrator </a> for any issue. </li>  
+
+        </ol> 
+
+    </div>
+</div>
+{% endblock %} 

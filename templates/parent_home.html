@@ -1,0 +1,34 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+{% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
+
+{% block title %}  Dashboard {% endblock %}
+{% block content %} 
+<div class="parent">
+    <h2 class="title">Manage Students</h2>
+    <div>
+        <table class="green_table">
+            <tr>
+                <th> Students</th><th>Check</th> <th> Assignment </th>
+            </tr>
+            {% for student in students %}
+            <tr>
+                <td><a href='{% url edit_student sid=student.eid %}'>{{student.firstName}} {{student.lastName}}</a> </td>
+                <td><a href='{% url student_score sid=student.eid%}'>Attendance & Grades </a></td>
+                <td> 
+                    {% for category in student.assign_categories %}
+                    <a href='{% url view_assignments cat_id=category.eid %}'> {{category.classPtr.name}} {{category.name}} </a> <br/>
+                    {% endfor %}
+
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div>
+        <a class="button" href='{% url edit_student %}'> Add Student </a> 
+        <a class="button" href={% url enroll_form %}> Enroll </a> <br/>
+    </div> 
+</div>
+{% endblock %} 
+

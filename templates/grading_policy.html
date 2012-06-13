@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %} Grading Weight Setting : {{theclass.name}} {% endblock %}
+{% block content %}
+
+{% if error %}
+{{error}}
+{% else %}
+{% endif%}
+<div class="teacher">
+    <h2 class="title"> Grading Policy Setting for {{theclass.name}} </h2>
+    <form class="grade" action="/grading_policy/{{theclass.eid}}" method="POST">
+        <table class="red_table">
+            <tr> <th> Category </th> <th> Weight </th>
+                <th> Assignment </th> 
+                {# <th> Order </th> #}
+            </tr>
+            {% for c in categories %}
+            <tr>
+                <td> <input type="text" name="category-{{c.eid}}" value="{{c.name}}" /> </td>
+                <td> <input type="text" name="weight-{{c.eid}}" value="{{c.weight}}"/>%  </td>
+                <td> <input type="checkbox" name="assignment-{{c.eid}}" value="assignment-{{c.eid}}" {%if c.hasAssignment %}checked="checked" {% endif %}/>  </td>
+            </tr>
+            {% endfor %}
+        </table>
+        Make sure weight add up to 100%. <br/>
+
+        {% csrf_token %}
+        <input class="button" type="submit"  value="Update" />
+    </form>
+</div>
+
+{% endblock %}
+

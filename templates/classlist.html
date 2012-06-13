@@ -1,0 +1,87 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Semester Setup {% endblock %}
+{% block content %} 
+<script>
+    $(function() {
+        var lateDate = $("#id_lateDate").val();
+        $( "#id_lateDate" ).datepicker();
+        $( "#id_lateDate" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+        $( "#id_lateDate").width(100);
+        $( "#id_lateDate").val(lateDate);
+    });
+</script>
+
+<div class="admin2">
+    <h3 class="title"> Semester: <a href='/semester/{{sem.id}}'> {{sem}} </a> </h3>
+    {% if classes %}
+    <form class="classform" action="/classlist/{{sem.id}}"  method='post'>
+        {% csrf_token %}
+        <table class="normal">
+            <tr>
+                <th>Class </th>
+                <th>Base (Credit Card)</th>
+                <th>Base (Check/Cash)</th>
+                <th>Book</th>
+                <th>Material</th>
+                <th>Misc</th>
+                <th>Elective<br/>discount </th> 
+            </tr>
+            {% for c in classes %}
+            <tr> <td> <a href='/edit_class/{{c.id}}'>{{c}}</a>  </td>
+                <td>$<input type="text" name="basecc_{{c.id}}" value="{{c.fee.basecc}}" id="id_basecc_{{c.id}}" /></td>
+                <td>$<input type="text" name="basechk_{{c.id}}" value="{{c.fee.basechk}}" id="id_basechk_{{c.id}}" /></td>
+                <td>$<input type="text" name="book_{{c.id}}" value="{{c.fee.book}}" id="id_book_{{c.id}}" /></td>
+                <td>$<input type="text" name="material_{{c.id}}" value="{{c.fee.material}}" id="id_material_{{c.id}}" /></td>
+                <td>$<input type="text" name="misc_{{c.id}}" value="{{c.fee.misc}}" id="id_misc_{{c.id}}" /></td>
+                <td>
+                    {% if c.elective %}
+                    $<input type="text" name="mdiscount_{{c.id}}" value="{{c.fee.mdiscount}}" id="id_mdiscount_{{c.id}}" />
+                    {% endif %}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+        <input type='submit' name='feeupdate' value='Update'/>
+    </form>
+    {% endif %}
+
+    <a href='/edit_class'> Add new class </a>
+
+    <hr/>
+    <form class="classform" action='/classlist/{{sem.id}}' method='post'>
+        {% csrf_token %}
+        <table>
+            <tr>
+                <th>Number of students</th>
+                <th> 1 </th>
+                <th> 2 </th>
+                <th> 3 </th>
+                <th> 4 </th>
+                <th> 5 </th>
+            </tr>
+            <tr>
+                <th> Discount </th>
+                <td> ${{feeconfigform.discount1}} </td>
+                <td> ${{feeconfigform.discount2}} </td>
+                <td> ${{feeconfigform.discount3}} </td>
+                <td> ${{feeconfigform.discount4}} </td>
+                <td> ${{feeconfigform.discount5}} </td>
+            </tr>
+        </table>
+        {% for field in feeconfigform %} {{ field.errors }} {% endfor %}
+        Per-family Registration Fee: ${{feeconfigform.familyFee}} <br/>
+        {{feeconfigform.semester}}
+        Late fee: ${{feeconfigform.lateFee}} (0 means no late fee. )<br/>
+        Late registration starting date: {{feeconfigform.lateDate}} <br/> 
+        <input type='submit' name='feeconfigupdate' value='Update'/>
+        {{form.errors}}
+    </form>
+</div>
+{% endblock %} 
+

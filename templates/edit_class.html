@@ -1,0 +1,22 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}   Add/Edit Class{% endblock %}
+{% block content %} 
+
+<div class="admin2">
+    <br/>
+    <form method='post' action='/edit_class{%if theclass %}/{{theclass.id}}{% endif %}'> 
+        {{ form.as_p }}
+        {% csrf_token %}
+        <input type="submit" name="Add/Edit Class" value="Update" />
+    </form>
+
+    <a href="{% url delete_class class_id=class_id %}"> delete this class </a> 
+    <br/>
+    <b> Use <a href='http://en.wikipedia.org/wiki/Markdown' target="_blank"> Markdown </a> syntax for class description </b>
+</div>
+{% endblock %} 
+
+

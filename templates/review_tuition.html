@@ -1,0 +1,129 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% load markup %}
+
+{% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
+
+
+{% block title %}  Review Tuition {% endblock %}
+{% block content %} 
+<script language="javascript">
+function Clickheretoprint(){
+  var disp_setting="toolbar=yes,location=no,directories=yes,menubar=yes,";
+  var content_vlue = document.getElementById("print_content").innerHTML;
+ 
+  var docprint=window.open("","",disp_setting);
+   docprint.document.open();
+   docprint.document.write('<html><head><title>Review Tuition</title>');   docprint.document.write('</head><body onLoad="self.print()">');      
+ 
+   docprint.document.write(content_vlue);
+   docprint.document.write('</body></html>');
+   docprint.document.close();   docprint.focus();
+}</script>
+
+<div class="parent" id="print_content">
+    {% if error %}
+    {{error}}
+
+    {% else %}
+    <br />
+<b> <a href="javascript:Clickheretoprint()"> Print this page </a> </b> 
+    {% include "tuition.html" %}
+
+    {% if paypal %}
+    <h3> Please review the tuition and read the code of conduct before click the payment button at the bottom of this page </h3> 
+
+
+    {% else %} 
+    <h3> Please review the tuition, read the code of conduct, then print and mail this form with your check to Registrar at <br/> 
+        {% if school_mailing_addr %}
+        {{school_mailing_addr|markdown}}
+        {% else %}
+        <b> ??? </b> 
+        {% endif %}
+    </h3> 
+    {% endif %}
+
+
+
+
+    <h1 xml:lang="en" lang="en" align="center">Code of Conduct For NWCS Students </h1>
+    Dear Parents: Please review the following rules with your child(ren). <br/>
+    <br/>
+    In order to maintain a safe and distraction-free environment during class sessions and to protect school
+    property, the following rules are strictly enforced. Our continuing use of the school facilities is contingent
+    upon our good conduct and good relationship with Briarcliff Middle School.<br/>
+
+    <h3> Code:</h3>
+    <ol>
+        <li> No food or beverage is allowed in the classroom.</li>
+        <li> NEVER erase anything left on the whiteboard from Briarcliff Middle School classes. Write on the
+        whiteboard only when instructed by your teachers.</li>
+        <li>NEVER touch or move any object(s) on the shelves, teachers' or students' desks. NEVER open any drawers.</li>
+        <li>Keep the desks and classroom clean.</li>
+        <li>NEVER play with window shades, sit on the windowsill, or lean your body out of the window.<br/>
+        <li>NEVER touch circuit breakers, gas valves, or microwave ovens.</li>
+        <li>When class is in session, students should stay in their classroom. Anyone who does not have class should stay in the cafeteria or designated rooms when the cafeteria is not available.</li>
+        <li>Do not run, play, or shout in the hallway and stairs.</li>
+        <li>Cooperate with and pay respect to the teachers, staff and on-duty parents.</li>
+        <li> No fighting or chatting in the classroom.</li>
+    </ol>
+    <h3>Consequences:</h3>
+    <ol>
+        <li>Students who do not follow the rules will be disciplined.</li>
+        <li>If a student continues to break the rules, his/her parents will be notified.</li>
+        <li>If the situation does not improve, a meeting will be required between parents and Principal.</li>
+        <li>If the situation does not improve further, the student will be expelled from this school.</li>
+    </ol>
+    My family member(s) ({{student_names}})  and I ({{parent_name}}) have reviewed the Code of Conduct for NWCS Students and we accept it.<br/>
+    <br/>
+    <br/>
+
+    <p>I allow the school to publish name/street address/e-mail address in the NWCS School Directory, for internal
+    use only.
+    </p>
+    Waiver / Release of Liability: I, {{parent_name}} (Parent/ Guardian), waive
+    any and all claims against Northern Westchester Chinese School, its Board of Directors, Administrative
+    Staff and the teachers in the event of any injury, sickness, or death resulting from any accident while my
+    child(ren) is(are) attending the Northern Westchester Chinese School.<br/>
+    <br/>
+
+    {% if paypal %}
+
+</strong>
+
+
+<div id="wrapper">
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+        <input type="hidden" name="cmd" value="_cart">
+        <input type="hidden" name="upload" value="1">
+        <input type="hidden" name="business" value="paypal@nwcsny.org">
+        <input type="hidden" name="item_name_1" value="NWCS Tuition {{semester}}, {{parent_name}}({{family.id}}) ">
+        <input type="hidden" name="amount_1" value="{{total}}">
+        <input type="submit" value="We agree to follow the NWCS code of conduct. Proceed to Pay by PayPal or credit card">
+
+        Date: {{today}}
+    </form>
+</div>
+<!-- PayPal Logo -->
+<table border="0" cellpadding="10" cellspacing="0" align="center">
+    <tr><td align="center"></td></tr>
+    <tr><td align="center">
+            {# <a href="#" onclick="javascript:window.open('https://www.paypal.com/us/cgi-bin/webscr?cmd=xpt/Marketing/popup/OLCWhatIsPayPal-outside','olcwhatispaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=400, height=350');"> #}
+                <img  src="https://www.paypal.com/en_US/i/bnr/horizontal_solution_PPeCheck.gif" border="0" alt="Solution Graphics">
+                {# </a> #}
+</td></tr></table><!-- PayPal Logo -->
+{% else %}
+
+Parent/Guardian: ______________________________      Date: ______________________ <br/><br/> 
+
+<b> <a href="javascript:Clickheretoprint()"> Print this page </a> </b> 
+
+{% endif %}
+{% endif %}
+
+</div>
+{% endblock %} 
+
+

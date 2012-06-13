@@ -1,0 +1,116 @@
+{% load i18n %}
+{% load core_tags %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+    <head>
+        <link rel="stylesheet" href="{% static_path %}/css/jquery-ui.css" type="text/css" media="all" />
+        <link rel="stylesheet" href="{% static_path %}/css/ui.theme.css" type="text/css" media="all" />
+        <link href="{% static_path %}/css/defaults.css" rel="stylesheet" type="text/css" />
+        <link href="{% static_path %}/css/style.css" rel="stylesheet" type="text/css" />
+        <link href="{% static_path %}/css/menu.css" rel="stylesheet" type="text/css" />
+        <link href="{% static_path %}/css/table.css" rel="stylesheet" type="text/css" />
+        <link href="{% static_path %}/css/button.css" rel="stylesheet" type="text/css" />
+        <link href="{% static_path %}/css/form.css" rel="stylesheet" type="text/css" />
+        <link href="{% static_path %}/css/menu_style.css" rel="stylesheet" type="text/css" />
+
+        <script src="{% static_path %}/js/jquery.min.js" type="text/javascript"></script>
+        <script src="{% static_path %}/js/jquery-ui.min.js" type="text/javascript"></script>
+        <script src="{% static_path %}/js/jquery.bgiframe-2.1.2.js" type="text/javascript"></script>
+        {#    <script src="{% static_path %}/js/jquery-ui-i18n.min.js" type="text/javascript"></script> #}
+        {% block theme%}{% endblock %}
+        <title>NWCS Student Information System {% block title %}{% endblock %}</title>
+    </head>
+
+    <body class="home blog">
+
+        <div id="wrapper">
+
+            <div id="container">
+                <div class="clearfix">
+                    <div id="top-social-profiles">
+                        <ul class="widget-container"><li class="social-profiles-widget"> </li></ul>
+                    </div>
+                </div>
+                <div id="header">
+                    <div class="logo">
+                        <a href="/"><img src="{% static_path %}/images/nwcs-header-transparent1.png" alt="北威中文學校 Northern Westchester Chinese School" title="北威中文學校 Northern Westchester Chinese School" /></a>
+                    </div>
+                    <div class="header-right">
+                    </div>
+                </div> <!-- #header -->
+                <!-- don't know what msg is yet -->
+                <div class="clearfix"> 
+                    {% if messages %}
+                    {{ messages }}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        message
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div><!-- end don't know -->
+
+                <div class="clearfix">
+                    <div class="menu-secondary-container">
+                        <ul class="menus menu-secondary"> 
+                            <li class="menu-item menu-item-type-post_type"> 
+                            <a href="{% url change_view view='parent'%}"> Parents' View </a></li>
+                            {% if request.user.get_profile.is_teacher %}
+                            <li class="menu-item menu-item-type-post_type">
+                            <a href="{% url change_view view='teacher'%}"> Teacher's View </a></li>
+                            {% endif %}
+
+                            {% if request.user.get_profile.is_admin %}
+                            <li class="menu-item menu-item-type-post_type">
+                            <a href="{% url change_view view='admin'%}"> Admin's View </a> </li>
+                            {% endif %}
+
+                        </ul>
+                    </div> <!-- #menu-secondary-container -->
+                </div>
+
+                <div id="main" >
+                    <div id="content" style="width: 715px" > <!--style.css default #content width: 460px -->
+                        {% block content %}{% endblock %}
+                    </div>
+
+                    <div id="sidebar-primary" style="margin-left: -960px"> <!-- style.css default margin-left: -695 -->
+                        <ul class="widget-container">
+                            <li id="user" class="widget"><h3 class="widgettitle">Welcome! {% if request.user.is_authenticated %}{{ request.user.get_profile.parent1LastName }} Family {% endif %}</h3></li></ul>
+                        <div class="widget">
+                            <ul>
+
+                                {% if request.user.is_authenticated %}
+                                <li><a href="{% url home %}">Home</a></li> 
+                                {% else %}
+                                <li><a href="{% url auth_login  %}?next=/">Log in</a></li>  
+                                {% endif %}
+                                <li><a href="{% url offered_classes %}">Offered Classes</a></li> 
+
+                                {% if request.user.is_authenticated %}
+
+                                <li><a href="{% url familyinfo %}"> My Family Profile </a></li> 
+                                <li><a href="{% url auth_password_change %}">Change password</a></li>
+                                <li><a href="{% url auth_logout %}">Log out</a></li>  
+                                {% endif %}
+                                <li> <a href="{% url help %}"> Help </a></li>
+                            </ul>
+                        </div>
+                    </div><!-- sidebarprimary-->
+                </div><!-- main -->
+
+                <div id="footer">
+                    <div id="copyrights">
+                        &copy; 2012  <a href="http://nwcsny.org/">北威中文學校 Northern Westchester Chinese School</a><a href='http://www.rapidssl.com'> <img src="{% static_path %}/images/RapidSSL_SEAL.gif"/> </a> 
+                    </div>
+                </div><!-- #footer -->
+
+            </div> 
+        </div>
+    </body>
+
+</html>

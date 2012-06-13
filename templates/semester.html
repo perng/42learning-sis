@@ -1,0 +1,28 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block title %}  Semester Setup {% endblock %}
+{% block content %} 
+
+
+Semester: <a href='{% url semester sid=sem.id %}'> {{sem}} </a> 
+
+<form action='{% url semester sid=sem.id %}' method='post'> 
+    {{ form.as_p }}
+    {% csrf_token %}
+    <input type="submit" name="addclass" value="addclass" />
+
+</form> 
+
+<hr/>
+<ul>
+    {% for c in classes %}
+    <li> <a href='/class/{{c.id}}'>{{c}}</a>  </li> 
+
+    {% endfor %}
+</ul> 
+
+</form> 
+
+{% endblock %} 
+

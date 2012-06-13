@@ -1,0 +1,89 @@
+<style type="text/css">
+body {
+font-family:sans-serif;
+}
+br{
+clear: left;
+}
+
+h1{
+text-align: left;
+font-size: 1.5em;
+font-family:sans-serif;
+font-style:normal;
+}
+
+h2{
+text-align: left;
+font-size: 1.2em;
+font-family:sans-serif;
+font-style:normal;
+}
+
+.alignCenter{text-align: center;}
+.alignLeft{text-align: left;}
+.alignRight{text-align: right;}
+
+.warning{
+text-align: left;
+font-family:sans-serif;
+color:red;
+font-style:normal;
+}
+
+footer{
+//text-align: center;
+font-family:sans-serif;
+font-size: 0.75em;
+font-style:normal;
+}
+.formLayout
+{
+//text-align: left;
+}
+
+.formLayout label, .formLayout input
+{
+display: block;
+width: 120px;
+float: left;
+margin-bottom: 10px;
+}
+
+.formLayout label
+{
+font-family:sans-serif;
+text-align: left;
+padding-right: 20px;
+}
+
+#submitbutton{
+margin-top: 5px;
+width: 90px;
+}
+
+#wrapper {
+margin: 0 auto;
+width: 400px;
+}
+
+table, td, th
+{
+font-family:sans-serif;
+border:1px ;
+//table-layout:fixed
+}
+td
+{
+//text-align:left;
+//width: 20%;
+}
+th
+{
+//background-color:gray;
+//color:white;
+}
+
+
+
+</style>

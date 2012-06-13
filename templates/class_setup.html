@@ -1,0 +1,36 @@
+
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block title %}  Grading Setup {% endblock %}
+{% block content %} 
+{% if error %}
+{{error}}
+
+{% else %}
+
+<h2> Class Setup: {{theclass.name}}  </h2> 
+<hr> 
+<h3>  Grading Categories </h3> 
+
+<form action="/setup_class/{{theclass.id}}" method="POST"> 
+    <table> 
+        <tr> <th> Category </th> <th> Weight </th> 
+            {# <th> Order </th> #}
+        </tr> 
+        {% for c in categories %}
+        <tr>
+            <td> <input type="text" name="category-{{c.id}}" value="{{c.name}}" /> </td>
+            <td> <input type="text" name="weight-{{c.id}}" value="{{c.weight}}"/>%  </td> 
+            {#    <td>  <a href="/gradingcategoryup/{{c.id}}"> up </a> <a href="/gradingcategorydown/{{c.id}}"> down</a>  </td>  #}
+        </tr>
+        {% endfor %}
+    </table>
+    Make sure addint up to 100%. <br/>
+
+    {% csrf_token %}
+    <input type="submit"  value="Update" />
+</form>
+{% endif %}
+
+{% endblock %}

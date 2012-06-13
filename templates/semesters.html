@@ -1,0 +1,26 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block title %}  Semester Setup {% endblock %}
+{% block content %} 
+
+<hr/>
+<ul> 
+    {% for sem in semesters %}
+    <li> <a href='/semester/{{sem.id}}'> {{sem.schoolYear }} {{sem.semester}} </a>  </li> 
+    {% endfor %}
+</ul>
+<hr/>
+
+Add new semester 
+<br/>
+<form method='post' action='/semester'> 
+    {{ sform.as_p }}
+    {% csrf_token %}
+    <input type="submit" name="Add Semester" value="add" />
+
+
+</form> 
+
+{% endblock %} 
+

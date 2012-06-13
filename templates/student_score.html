@@ -1,0 +1,67 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Student Scores{% endblock %}
+{% block content %} 
+<div class="parent">
+
+    <h3 class="title"> {{student.firstName}} {{student.lastName}} </h3> <br/>
+    <h2 class="title"> {{semester}} </h2>
+
+    {% if student.enrolledClasses %}
+
+    {% for c in student.enrolledClasses %}
+    <h3> {{c.name}} </h3>
+    {% if c.show_attendance %}
+    <table class="normal">
+        <tr>
+            <th> Date </th> 
+            {% for cs in c.sessions %}
+            <th> {{cs.date.isoformat}}
+                {% endfor %}
+            </tr>
+            <tr> 
+                <th> Attendance </th>
+                {% for cs in c.sessions %}
+                <td> {{cs.att.attended}} </td> 
+                {% endfor %}
+            </tr>
+        </table>
+        {% else %} 
+        No attendance record. <br/>
+        {% endif %}
+
+        {% if c.recordGrade %}
+        {% for cat in c.categories %}
+        {% if cat.gds %}
+        <h4> {{cat.name}} </h4> 
+        <table class="normal">
+            <tr>
+                <th>Name</th> <th> Date</th> <th>Score</th><th>Highest</th><th>Median</th>
+            </tr>
+            {% for gd in cat.gds %}
+            <tr>
+                <td> {{gd.name}} </td> 
+                <td> {{gd.date.isoformat}} </td> 
+                <td> {{gd.score.score}} </td> 
+                <td> {{gd.highest}} </td> 
+                <td> {{gd.median}} </td> 
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        No score record <br/>
+        {% endif %}
+
+        {% endfor %}
+
+        {% else %}
+        <h3> Not enrolled in any class yet. </h3>
+
+        {% endif %}
+
+    </div>    
+    {% endblock %} 

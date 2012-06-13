@@ -1,0 +1,49 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Directory {% endblock %}
+{% block content %} 
+<div class="admin2">
+    <h2 class="title">Directory</h2>
+    <table class="normal">
+        <tr> 
+            <th> Family ID </th>
+            <th> Parent </th> 
+            <th> Student </th>
+            <th> Enrolled </th> 
+            <th> Gender </th>
+            <th> Birthday </th> 
+            <th> Home Lang. </th>
+            <th> Home Phone </th>
+            <th> Mobile Phone </th>
+            <th> Email </th> 
+            <th> Address </th>
+        </tr> 
+        {% for f in family_list %}
+        {% for s in f.students %}
+        <tr>
+            {% ifequal s.sno 0 %} 
+            <td rowspan={{f.nstudents}}>{{f.id}}  </td>
+            <td rowspan={{f.nstudents}}>{{f.parent1}}{% if f.parent2 %}, {{f.parent2}}{% endif %}</td>
+            {% endifequal %}
+            <td>{{s}}</td>
+            <td>{{s.classes}}</td>
+            <td>{{s.gender}}</td>
+            <td>{{s.birthday}}</td>
+            <td>{{s.homeLanguage}}</td>
+            {% ifequal s.sno 0 %} 
+            <td rowspan={{f.nstudents}}>{{f.homePhone}}</td>
+            <td rowspan={{f.nstudents}}>{{f.mobilePhone}}</td>
+            <td rowspan={{f.nstudents}}>{{f.user.email}}</td>
+            <td rowspan={{f.nstudents}}>{{f.address}}</td>
+            {% endifequal %} 
+        </tr>
+        {% endfor %}
+        {% endfor %}
+
+    </table>
+</div>
+{% endblock %} 
+
+

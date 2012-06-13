@@ -1,0 +1,19 @@
+#main {
+    padding: 15px;
+    background: #8DA7B4;
+}
+
+#main-fullwidth {
+    padding: 15px;
+    background: #fff;
+}
+
+#sidebar-primary {
+    padding: 0px 5px 5px 5px;
+    background: #F1F8FA;
+    margin: 2px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+
+}

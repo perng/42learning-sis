@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %} Assignment  {% endblock %}
+
+{% block content %}
+<script>
+    $(function() {
+        $( "#assign_date" ).datepicker();
+        $( "#assign_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+        $( "#due_date" ).datepicker();
+        $( "#due_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+    });
+</script>
+<div class="teacher">
+
+
+    {% if gditems %}
+    <table  class="red_table"> 
+        <tr> <th> Due Date </th><th> Name </th>  <th> Description </th> 
+            <th> Files </th> 
+        </tr>
+
+        {% for gditem in gditems %}
+        <tr> 
+            <td> {{gditem.duedate.isoformat}} </td> 
+            <td>{{gditem.name}} </td>
+            <td> {{gditem.assignmentDescr}}</td> 
+            <td> <a href="{{gditem.download_url}}"  target="_blank" > upload </a> </td> 
+        </tr> 
+
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    <h3> New Assignment </h3> 
+    <form class="red" action='{% url assignments cat_id=category.eid %}' method='post'>
+        <label> Name </label> <input type='text' name='Name'  value="{{category.name}} {{category.serial}}"/>  <br/>
+        <label> Assign Date </label> {{assignment_date}}  <br/>
+
+        <label> Description </label>  <textarea name='Description'  value="{{category.assignmentDescr}}" rows=6 cols=60>  </textarea> <br/>
+        <label> Due Date </label> {{due_date}}  <br/>
+
+        {% csrf_token %}
+        <input class="button" type="submit" name="Update" value="Update" />
+    </form>
+</div>
+{% endblock %}

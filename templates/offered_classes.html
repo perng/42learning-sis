@@ -1,0 +1,65 @@
+{% extends 'base.html' %} 
+{% load markup %}
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Semester Setup {% endblock %}
+{% block content %} 
+<div class="admin2">
+    <h3 class="title"> Semester: <a href='/semester/{{sem.id}}'> {{sem}} </a> </h3>
+    {% if classes %}
+    <table border="1" >
+        {% for c in classes %}
+        <tr> <th rowspan="4"> {{c}}  </th> 
+            <td align="left"> <b>Tuition:</b>
+                {% if c.elective %}
+                If also enrolled in language: ${{c.discounted_base_cc}}(Credit Card), 
+                ${{c.discounted_base_chk}}(Cash/Check); otherwise ${{c.fee.basecc}}(Credit Card), 
+                ${{c.fee.basechk}}(Cash/Check)
+                {% else %}
+                ${{c.fee.basecc}} (Credit Card), $${{c.fee.basechk}}(Cash/Check)
+                {% endif %}
+                <br/>
+                {% if c.fee.book %}
+                Book: ${{c.fee.book}},
+                {% endif %}
+                {% if c.fee.material %}
+                Material: ${{c.fee.material}},
+                {% endif %}
+                {% if c.fee.misc %}
+                Misc.: ${{c.fee.misc}}.
+                {% endif %}
+            </td>
+            </tr><tr>
+            <td > <b>Teacher(s):</b>
+                {% if c.headTeacher %}
+                {{c.headTeacher.get_profile.parent1_fullname }}
+                {% if c.assocTeacher1 %}
+                , {{c.assocTeacher1}}
+                {% endif %}
+                {% if c.assocTeacher2 %}
+                , {{c.assocTeacher2}}
+                {% endif %}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>Description: </b><br/>
+                {% if c.description %}
+                {{c.description|markdown}} <br/>
+                {% endif %}
+            </td>
+        </tr>
+        <tr> <td> <b> Condition:</b> 
+                {% if c.mandate %}Students take this class are also required to take {{ c.mandate }}.
+                {% elif c.elective_required %} Students take this class are required to take an elective class.  
+                {% endif %}</td> </tr> 
+
+        {% endfor %}
+    </table>
+
+    {%endif %}
+</div>
+{% endblock %} 
+

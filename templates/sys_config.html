@@ -1,0 +1,50 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Configuration{% endblock %}
+{% block content %} 
+<div class="admin2">
+    <h2 class="title">Managed Semesters and Classes</h2>
+
+    <form method="POST" action='/sys_config/'> 
+        {% csrf_token %}
+        <table class="blue_table">
+            <tr>
+                <th> Item </th> <th>Value</th>
+            </tr>
+
+            {% for c in configs %}
+            {% ifnotequal c.valueType 'text'%}
+            <tr>
+
+                <td> <input id="name-{{c.name}}"  type="text" 
+                    name="name-{{c.name}}" 	value="{{c.verbose_name}}"  size="60" maxlength="100"/>
+                </td> 
+                <td> <input id="value-{{c.name}}"  type="text" 
+                    name="value-{{c.name}}" 	value="{{c.value}}"  size="60" maxlength="100"/>
+                </td> 
+
+            </tr>
+            {% endifnotequal %}
+            {% endfor %}
+        </table>
+
+
+        {% for c in configs %}
+        {% ifequal c.valueType 'text'%}
+        <input id="name-{{c.name}}"  type="text" 
+        name="name-{{c.name}}" 	value="{{c.verbose_name}}"  size="60" maxlength="100"/>
+        <br/>
+        <textarea id="value-{{c.name}}"   name="value-{{c.name}}" 	value="{{c.value}}" rows="5" cols="60">{{c.value}}</textarea>
+        <br/><br/>
+        {% endifequal %}
+        {% endfor %}
+
+
+        <input type='submit' name="Update" value="Update"/> 
+    </form> 
+
+</div>
+{% endblock %} 
+

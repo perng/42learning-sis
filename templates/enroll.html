@@ -1,0 +1,59 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Enroll {% endblock %}
+{% block content %} 
+{% if enrollment_not_open %}
+Enrollment is not open at this moment. 
+
+{% else %}
+<div class="parent">
+    <h2 class="title">Class Enrollment</h2>
+
+
+    {% for e in errors %}
+    <li> {{e}} </li>
+    {% endfor %}
+</ul>
+
+
+<form method='post' action='/enroll'> 
+    <table class="green_table">  
+        <tr> <th> Student </th> <th> Required </th> <th> Elective </th> </th> </tr>
+
+    {% for s in students %}
+    <tr> 
+        <td> {{s.firstName }} {{s.lastName}} </td> 
+        <td> <select name='classm-{{s.id}}'> 
+                <option value="---"> not enrolled </option>
+                {% for mc in mclasses %}
+                <option value="{{mc.id}}" {% ifequal mc.id s.mclass %} selected="selected" {% endifequal %}> {{mc.name}} </option>
+                {% endfor %}
+                </select >
+            </td> 
+            <td> <select name='classe-{{s.id}}'> 
+                    <option value="---"> not enrolled </option>
+                    {% for ec in eclasses %}
+                    <option value="{{ec.id}}"
+                    {% ifequal ec.id s.eclass %} selected="selected" {% endifequal %} > 
+                    {{ec.name}} </option>
+                    {% endfor %}
+                </select>
+            </td> 
+
+        </tr>
+        {% endfor %}
+    </table>
+    <ul>
+
+        {% csrf_token %}
+        <input  type="submit" name="enroll_paypal" value="Enroll and Pay with Credit Card"/>
+        <input  type="submit" name="enroll_check" value="Enroll and Pay with Cash/Check"/>
+    </form> 
+
+    {# <a href='/review_tuition_paypal'> Pay Tuition by Credit Card </a> <br/> <a href='/review_tuition_check'> Pay Tuition by Check</a> #}
+
+    {% endif %}
+</div>
+{% endblock %} 

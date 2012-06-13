@@ -1,0 +1,88 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Record {{ category.name }} Scores: {{theclass.name}} {% endblock %}
+{% block content %} 
+
+
+{% if error %}
+{{error}}
+{% else %}
+<script>
+    $(function() {
+        $( "#extra_score_date" ).datepicker();
+        $( "#extra_score_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+    });
+</script>
+<div class="teacher">
+    <h3 class="title"> Class: {{theclass.name}} </h3>
+    <h3 class="title"> {{category.name}}  {{category.weight}}% </h3>
+    <form class="red" action='{% url record_grade class_id=theclass.eid cat_id=category.eid show_item="_" %}' method='post'>
+        {% csrf_token %}
+        <div class="tbody">
+            <table class="normal">
+                <tr> 
+                    <th> Item </th>
+                    {% for gdis in category.gradingitems %}
+                    <th> {{gdis.name}} (<a href="{% url del_score gd_id=gdis.eid%}"> del </a>) </th>
+                    {% endfor %}
+                    <th> <input type="text" name="extra-score-name" value="{{category.name}} {{category.serial}}"/>  </th> 
+                </tr>
+                <tr>
+                    <th> Date </th>
+                    {% for gdis in category.gradingitems %}
+                    <th> {{gdis.date.isoformat}}  </th>
+                    {% endfor %}
+                    <th> <input type="text" id="extra_score_date" name="extra-score-date"/>  </th> 
+                </tr>
+                {% for s in category.students %}
+                <tr>
+                    <th> {{s.firstName}} {{s.lastName}} </th>
+                    {% for score in s.scores%}
+                    <td width="8"> {{score}} </td> 
+                    {% endfor %}
+                    <td> {{s.extra_score}} </td> 
+                </tr>
+                {% endfor %}
+                {% if request.session.show_stats %}
+                <tr> <th> Highest </th> 
+                    {% for gdis in category.gradingitems %}
+                    <td> {{gdis.highest|floatformat:2}} </td> 
+                    {% endfor %}
+                </tr>
+                <tr> <th> Average </th> 
+                    {% for gdis in c.gradingitems %}
+                    <td> {{gdis.average|floatformat:2}} </td> 
+                    {% endfor %}
+                </tr>
+                <tr> <th> Median </th> 
+                    {% for gdis in c.gradingitems %}
+                    <td> {{gdis.median|floatformat:2}} </td> 
+                    {% endfor %}
+                </tr>
+                <tr> <th> Lowest </th> 
+                    {% for gdis in c.gradingitems %}
+                    <td> {{gdis.lowest|floatformat:2}} </td> 
+                    {% endfor %}
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+        <input type='hidden' name='category' value='{{category.eid}}'/> 
+        <input class="button" type="submit" name="update-score" value="Update {{c.name}}"/>
+    </form>
+
+    <br/>
+
+    <form class="red" action="/calculate_total/{{theclass.eid}}" method="post">
+        <input type='hidden' name='category' value='{{category.eid}}'/> 
+        {% csrf_token %}
+        <h3> Class Setup </h3> 
+        <input type="checkbox" name="total_ready" value="total_ready"> Final Scores are ready </input></br>
+        <input type="checkbox" name="show_stats" value="show_stats" {% if request.session.show_stats %} checked="checked" {% endif %}> Show highest, lowest, average, and median for each item. </input><br/><br />
+        <input class="button" type="submit" name="calculate_total" value="Update Setting"/>
+    </form>
+    {% endif%}
+</div>
+{% endblock %}

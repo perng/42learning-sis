@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load core_tags %}
+{% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %} Family {% endblock %}
+
+{% block content %}
+<div class="parent">
+    <h2 class="title">My Family Profile </h2>
+    <form action="{% url familyinfo %}" method="POST"> 
+        {{ form.non_field_errorss }}
+
+        <fieldset style="width:275px">
+            <legend>My Information </legend>  
+            <label id="required" {% if form.parent1FirstName.errors%} class="warning" {% endif %} > 
+                {{form.parent1FirstName.help_text}}* </label> {{form.parent1FirstName}} <br/>
+
+            <label id="required" {% if form.parent1LastName.errors%} class="warning" {% endif %} > 
+                {{form.parent1LastName.help_text}}* </label> {{form.parent1LastName}} <br/>
+
+            <label>{{form.parent1ChineseFullName.help_text}}</label>{{form.parent1ChineseFullName}} {{form.parent1ChineseFullName.errors}} 
+        </fieldset>
+        <fieldset style="width:275px">
+            <legend>Spouse Information</legend>   
+            <label> {{form.parent2FirstName.help_text}}</label>{{form.parent2FirstName}} {{form.parent2FirstName.errors}} <br />
+            <label> {{form.parent2LastName.help_text}}</label> {{form.parent2LastName}} {{form.parent2LastName.errors}} <br />
+            <label> {{form.parent2ChineseFullName.help_text}}</label>{{form.parent2ChineseFullName}} {{form.parent2ChineseFullName.errors}} 
+        </fieldset>
+        <fieldset>
+            <legend>Address</legend>
+            <label id="required" {% if form.streetNumber.errors%} class="warning" {% endif %} > 
+                {{form.streetNumber.help_text}}* </label>  {{form.streetNumber}} <br /> 
+
+            <label id="required" {% if form.city.errors%} class="warning" {% endif %} > 
+                {{form.city.help_text}}* </label> {{form.city}}  <br /> 
+
+            <label id="required" {% if form.state.errors%} class="warning" {% endif %} > 
+                {{form.state.help_text}}* </label>  {{form.state}} <br />  
+
+            <label id="required" {% if form.zipcode.errors%} class="warning" {% endif %} > 
+                {{form.zipcode.help_text}}*</label> {{form.zipcode}} <br />   
+        </fieldset>
+        <fieldset>
+            <legend>Phones and Email</legend>
+            <label id="required" {% if form.homePhone.errors%} class="warning" {% endif %} > 
+                {{form.homePhone.help_text}}* </label>  {{form.homePhone}} <br />
+            <label> {{form.mobilePhone.help_text}}</label> {{form.mobilePhone}} 	<br /> 
+            <label>Email</label>  {{request.user.email}} <br />
+            <label>{{form.altEmail.help_text}} </label>{{form.altEmail}}  <br />
+            {#  {{form.participation.help_text}}  {{form.participation}} <label class="warning" >  {{form.participation.errors.as_text}}</label>   #}
+        </fieldset>
+        {% csrf_token %}
+        <br/>
+        * required <br/>
+        <input class="button" type="submit" name="Update" value="Update" />
+        <br/>
+
+        {% if form.non_field_errors %} <ul class="errorlist">  {{form.non_field_errors.as_ul }} </ul> {% endif %}
+    </form> 
+    {% if form.errorss %}
+    <p style="color: red;">
+    Please correct the errors{{ form.errorss|pluralize }} below.
+    </p>
+    {% endif %}
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,2 @@
+django-extensions  is required  for generating ER diagram
+http://packages.python.org/django-extensions/installation_instructions.html

@@ -1,0 +1,42 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Teacher Directory {% endblock %}
+{% block content %} 
+<div class="admin2">
+    <h2 class="title">Teacher Directory</h2>
+    <table class="normal">
+        <tr> 
+            <th> Class </th> 
+            <th> Name </th> 
+            <th> Home Phone </th>
+            <th> Mobile Phone </th>
+            <th> Email </th> 
+            <th> Address </th>
+        </tr> 
+        {% for f in teachers %}
+        <tr>
+
+            <td>{{f.teachclass}}</td>
+            <td>{{f.parent1}}</td>
+            <td >{{f.homePhone}}</td>
+            <td >{{f.mobilePhone}}</td>
+            <td >{{f.user.email}}</td>
+            <td >{{f.address}}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
+<style>
+    #sidebar-primary {
+        background-color: #E0EEEE;
+    }
+</style>
+
+
+{% endblock %} 
+
+
+
