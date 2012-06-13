@@ -268,10 +268,15 @@ a:focus {
 
 .menu-secondary li a:hover, .menu-secondary li a:active, .menu-secondary li a:focus, 
 .menu-secondary li:hover > a, .menu-secondary li.current-cat > a, .menu-secondary li.current_page_item > a, .menu-secondary li.current-menu-item > a {
-    color: #C80C15;
+    color: #C80C15; 
     background: url(/static/images/menu-secondary-bg.png) left -138px repeat-x;
     outline: 0;
 }
+
+.menu-secondary li a.selected {
+   color: #F59811; 
+   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.8); 
+} 
 
 /* Child Levels - Menu Secondary */
 
