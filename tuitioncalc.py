@@ -1,5 +1,7 @@
+not needed anymore
+
 # tuitioncalc.py
-# NWCS tuition calculator 
+# NWCS tuition calculator
 # NWCS rates and schedule based on 2012-2013 academic year
 
 baseTuition = 470
@@ -104,6 +106,6 @@ total += addAdultClassFee()
 total += applyDiscount(1)
 total += familyRegistrationFee
 print total
-	
-		
-	
+
+
+
