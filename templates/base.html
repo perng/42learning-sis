@@ -25,10 +25,11 @@
 	<script type="text/javascript">
 		$(document).ready ( function(){
 			var path = location.pathname.substring(1);
-   			if ( path )
+				
+			if ( path.indexOf("view") != -1)
      				$('#menu_secondary a[href$="' + path + '"]').attr('class', 'selected');
-console.log($('#menu_secondary a[href$="' + path + '"]'));
-		
+			else
+				$('ul#side_menu a[href$="' + path + '"]').attr('class', 'selected');
 		})
 	</script>
     </head>
@@ -91,7 +92,7 @@ console.log($('#menu_secondary a[href$="' + path + '"]'));
                         <ul class="widget-container">
                             <li id="user" class="widget"><h3 class="widgettitle">Welcome! {% if request.user.is_authenticated %}{{ request.user.get_profile.parent1LastName }} Family {% endif %}</h3></li></ul>
                         <div class="widget">
-                            <ul>
+                            <ul id="side_menu">
 
                                 {% if request.user.is_authenticated %}
                                 <li><a href="{% url home %}">Home</a></li> 

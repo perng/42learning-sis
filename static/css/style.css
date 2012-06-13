@@ -273,10 +273,15 @@ a:focus {
     outline: 0;
 }
 
-.menu-secondary li a.selected {
+.menu-secondary li a.selected{
    color: #F59811; 
    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.8); 
 } 
+
+
+div.widget ul#side_menu li a.selected {
+   color: red;
+}
 
 /* Child Levels - Menu Secondary */
 
