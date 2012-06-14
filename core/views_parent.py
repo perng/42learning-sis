@@ -308,7 +308,13 @@ def review_tuition(request, howtopay):
 
 def help(request):
     semester = current_reg_semester() # the semester open for registration
-    sis_contact= Config.objects.get(name='sis_contact').emailValue
-    registrar_contact= Config.objects.get(name='registrar_contact').emailValue
+    try:
+        sis_contact= Config.objects.get(name='sis_contact').emailValue
+    except:
+        sis_contact = "charles@perng.com"
+    try:
+        registrar_contact= Config.objects.get(name='registrar_contact').emailValue
+    except:
+        registrar_contact= "charles@perng.com"
      
     return my_render_to_response(request, 'help.html', locals())
