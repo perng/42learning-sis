@@ -21,6 +21,7 @@
         <script src="{% static_path %}/js/jquery.bgiframe-2.1.2.js" type="text/javascript"></script>
         {% block theme%}{% endblock %}
         <title>NWCS Student Information System {% block title %}{% endblock %}</title>
+        {% include "google-tracking.html" %}
     </head>
 
     <body class="home blog">
