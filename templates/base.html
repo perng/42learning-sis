@@ -21,17 +21,6 @@
         <script src="{% static_path %}/js/jquery.bgiframe-2.1.2.js" type="text/javascript"></script>
         {% block theme%}{% endblock %}
         <title>NWCS Student Information System {% block title %}{% endblock %}</title>
-
-	<script type="text/javascript">
-		$(document).ready ( function(){
-			var path = location.pathname.substring(1);
-				
-			if ( path.indexOf("view") != -1)
-     				$('#menu_secondary a[href$="' + path + '"]').attr('class', 'selected');
-			else
-				$('ul#side_menu a[href$="' + path + '"]').attr('class', 'selected');
-		})
-	</script>
     </head>
 
     <body class="home blog">
@@ -68,15 +57,22 @@
                     <div class="menu-secondary-container">
                         <ul class="menus menu-secondary" id="menu_secondary"> 
                             <li class="menu-item menu-item-type-post_type"> 
-                            <a href="{% url change_view view='parent'%}"> Parents' View</a></li>
+                            <a href="{% url change_view view='parent'%}" 
+                                {% ifequal  request.session.view 'parent' %} class="selected" {% endifequal %}
+                                > Parents' View</a></li>
                             {% if request.user.get_profile.is_teacher %}
                             <li class="menu-item menu-item-type-post_type">
-                            <a href="{% url change_view view='teacher'%}"> Teacher's View </a></li>
+                            <a href="{% url change_view view='teacher'%}"
+                                {% ifequal  request.session.view 'teacher' %} class="selected" {% endifequal %}
+                                
+                                > Teacher's View </a></li>
                             {% endif %}
 
                             {% if request.user.get_profile.is_admin %}
                             <li class="menu-item menu-item-type-post_type">
-                            <a href="{% url change_view view='admin'%}"> Admin's View </a> </li>
+                            <a href="{% url change_view view='admin'%}"
+                                {% ifequal  request.session.view 'admin' %} class="selected" {% endifequal %}
+                                > Admin's View </a> </li>
                             {% endif %}
 
                         </ul>
