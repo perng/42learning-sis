@@ -1,5 +1,6 @@
 {% extends 'base.html' %} 
 {% load core_tags %}
+{% load url from future %}
 
 {% block title %}  Semester Setup {% endblock %}
 {% block content %} 
@@ -7,14 +8,14 @@
 <hr/>
 <ul> 
     {% for sem in semesters %}
-    <li> <a href='/semester/{{sem.id}}'> {{sem.schoolYear }} {{sem.semester}} </a>  </li> 
+    <li> <a href='{% url 'semester' sem.id %}'> {{sem.schoolYear }} {{sem.semester}} </a>  </li> 
     {% endfor %}
 </ul>
 <hr/>
 
 Add new semester 
 <br/>
-<form method='post' action='/semester'> 
+<form method='post' action='{% url 'semester' %}'> 
     {{ sform.as_p }}
     {% csrf_token %}
     <input type="submit" name="Add Semester" value="add" />

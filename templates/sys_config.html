@@ -1,5 +1,6 @@
 {% extends 'base.html' %} 
 {% load core_tags %}
+{% load url from future %}
 
 {% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
 {% block title %}  Configuration{% endblock %}
@@ -7,7 +8,7 @@
 <div class="admin2">
     <h2 class="title">Managed Semesters and Classes</h2>
 
-    <form method="POST" action='/sys_config/'> 
+    <form method="POST" action='{% url 'sys_config' %}'> 
         {% csrf_token %}
         <table class="blue_table">
             <tr>
