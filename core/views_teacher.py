@@ -1,18 +1,16 @@
 
-import datetime, copy
-from django.template.loader import get_template
+import  copy
+#from django.template.loader import get_template
 from django.template import *
-from django.core import serializers
-from django.template import Template
-from django.template.defaultfilters import floatformat
-from django.views.generic import TemplateView
-from django.http import HttpResponse, HttpResponseRedirect
+#from django.template.defaultfilters import floatformat
+#from django.views.generic import TemplateView
+#from django.http import HttpResponse, HttpResponseRedirect
 #from django.shortcuts import render_to_response
-from django.contrib.auth.models import User
-from django.core.context_processors import csrf
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.admin import widgets
+#from django.contrib.auth.models import User
+#from django.core.context_processors import csrf
+#from django.contrib import messages
+from django.contrib.auth.decorators import login_required #, user_passes_test
+#from django.contrib.admin import widgets
 
 from sis.core.models import *
 from sis.core.forms import *
@@ -25,6 +23,7 @@ def grading_policy(request, cid):
     teaches = request.user.get_profile().teaches()
     teaches_class_ids = [c.id for c in teaches]
     permitted = classid in teaches_class_ids or request.user.is_superuser
+    errors=[]
     if permitted:
         theclass = Class.objects.get(id=classid)
         if request.method == 'POST':
@@ -41,7 +40,10 @@ def grading_policy(request, cid):
                 if label == 'category':
                     category.name = v
                 elif label == 'weight':
-                    category.weight = int(v)
+                    if v.isdigit():
+                        category.weight = int(v)
+                    else:
+                        errors.append(v+' is not a number.')
                 elif label == 'assignment':
                     category.hasAssignment = True
             for category in cats.values():
