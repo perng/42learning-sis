@@ -1,12 +1,13 @@
 {% extends 'base.html' %} 
 {% load core_tags %}
+{% load url from future %}
 
 {% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
 {% block title %}  Registrar Dashboard {% endblock %}
 {% block content %} 
 <div class="admin2">
     <h3 class="title"> Semester: {{ semester }} </h3>
-    <form action="{% url payment %}" method="post">
+    <form action="{% url 'payment' %}" method="post">
         {% csrf_token %}
         <table border=1>
             <tr>
@@ -21,10 +22,10 @@
             {% for f in families.values %}
             <tr>
                 <td align="center">{{f.id}} </td>
-                <td align="center"><a href='{% url family_tuition fid=f.id %}'> {{ f.parent1}} </a> </td>
+                <td align="center"><a href='{% url 'family_tuition' fid=f.id %}'> {{ f.parent1}} </a> </td>
                 <td align="center">
                     {% if f.tuition %}
-                    <a href='{% url family_tuition fid=f.id  %}'> ${{ f.tuition.due}}</a></td>
+                    <a href='{% url 'family_tuition' fid=f.id  %}'> ${{ f.tuition.due}}</a></td>
                 {% else %} 
                 $0
                 {% endif %}

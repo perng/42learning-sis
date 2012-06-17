@@ -6,7 +6,7 @@
 {% block content %}
 <div class="parent">
     <h2 class="title">My Family Profile </h2>
-    <form action="{% url familyinfo %}" method="POST"> 
+    <form action="{% url 'familyinfo' %}" method="POST"> 
         {{ form.non_field_errorss }}
 
         <fieldset style="width:275px">
