@@ -1,6 +1,6 @@
 {% extends 'loginbase.html' %}
 {% load core_tags %}
-
+{% load url from future %}
 {% block title %} Login{% endblock %}
 {% block content %}
 <form id="login" method="post" action=".">
@@ -15,9 +15,9 @@
         <label for="id_password">Password</label>
         <input type="password" name="password" id="id_password" class="field required" placeholder="Your password" title="Password is required" />
     </div>			
-    <p class="forgot"> Forgot password? <a href="{% url auth_password_reset %}">Reset it</a>!</p>
-    <p class="forgot"> Not member? <a href="{% url registration_register %}">Register</a>!</p>
-    <p class="forgot"> See <a href="{% url offered_classes %}"> what classes are  offered </a>!</p>
+    <p class="forgot"> Forgot password? <a href="{% url 'auth_password_reset' %}">Reset it</a>!</p>
+    <p class="forgot"> Not member? <a href="{% url 'registration_register' %}">Register</a>!</p>
+    <p class="forgot"> See <a href="{% url 'offered_classes' %}"> what classes are  offered </a>!</p>
 
     <div class="submit">
         <input class="button" type="submit" value="Log in" />

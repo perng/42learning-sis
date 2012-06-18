@@ -19,6 +19,8 @@ from sis.core.util import *
 
 @login_required
 def grading_policy(request, cid):
+    k='HTTP_HOST'
+    print k, request.META[k]
     classid = id_decode(cid)
     teaches = request.user.get_profile().teaches()
     teaches_class_ids = [c.id for c in teaches]
