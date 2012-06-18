@@ -2,6 +2,7 @@ import datetime,base64,os
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.contrib.sites.models import Site
 from operator import  attrgetter #, itemgetter
 
 from django.contrib.localflavor.us.models import  PhoneNumberField #, USPostalCodeField
@@ -16,8 +17,30 @@ MONTH_CHOICES = ((1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr'), (5, 'May'), (6,
         (9, 'Sep'), (10, 'Oct'), (11, 'Nov'), (12, 'Dec'))
 DAY_CHOICES = tuple([(n, n) for n in range(1, 32)])
 SEMESTER_CHOICES = (('Fall', 'Fall'), ('Spring', 'Spring'), ('Summer', 'Summer'))
+STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
+
+
+class School(models.Model):
+    name = models.CharField(max_length=30, verbose_name='School Name')
+    domain = models.CharField( max_length=100)
+
+    chineseName = models.CharField(max_length=30, verbose_name='Chinese Name', blank=True, default='')
+    location = models.TextField(null=True)
+    mailStop = models.TextField(null=True)
+    phone = PhoneNumberField(help_text='Home Phone',null=True)
+    principalEmail = models.EmailField(blank=True, help_text='Principal email')
+    deanEmail = models.EmailField(blank=True, help_text='Dean email')
+    registrarEmail = models.EmailField(blank=True, help_text='Registrar email')
+    treasurerEmail = models.EmailField(blank=True, help_text='Treasurer email')
+    
+    def eid(self):
+        return id_encode(self.id)
+
+    def __repr__(self):
+        return self.name
 
 class Semester(models.Model):
+    school = models.ForeignKey(School)
     schoolYear = models.CharField(max_length=20, choices=SEMESTER_YEAR_CHOICES)
     semester = models.CharField(max_length=20, choices=SEMESTER_CHOICES)
     need_enroll = models.BooleanField()   # If enrollment is needed. set false to 2nd semester which has not change
@@ -38,8 +61,8 @@ class Semester(models.Model):
         unique_together = (('schoolYear', 'semester'))
 
 
-STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
 class Family(models.Model):
+    school = models.ForeignKey(School)
     user = models.OneToOneField(User)
     staff_role = models.CharField(max_length=50)
     streetNumber = models.CharField(max_length=50, help_text='Street')
@@ -307,6 +330,7 @@ types= ['string','float','int','dollar','text','boolean','date','url','email','t
 TYPE_CHOICES = tuple(zip(types,types) )
 
 class Config(models.Model):
+    school = models.ForeignKey(School)    
     name = models.CharField(max_length=100)
     verbose_name = models.CharField(max_length=100)
     

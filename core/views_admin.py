@@ -41,8 +41,11 @@ def superuser_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, l
 @superuser_required
 def edit_semester(request, sem_id=0):
     sem = Semester.objects.get(id=id_decode(sem_id)) if sem_id else None
+    if not sem:
+        sem=Semester(school=request.school)
     if request.method == 'POST':
         sform = SemesterForm(request.POST, instance=sem)
+        #sem.school=request.school
         if sform.is_valid():
             sform.save()
             messages.info(request, 'Semester updated')

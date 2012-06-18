@@ -75,6 +75,7 @@ def familyinfo(request):
         form = FamilyForm(request.POST, instance=family)
     students = family.student_set.order_by('-birthday')
     if form.is_valid():
+        family.school=request.school
         form.save()
         messages.info(request, 'Family Information Updated.')
         return HttpResponseRedirect('/')
