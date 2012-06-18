@@ -25,17 +25,17 @@ Enrollment is not open at this moment.
     {% for s in students %}
     <tr> 
         <td> {{s.firstName }} {{s.lastName}} </td> 
-        <td> <select name='classm-{{s.id}}'> 
+        <td> <select name='classm-{{s.eid}}'> 
                 <option value="---"> not enrolled </option>
                 {% for mc in mclasses %}
-                <option value="{{mc.id}}" {% ifequal mc.id s.mclass %} selected="selected" {% endifequal %}> {{mc.name}} </option>
+                <option value="{{mc.eid}}" {% ifequal mc.id s.mclass %} selected="selected" {% endifequal %}> {{mc.name}} </option>
                 {% endfor %}
                 </select >
             </td> 
-            <td> <select name='classe-{{s.id}}'> 
+            <td> <select name='classe-{{s.eid}}'> 
                     <option value="---"> not enrolled </option>
                     {% for ec in eclasses %}
-                    <option value="{{ec.id}}"
+                    <option value="{{ec.eid}}"
                     {% ifequal ec.id s.eclass %} selected="selected" {% endifequal %} > 
                     {{ec.name}} </option>
                     {% endfor %}

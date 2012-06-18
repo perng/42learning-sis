@@ -181,9 +181,9 @@ def enroll(request):
             k = str(k)
             if  'class' not in k or v == '---':
                 continue
-            cid = int(v)
+            cid = id_decode(v)
             theclass = Class.objects.get(id=cid)
-            sid = int(k.split('-')[1])
+            sid = id_decode(k.split('-')[1])
             student = lookup(sid, students)
             if k.startswith('classm'):
                     if s.mclass:

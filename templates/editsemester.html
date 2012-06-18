@@ -34,7 +34,7 @@
 </script>
 <div class="admin2"
     <br/>
-    <form method='post' action='/edit_semester{%if sem %}/{{sem.id}}{% endif %}'> 
+    <form method='post' action='/edit_semester{%if sem %}/{{sem.eid}}{% endif %}'> 
         {{ sform.as_p }}
         {% csrf_token %}
         <input type="submit" name="Add Semester" value="Update" />

@@ -228,7 +228,7 @@ def del_score(request, gd_id):
     for score in gd.score_set.all():
         score.delete()
     gd.delete()
-    return HttpResponseRedirect('/record_grade/%s/_' % (id_encode(theClass.id),))
+    return HttpResponseRedirect('/record_grade/%s/%s/_' % (id_encode(theClass.id),id_encode(gd.category.id)))
 
 
 @login_required
