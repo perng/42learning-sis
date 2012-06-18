@@ -42,17 +42,6 @@
                     <div class="header-right">
                     </div>
                 </div> <!-- #header -->
-                <!-- don't know what msg is yet -->
-                <div class="clearfix"> 
-                    {% if errors %}
-                    <ul class="messages">
-                        {% for error in errors %}
-                        
-                        <li class="error">{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                </div><!-- end don't know -->
 
                 <div class="clearfix">
                     <div class="menu-secondary-container">
@@ -82,7 +71,19 @@
 
                 <div id="main" >
                     <div id="content" style="width: 715px" > <!--style.css default #content width: 460px -->
-                        {% block content %}{% endblock %}
+                        <!-- don't know what msg is yet -->
+	                <div class="clearfix">
+        	            {% if errors %}
+                	    <ul class="messages">
+                       	    {% for error in errors %}
+
+                       	     <li class="error">{{ error }}</li>
+                       	    {% endfor %}
+                    	    </ul>
+                   	    {% endif %}
+                	</div><!-- end don't know -->
+
+			{% block content %}{% endblock %}
                     </div>
 
                     <div id="sidebar-primary" style="margin-left: -960px"> <!-- style.css default margin-left: -695 -->
