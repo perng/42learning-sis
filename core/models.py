@@ -27,6 +27,8 @@ class Semester(models.Model):
     recordEnd = models.DateField(null=True, verbose_name='Score recording end data', help_text='Format: YYYY-MM-DD')
     copyFrom = models.ForeignKey('Semester', null=True, blank=True, related_name="previous", help_text="Copy semester setting from") # The previous semester with same classes
 
+    def eid(self):
+        return id_encode(self.id)
 
     def __repr__(self):
         return self.schoolYear + ' ' + self.semester
@@ -239,6 +241,9 @@ class Fee(models.Model):
     misc = models.FloatField(default=0)
     mdiscount = models.FloatField(default=0, help_text='Discount when taking with a language class')
     classPtr = models.OneToOneField(Class)
+    def eid(self):
+        return id_encode(self.id)
+
 
 class FeeConfig(models.Model):
     semester = models.OneToOneField(Semester)
@@ -262,6 +267,8 @@ class FeeConfig(models.Model):
             return self.discount4
         elif nStudent == 5:
             return self.discount5
+    def eid(self):
+        return id_encode(self.id)
 
 class Tuition(models.Model):
     family = models.ForeignKey(Family)
@@ -273,6 +280,8 @@ class Tuition(models.Model):
     checkno = models.CharField(max_length=40, null=True, verbose_name='PayPal/check number')
     pay_date = models.DateField(null=True, verbose_name='Payment confirmed date', help_text='Format: YYYY-MM-DD')
     pay_credit = models.BooleanField(help_text="Pay by Credit Card")
+    def eid(self):
+        return id_encode(self.id)
 
     def fully_paid(self):
         return self.paid == self.due
@@ -315,6 +324,8 @@ class Config(models.Model):
     timeValue=models.TimeField(null=True)
 
     description = models.CharField(max_length=400, null=True)
+    def eid(self):
+        return id_encode(self.id)
 
     def is_text(self):
         return self.valueType == 'text'

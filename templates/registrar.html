@@ -22,16 +22,16 @@
             {% for f in families.values %}
             <tr>
                 <td align="center">{{f.id}} </td>
-                <td align="center"><a href='{% url 'family_tuition' fid=f.id %}'> {{ f.parent1}} </a> </td>
+                <td align="center"><a href='{% url 'family_tuition' fid=f.eid %}'> {{ f.parent1}} </a> </td>
                 <td align="center">
                     {% if f.tuition %}
-                    <a href='{% url 'family_tuition' fid=f.id  %}'> ${{ f.tuition.due}}</a></td>
+                    <a href='{% url 'family_tuition' fid=f.eid  %}'> ${{ f.tuition.due}}</a></td>
                 {% else %} 
                 $0
                 {% endif %}
-                <td align="center"><input type="checkbox" name="fully_paid-{{f.id}}" value="fully_paid-{{f.id}}" {% if f.tuition.fully_paid %} checked="checked" {% endif %} </td>
-                <td align="right"><input type="text" name="paid-{{f.id}}" value="${{ f.tuition.paid}}"/> </td>
-                <td align="center"><input type="text" name="checkno-{{f.id}}" {% if f.tuition.checkno %} value="{{f.tuition.checkno }}" {% endif %}/> </td>
+                <td align="center"><input type="checkbox" name="fully_paid-{{f.eid}}" value="fully_paid-{{f.eid}}" {% if f.tuition.fully_paid %} checked="checked" {% endif %} </td>
+                <td align="right"><input type="text" name="paid-{{f.eid}}" value="${{ f.tuition.paid}}"/> </td>
+                <td align="center"><input type="text" name="checkno-{{f.eid}}" {% if f.tuition.checkno %} value="{{f.tuition.checkno }}" {% endif %}/> </td>
 
             </tr>
             {% endfor %}

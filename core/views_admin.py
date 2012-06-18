@@ -40,7 +40,7 @@ def superuser_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, l
 
 @superuser_required
 def edit_semester(request, sem_id=0):
-    sem = Semester.objects.get(id=int(sem_id)) if sem_id else None
+    sem = Semester.objects.get(id=id_decode(sem_id)) if sem_id else None
     if request.method == 'POST':
         sform = SemesterForm(request.POST, instance=sem)
         if sform.is_valid():
@@ -83,7 +83,7 @@ def semesters(request):
 
 @superuser_required
 def classlist(request, sem_id):
-    sem = Semester.objects.get(id=int(sem_id))
+    sem = Semester.objects.get(id=id_decode(sem_id))
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
     feeconfig, created = FeeConfig.objects.get_or_create(semester=sem)
     errors=[]
@@ -95,7 +95,7 @@ def classlist(request, sem_id):
                 key, fid = tuple(kk.split('_'))
                 if key not in ['basecc', 'basechk', 'book', 'material', 'misc', 'mdiscount']:
                     continue
-                fid = int(fid)
+                fid = id_decode(fid)
                 if fid in fees:
                     fee = fees[fid]
                 else:
@@ -159,7 +159,7 @@ def semester(request, sid):
     # 3 possible invokes --- simple get, add class, edit class
 
     try:
-        sem = Semester.objects.get(id=int(sid))
+        sem = Semester.objects.get(id=id_decode(sid))
     except:
         print "can't find semester"
         return HttpResponseRedirect('/semesters')
@@ -191,7 +191,7 @@ def edit_class(request, class_id=0):
     print 'class_id', class_id
 
     if class_id:
-        theclass = Class.objects.get(id=int(class_id))
+        theclass = Class.objects.get(id=id_decode(class_id))
     if request.method == 'POST':
         if class_id:
             theclass = Class.objects.get(id=int(class_id))
@@ -235,7 +235,7 @@ def sisadmin(request):
 
 @superuser_required
 def family_tuition(request, fid):
-    family = Family.objects.get(id=int(fid))
+    family = Family.objects.get(id=id_decode(fid))
     semester = current_record_semester() # the semester open for registration
     tuition, created = Tuition.objects.get_or_create(family=family, semester=semester)
 
@@ -276,7 +276,7 @@ def payment(request, filter=None):
             kk = k.split('-')
             if len(kk) != 2 or not kk[-1].isdigit():
                 continue
-            fid = int(kk[1])
+            fid = id_decode(kk[1])
             family = families[fid]
             key = kk[0]
             if key == 'fully_paid':
@@ -351,7 +351,7 @@ def offered_classes(request):
     
 @superuser_required
 def delete_class(request, class_id):
-    theclass=Class.objects.get(id=int(class_id))
+    theclass=Class.objects.get(id=id_decode(class_id))
     sem_id=theclass.semester.id
     theclass.delete()
     return classlist(request, sem_id)
