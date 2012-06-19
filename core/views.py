@@ -31,7 +31,7 @@ def home(request):
             view = request.session['view'] = 'parent'
 
     students = get_children(request)
-    teaches = request.user.get_profile().teaches()
+    teaches = request.user.get_profile().teaches(request)
     
     messages.add_message(request, messages.ERROR, 'Hello world.')
     messages.success(request, 'VIEW:'+view, fail_silently=False)
@@ -41,7 +41,7 @@ def home(request):
 
     if view == 'parent':
         for student in students:
-            semester=current_record_semester()
+            semester=current_record_semester(request)
             Classes = student.enroll.filter(semester=semester)
             student.assign_categories=[]
             for cl in Classes:

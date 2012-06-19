@@ -86,7 +86,7 @@ def semesters(request):
 
 @superuser_required
 def classlist(request, sem_id):
-    sem = Semester.objects.get(id=id_decode(sem_id))
+    sem = Semester.objects.get(id=id_decode(sem_id), school=request.school)
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
     feeconfig, created = FeeConfig.objects.get_or_create(semester=sem)
     errors=[]
@@ -179,7 +179,6 @@ def semester(request, sid):
             new_class = form.save()
             create_default_grading_categories(new_class)
         else:
-            print request.POST
             print 'form not valid'
             print 'non-field', form.non_field_errors()
             for f in form:
@@ -206,7 +205,7 @@ def edit_class(request, class_id=0):
             print 'is_valid'
             new_class = form.save()
             create_default_grading_categories(new_class)
-            return HttpResponseRedirect('/classlist/%d' % (new_class.semester.id,))
+            return HttpResponseRedirect('/classlist/%s' % (new_class.semester.eid(),))
     else:
         if class_id:
             form = ClassForm(instance=theclass)
@@ -239,7 +238,7 @@ def sisadmin(request):
 @superuser_required
 def family_tuition(request, fid):
     family = Family.objects.get(id=id_decode(fid))
-    semester = current_record_semester() # the semester open for registration
+    semester = current_record_semester(request) # the semester open for registration
     tuition, created = Tuition.objects.get_or_create(family=family, semester=semester)
 
     c = cal_tuition(family, semester, tuition.pay_credit)
@@ -298,7 +297,7 @@ def payment(request, filter=None):
 
 @superuser_required
 def active_directory(request, active_only=True):
-    semester = current_reg_semester()
+    semester = current_reg_semester(request)
     classes = semester.class_set.all()
     print 'classes', classes
     families = {}
@@ -348,8 +347,10 @@ def teacher_directory(request):
 
 
 def offered_classes(request):
-    sem = current_reg_semester()
+    sem = current_reg_semester(request)
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
+    if not sem or not classes:
+        error=['No Class Information Yet. ']
     return my_render_to_response(request, 'offered_classes.html', locals())
     
 @superuser_required
@@ -363,7 +364,6 @@ def delete_class(request, class_id):
 def system_config(request):
     
     if request.method== 'POST':
-        print request.POST
         for key in request.POST:
             x=key.split('-')
             if len(x)!=2:

@@ -8,6 +8,10 @@
 {% block title %}  Semester Setup {% endblock %}
 {% block content %} 
 <div class="admin2">
+{% if error %} 
+    <h3 class="title"> No class information. </h3>
+
+{% else %}
     <h3 class="title"> Semester: <a href='{% url 'semester'  sem.id %}'> {{sem}} </a> </h3>
     {% if classes %}
     <table border="1" >
@@ -62,6 +66,9 @@
     </table>
 
     {%endif %}
+{% endif %}
+
 </div>
+
 {% endblock %} 
 
