@@ -1,0 +1,31 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+{% load url from future %}
+
+{% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  
+{% if new %} 
+Sign Up School for Learning42 
+{% else %}
+School Information
+{% endif %}
+{% endblock %}
+{% block content %} 
+<div class="admin2">
+    <h2 class="title">{% if new %} 
+Sign Up School for Learning42 
+{% else %}
+School Information
+{% endif %}
+</h2>
+
+    <form method="POST" action='{% url 'school_info' %}'> 
+        {% csrf_token %}
+
+		{{form.as_p}}
+        <input type='submit' name="Update" value="Update"/> 
+    </form> 
+
+</div>
+{% endblock %} 
+

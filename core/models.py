@@ -2,7 +2,6 @@ import datetime,base64,os
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.contrib.sites.models import Site
 from operator import  attrgetter #, itemgetter
 
 from django.contrib.localflavor.us.models import  PhoneNumberField #, USPostalCodeField
@@ -25,13 +24,16 @@ class School(models.Model):
     domain = models.CharField( max_length=100)
 
     chineseName = models.CharField(max_length=30, verbose_name='Chinese Name', blank=True, default='')
-    location = models.TextField(null=True)
-    mailStop = models.TextField(null=True)
-    phone = PhoneNumberField(help_text='Home Phone',null=True)
+    location = models.TextField(null=True, blank=True)
+    mailStop = models.TextField(null=True, blank=True)
+    phone = PhoneNumberField(help_text='Home Phone',null=True, blank=True)
     principalEmail = models.EmailField(blank=True, help_text='Principal email')
     deanEmail = models.EmailField(blank=True, help_text='Dean email')
     registrarEmail = models.EmailField(blank=True, help_text='Registrar email')
     treasurerEmail = models.EmailField(blank=True, help_text='Treasurer email')
+    policy = models.TextField(null=True, blank=True)
+    createDate = models.DateField(auto_now_add=True)
+    
     
     def eid(self):
         return id_encode(self.id)

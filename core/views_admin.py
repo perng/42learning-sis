@@ -379,3 +379,28 @@ def system_config(request):
             
     return my_render_to_response(request, 'sys_config.html', locals())
 
+
+def school_info(request):
+    if request.method == 'POST':
+        try:
+            form = SchoolForm(request.POST, instance=request.school)
+        except:
+            new=True
+            request.school=School()
+            form = SchoolForm(request.POST, instance=request.school)
+            
+        #sem.school=request.school
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/')
+        else:
+            print  'form not valid', dir(form)
+    else:
+        try:
+            form= SchoolForm(instance=request.school)
+        except:
+            new=True
+            request.school=School()
+            form = SchoolForm(instance=request.school)
+
+    return my_render_to_response(request, 'school_info.html', locals())

@@ -14,6 +14,11 @@ from sis.core.models import *
 STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
 PARTICIPATION_CHOICES = (('Breakfast', 'Breakfast Club'), ('IT', 'IT Support'), ('Event', 'Event Planning'))
 
+class SchoolForm(ModelForm):
+	class Meta:
+		model = School
+
+
 class FamilyForm(ModelForm):
 	class Meta:
 		model = Family
