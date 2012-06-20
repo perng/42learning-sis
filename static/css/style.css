@@ -62,16 +62,16 @@ a:focus {
 #content {
     overflow: hidden;
     float: left;
-    width: 460px;
-    margin-left: 245px;
+    width: 77%; 
+    margin-left: 10px;
+
 }
 
 #sidebar-primary {
     overflow: hidden;
-	float: left;
-    width: 220px;
+    float: left;
     border:  1px solid #d4d4d4;
-    margin-left: -693px;
+    width: 20%; 
 }
 
 #sidebar-secondary {
