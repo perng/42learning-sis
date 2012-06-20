@@ -404,3 +404,7 @@ def school_info(request):
             form = SchoolForm(instance=request.school)
 
     return my_render_to_response(request, 'school_info.html', locals())
+
+def signup(request):
+    return my_render_to_response(request, 'signup.html', locals())
+    
