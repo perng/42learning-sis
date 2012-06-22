@@ -70,7 +70,8 @@ class DefaultBackend(object):
         class of this backend as the sender.
 
         """
-        username, email, password = kwargs['username'], kwargs['email'], kwargs['password1']
+        email, password =  kwargs['email'], kwargs['password1']
+        username=email
         if Site._meta.installed:
             site = Site.objects.get_current()
         else:

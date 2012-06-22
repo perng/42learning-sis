@@ -5,7 +5,7 @@ from django.db.models import Q
 from operator import  attrgetter #, itemgetter
 
 from django.contrib.localflavor.us.models import  PhoneNumberField #, USPostalCodeField
-from sis.core.util import id_encode
+from sis.core.util import id_encode, det_encode
 
 
 this_year = datetime.date.today().year
@@ -27,17 +27,22 @@ class School(models.Model):
     location = models.TextField(null=True, blank=True)
     mailStop = models.TextField(null=True, blank=True)
     phone = PhoneNumberField(help_text='Home Phone',null=True, blank=True)
-    principalEmail = models.EmailField(blank=True, help_text='Principal email')
-    deanEmail = models.EmailField(blank=True, help_text='Dean email')
-    registrarEmail = models.EmailField(blank=True, help_text='Registrar email')
-    treasurerEmail = models.EmailField(blank=True, help_text='Treasurer email')
+    
+    #adminEmail = models.EmailField(blank=True, help_text='Principal email')
+    #deanEmail = models.EmailField(blank=True, help_text='Dean email')
+    #registrarEmail = models.EmailField(blank=True, help_text='Registrar email')
+    #treasurerEmail = models.EmailField(blank=True, help_text='Treasurer email')
     policy = models.TextField(null=True, blank=True)
     createDate = models.DateField(auto_now_add=True)
-    
+    banner=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
+    logo=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
+    admin=models.ForeignKey(User, null=True)
     
     def eid(self):
         return id_encode(self.id)
 
+    def det_id(self):
+        return det_encode(self.id) 
     def __repr__(self):
         return self.name
 
@@ -107,6 +112,26 @@ class Family(models.Model):
         return self.parent2FirstName + ' ' + self.parent2LastName+ ("("+self.parent2ChineseFullName+")"  if self.parent2ChineseFullName else '')
     def address(self):
         return ','.join([self.streetNumber, self.city, self.state, self.zipcode])
+
+ROLE_CHOICES =(('School Admin', 'School Admin'), ('Dean', 'Dean'), ('Registrar', 'Registrar'))
+
+class Staff(models.Model):
+    family = models.ForeignKey(Family)
+    title = models.CharField(max_length=30, verbose_name='Title')
+
+    firstName = models.CharField(max_length=30, verbose_name='First Name')
+    lastName = models.CharField(max_length=30, verbose_name='Last Name')
+    chineseFullName = models.CharField(max_length=30, verbose_name='Chinese Full Name', blank=True, default='')
+    bio = models.TextField()
+    roles = models.ManyToManyField('Role')
+
+class Role(models.Model):
+    user= models.OneToOneField(User)
+    is_admin = models.BooleanField(default=False)
+    is_dean = models.BooleanField(default=False)
+    is_registrar = models.BooleanField(default=False)
+    is_staff1 = models.BooleanField(default=False)
+    is_staff2 = models.BooleanField(default=False)
 
 LANG_CHOICES = (('English', 'English'), ('Mandarin', 'Mandarin'), ('Cantonese', 'Cantonese'), ('Other', 'Other'))
 GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'))

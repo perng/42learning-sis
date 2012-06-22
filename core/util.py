@@ -1,3 +1,4 @@
+from math import floor, sqrt
 from django.core.context_processors import csrf
 from django.shortcuts import render_to_response
 
@@ -61,16 +62,29 @@ def id_decode(did):
     n = len(did) / 3
     did1 = did[n:(2 * n)]
     did2 = int(did1)
-    for mm in range(m):
+    for _mm in range(m):
         did2 = int(de(did2))
     return did2
-
-if __name__ == '__main__':
-    for i in range(10000):
-        x = random.randint(1, 1000)
-        a = id_encode(x)
-        b = id_decode(a)
-        assert x == b
-        print a, b
+#
+#if __name__ == '__main__':
+#    for i in range(10000):
+#        x = random.randint(1, 1000)
+#        a = id_encode(x)
+#        b = id_decode(a)
+#        assert x == b
+#        print a, b
     #print 10000, id_encode(10000) , id_decode(id_encode(10000))
     #print 1, id_encode(1) , id_decode(id_encode(1))
+def det_encode(aid):
+    x= str((2*aid +31)**2+79)
+    return x[::-1]
+def det_decode(aid):
+    aid=str(aid)[::-1]
+    aid=int(aid)
+    aid-= 79
+    return  (int(sqrt(aid)+0.5) - 31)/2
+
+if __name__=='__main__':
+    for i in range(100000):
+        if i != det_decode(det_encode(i)):
+            print i

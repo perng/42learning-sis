@@ -7,6 +7,7 @@ from django.template import Template
 from django.template.defaultfilters import floatformat
 from django.views.generic import TemplateView
 
+from sis.registration.forms import RegistrationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.contrib.auth.models import User
@@ -382,6 +383,8 @@ def system_config(request):
 
 def school_info(request):
     if request.method == 'POST':
+        #adminForm.clean()
+
         try:
             form = SchoolForm(request.POST, instance=request.school)
         except:
@@ -389,22 +392,63 @@ def school_info(request):
             request.school=School()
             form = SchoolForm(request.POST, instance=request.school)
             
+        
         #sem.school=request.school
-        if form.is_valid():
+        adminForm=RegistrationForm(request.POST)
+
+        if form.is_valid() and adminForm.is_valid() and adminForm.cleaned_data['password1']==adminForm.cleaned_data['password2']:
+            #print dir(adminForm)
+            pswd1,pswd2=adminForm.cleaned_data['password1'],adminForm.cleaned_data['password2']
+            print 'pswd1:'+pswd1,'ps2d2:'+pswd2 , 'email:'+adminForm.cleaned_data['email']
+            print 'form is valid'
+            try:
+                admin = User.objects.get(username=adminForm.cleaned_data['email'])
+                admin.set_password(pswd1)
+                
+            except:            
+                admin=User.objects.create_user(username=adminForm.cleaned_data['email'],
+                                               email=adminForm.cleaned_data['email'],
+                                               password=adminForm.cleaned_data['password1'])
+            
+            admin.save()
+            role,_= Role.objects.get_or_create(user=admin, is_admin=True)
+            role.save()
+            request.school.admin=admin
             form.save()
+            
             return HttpResponseRedirect('/')
         else:
             print  'form not valid', dir(form)
-    else:
+    else: # GET
         try:
             form= SchoolForm(instance=request.school)
         except:
             new=True
             request.school=School()
             form = SchoolForm(instance=request.school)
+        if  request.school.admin: # admin is in
+            adminForm =RegistrationForm(instance=request.school.admin)
+        else:
+            adminForm =RegistrationForm()
+
 
     return my_render_to_response(request, 'school_info.html', locals())
 
-def signup(request):
+def signup(request):    
+    if request.method == 'POST':
+        domain=''
+        if 'domain_type' not in request.POST:
+            errors=['Choose the type of domain name']
+        else:
+            if request.POST['domain_type']=='own':
+                domain =request.POST['own_domain_name']
+            else:
+                domain =request.POST['l42_domain_name']+'.42learning.com'
+            if domain:
+                request.school,_c=School.objects.get_or_create(domain=domain)
+                print 'domain', domain
+                return HttpResponseRedirect('/school_info')
+            else:
+                errors=['Domain name not correct']             
     return my_render_to_response(request, 'signup.html', locals())
     

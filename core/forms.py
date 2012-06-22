@@ -17,6 +17,7 @@ PARTICIPATION_CHOICES = (('Breakfast', 'Breakfast Club'), ('IT', 'IT Support'), 
 class SchoolForm(ModelForm):
 	class Meta:
 		model = School
+		exclude = ('admin',)
 
 
 class FamilyForm(ModelForm):
