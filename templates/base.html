@@ -58,7 +58,7 @@
                                 > Teacher's View </a></li>
                             {% endif %}
 
-                            {% if request.user.get_profile.is_admin %}
+                            {% if request.user.role.is_admin %}
                             <li class="menu-item menu-item-type-post_type">
                             <a href="{% url 'change_view' view='admin'%}"
                                 {% ifequal  request.session.view 'admin' %} class="selected" {% endifequal %}

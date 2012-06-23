@@ -38,12 +38,28 @@ def superuser_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, l
     return actual_decorator
 
 
+def admin_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
+    """
+    Decorator for views that checks that the user is logged in and is superuser, redirecting
+    to the log-in page if necessary.
+    """
+    actual_decorator = user_passes_test(
+        lambda u: u.is_authenticated() and u.role.is_admin,
+        login_url=login_url,
+        redirect_field_name=redirect_field_name
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
 
-@superuser_required
+
+
+@admin_required
 def edit_semester(request, sem_id=0):
     sem = Semester.objects.get(id=id_decode(sem_id)) if sem_id else None
     if not sem:
         sem=Semester(school=request.school)
+        sem.save()
     if request.method == 'POST':
         sform = SemesterForm(request.POST, instance=sem)
         #sem.school=request.school
@@ -58,9 +74,9 @@ def edit_semester(request, sem_id=0):
         sform = SemesterForm(instance=sem)
     return my_render_to_response(request, 'editsemester.html', locals())
 
-@superuser_required
+@admin_required
 def semesterlist(request):
-    semesters = list(Semester.objects.order_by('-id')[:])
+    semesters = list(Semester.objects.filter(school=request.school).order_by('-id')[:])
 
     return my_render_to_response(request, 'semesterlist.html', locals())
 
@@ -85,7 +101,7 @@ def semesters(request):
     return my_render_to_response(request, 'semesters.html', locals())
 
 
-@superuser_required
+@admin_required
 def classlist(request, sem_id):
     sem = Semester.objects.get(id=id_decode(sem_id), school=request.school)
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
@@ -158,7 +174,7 @@ def create_default_grading_categories(theclass):
 
 
 
-@superuser_required
+@admin_required
 def semester(request, sid):
     # 3 possible invokes --- simple get, add class, edit class
 
@@ -189,7 +205,7 @@ def semester(request, sid):
     return my_render_to_response(request, 'semester.html', locals())
 
 
-@superuser_required
+@admin_required
 def edit_class(request, class_id=0):
     print 'class_id', class_id
 
@@ -197,7 +213,7 @@ def edit_class(request, class_id=0):
         theclass = Class.objects.get(id=id_decode(class_id))
     if request.method == 'POST':
         if class_id:
-            theclass = Class.objects.get(id=int(class_id))
+            theclass = Class.objects.get(id=id_decode(class_id))
             form = ClassForm(request.POST  , instance=theclass)
         else:
             form = ClassForm(request.POST)
@@ -338,10 +354,10 @@ def active_directory(request, active_only=True):
             s.classes = ','.join(s.classes.values())
     return my_render_to_response(request, 'directory.html', locals())
 
-@superuser_required
+@admin_required
 def teacher_directory(request):
     teachers = Family.objects.all()
-    teachers = [t for t in teachers if t.is_teacher()]
+    teachers = [t for t in teachers if t.is_teacher(request)]
     for t in teachers:
         t.teachclass = ','.join([c.name for c in t.teaches()])
     return my_render_to_response(request, 'teacher_directory.html', locals())

@@ -98,8 +98,8 @@ class Family(models.Model):
         return classes
     def is_parent(self):
         return self.student_set.all()
-    def is_teacher(self):
-        return self.teaches()
+    def is_teacher(self,request):
+        return self.teaches(request)
     def is_admin(self):
         return self.user.is_superuser
     def parent1(self):

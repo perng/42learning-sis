@@ -23,7 +23,7 @@ def home(request):
     if 'view' in request.session:
         view = request.session['view']
     else:
-        if family.is_admin():
+        if request.user.role.is_admin:
             view = request.session['view'] = 'admin'
         elif family.is_teacher():
             view = request.session['view'] = 'teacher'
