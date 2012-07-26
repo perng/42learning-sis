@@ -376,3 +376,11 @@ def system_config(request):
             
     return my_render_to_response(request, 'sys_config.html', locals())
 
+@superuser_required 
+def class_enrollment(request):
+    sem = current_reg_semester()
+    classes = Class.objects.filter(semester=sem).order_by( "elective","name")
+    for c in classes:
+        c.count = len(EnrollDetail.objects.filter(classPtr=c))
+    return my_render_to_response(request, 'class_enrollment.html', locals())
+    
