@@ -1,6 +1,8 @@
 
 {% extends 'base.html' %} 
 {% load core_tags %}
+{% load url from future %}
+
 
 {% block title %}  Grading Setup {% endblock %}
 {% block content %} 
@@ -13,7 +15,7 @@
 <hr> 
 <h3>  Grading Categories </h3> 
 
-<form action="/setup_class/{{theclass.id}}" method="POST"> 
+<form action="{% url setup_class {{theclass.id} %}" method="POST"> 
     <table> 
         <tr> <th> Category </th> <th> Weight </th> 
             {# <th> Order </th> #}

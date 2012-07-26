@@ -1,8 +1,12 @@
 {% extends 'base.html' %} 
 {% load core_tags %}
 
-{% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block theme %} 
+<link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> 
+<link href="{% static_path %}/css/no-sidebar.css" rel="stylesheet" type="text/css" /> 
+{% endblock %}
 {% block title %}  Directory {% endblock %}
+
 {% block content %} 
 <div class="admin2">
     <h2 class="title">Directory</h2>

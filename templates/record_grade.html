@@ -1,5 +1,6 @@
 {% extends 'base.html' %} 
 {% load core_tags %}
+{% load url from future %}
 
 {% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
 {% block title %}  Record {{ category.name }} Scores: {{theclass.name}} {% endblock %}
@@ -16,16 +17,16 @@
     });
 </script>
 <div class="teacher">
-    <h3 class="title"> Class: {{theclass.name}} </h3>
+    <h3 class="title">  <a href='{% url 'record' theclass.eid %}'> Class: {{theclass.name}}</a> </h3>
     <h3 class="title"> {{category.name}}  {{category.weight}}% </h3>
-    <form class="red" action='{% url record_grade class_id=theclass.eid cat_id=category.eid show_item="_" %}' method='post'>
+    <form class="red" action='{% url 'record_grade' class_id=theclass.eid cat_id=category.eid show_item="_" %}' method='post'>
         {% csrf_token %}
         <div class="tbody">
             <table class="normal">
                 <tr> 
                     <th> Item </th>
                     {% for gdis in category.gradingitems %}
-                    <th> {{gdis.name}} (<a href="{% url del_score gd_id=gdis.eid%}"> del </a>) </th>
+                    <th> {{gdis.name}} (<a href="{% url 'del_score' gd_id=gdis.eid%}"> del </a>) </th>
                     {% endfor %}
                     <th> <input type="text" name="extra-score-name" value="{{category.name}} {{category.serial}}"/>  </th> 
                 </tr>

@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load core_tags %}
+{% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Logout {% endblock %}
 
 {% block content %}
-<p>{% trans "Logged out" %}</p>
+<div class="parent">
+<h3 class="title">{% trans "You are logged out" %}</h2>
+</div>
 {% endblock %}

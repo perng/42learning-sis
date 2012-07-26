@@ -26,9 +26,8 @@ a.button:active {
 }
 
 a.adminbutton, a.adminbutton:visited {
-        /*background-color:#91219E;*/
         background-color:#1D83AB;
-        width: 350px;
+        width: 400px;
         border:1px solid #00688B;
 }
 

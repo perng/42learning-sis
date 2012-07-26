@@ -6,7 +6,7 @@
 {% block content %}
 <div class="parent">
     <h2 class="title">My Family Profile </h2>
-    <form action="{% url familyinfo %}" method="POST"> 
+    <form action="{% url 'familyinfo' %}" method="POST"> 
         {{ form.non_field_errorss }}
 
         <fieldset style="width:275px">
@@ -51,8 +51,10 @@
         {% csrf_token %}
         <br/>
         * required <br/>
-        <input class="button" type="submit" name="Update" value="Update" />
-        <br/>
+	<ul>
+        <input class="button" style="width: 180px; margin-left:100px;"type="submit" name="Update" value="Update" />
+        </ul>
+	<br/>
 
         {% if form.non_field_errors %} <ul class="errorlist">  {{form.non_field_errors.as_ul }} </ul> {% endif %}
     </form> 
