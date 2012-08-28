@@ -63,8 +63,11 @@ class Family(models.Model):
 
     def teaches(self):
         semester = current_reg_semester()
-        classes = list(Class.objects.filter(Q(semester=semester) &(Q(headTeacher=self) | Q(assocTeacher1=self) | Q(assocTeacher2=self))))
-        classes.sort(key=attrgetter('name'))
+	try:
+            classes = list(Class.objects.filter(Q(semester=semester) &(Q(headTeacher=self.user) | Q(assocTeacher1=self.user) | Q(assocTeacher2=self.user))))
+            classes.sort(key=attrgetter('name'))
+	except:
+		return []
         return classes
     def is_parent(self):
         return self.student_set.all()
