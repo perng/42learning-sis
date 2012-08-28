@@ -60,6 +60,7 @@ urlpatterns = patterns('',
      url(r'^edit_class/(?P<class_id>[0-9]+)$', edit_class, name='edit_class'),
      url(r'^delete_class/(?P<class_id>[0-9]+)$', delete_class, name='delete_class'),
      url(r'^payment$', payment, name='payment'),
+     url(r'^class_enrollment$', class_enrollment, name='class_enrollment'),
      url(r'^unpaid_payment$', unpaid_payment, name='unpaid_payment'),
      url(r'^class_enrollment$', class_enrollment, name='class_enrollment'),
 

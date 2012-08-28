@@ -376,7 +376,6 @@ def system_config(request):
             
     return my_render_to_response(request, 'sys_config.html', locals())
 
-
 @superuser_required 
 def class_enrollment(request):
     sem = current_reg_semester()
