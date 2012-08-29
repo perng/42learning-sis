@@ -62,6 +62,7 @@ urlpatterns = patterns('',
      url(r'^payment$', payment, name='payment'),
      url(r'^class_enrollment$', class_enrollment, name='class_enrollment'),
      url(r'^unpaid_payment$', unpaid_payment, name='unpaid_payment'),
+     url(r'^class_enrollment$', class_enrollment, name='class_enrollment'),
 
      url(r'^3.14159sisadmin', sisadmin, name='sisadmin'),
      url(r'^sisadmincmd/(?P<adminid>.+)/(?P<command>.*)/(?P<subject>.*)$', sisadmin, name='sisadmin'),

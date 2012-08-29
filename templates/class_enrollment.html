@@ -10,12 +10,14 @@
             <tr>
                 <th>Class</th>
                 <th>Enrollment</th>
+                <th>Students</th>
             </tr>
 
             {% for c in classes%}
             <tr>
                 <td align="center">{{c.name}} </td>
-                <td align="center">{{c.count}} </a> </td>
+                <td align="right">{{c.count}} </td>
+                <td align="left"> {{c.student_names}} </td>
 
             </tr>
             {% endfor %}
