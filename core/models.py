@@ -141,6 +141,8 @@ class Class(models.Model):
             return self.fee.basecc - self.fee.mdiscount
     def discounted_base_chk(self):
             return self.fee.basechk - self.fee.mdiscount
+    def student_names(self):
+	return ', '.join([s.firstName+' '+s.lastName for s in self.student_set.all()])
         
 
 class EnrollDetail(models.Model):
