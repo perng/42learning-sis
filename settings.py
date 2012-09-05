@@ -22,7 +22,7 @@ if not onLinux:
     DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'msis.db',                      # Or path to database file if using sqlite3.
+        'NAME': 'sis.db',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -120,7 +120,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'sis.core.middleware.GetSchool',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -203,8 +202,11 @@ EMAIL_HOST_PASSWORD='chinese'
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
 
-SESSION_COOKIE_SECURE = 'https' in site_static_path 
+SESSION_COOKIE_SECURE = 'https' in site_static_path
 LOGIN_REDIRECT_URL='/accounts/login/?next=/'
 if SESSION_COOKIE_SECURE:
 	SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 	SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = True
+
+
+BASE_SITE='.learning42.com'

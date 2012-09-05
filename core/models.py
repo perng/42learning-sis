@@ -21,7 +21,7 @@ STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
 
 class School(models.Model):
     name = models.CharField(max_length=30, verbose_name='School Name')
-    domain = models.CharField( max_length=100)
+    domain = models.CharField( max_length=100, primary_key=True)
 
     chineseName = models.CharField(max_length=30, verbose_name='Chinese Name', blank=True, default='')
     location = models.TextField(null=True, blank=True)
@@ -91,15 +91,16 @@ class Family(models.Model):
     def eid(self):
         return id_encode(self.id)
 
-    def teaches(self,request):
-        semester = current_reg_semester(request)
+    def teaches(self):
+        semester = current_reg_semester(self.school)
         classes = list(Class.objects.filter(Q(semester=semester) &(Q(headTeacher=self) | Q(assocTeacher1=self) | Q(assocTeacher2=self))))
         classes.sort(key=attrgetter('name'))
+        print 'teaches', semester, classes
         return classes
     def is_parent(self):
         return self.student_set.all()
-    def is_teacher(self,request):
-        return self.teaches(request)
+    def is_teacher(self):
+        return self.teaches()
     def is_admin(self):
         return self.user.is_superuser
     def parent1(self):
@@ -127,6 +128,7 @@ class Staff(models.Model):
 
 class Role(models.Model):
     user= models.OneToOneField(User)
+    school = models.ForeignKey(School)
     is_admin = models.BooleanField(default=False)
     is_dean = models.BooleanField(default=False)
     is_registrar = models.BooleanField(default=False)
@@ -338,15 +340,15 @@ class Tuition(models.Model):
     class Meta:
         unique_together = (('family', 'semester'))
 
-def current_reg_semester(request):
+def current_reg_semester(school):
     today = datetime.datetime.today()
-    sems = Semester.objects.filter(school=request.school, regStart__lte=today, regEnd__gte=today)
+    sems = Semester.objects.filter(school=school, regStart__lte=today, regEnd__gte=today)
     if sems:  # find the one ended last
         return reduce((lambda x, y:x if x.regEnd > y.regEnd else y), sems)
     return None
-def current_record_semester(request):
+def current_record_semester(school):
     today = datetime.datetime.today()
-    sems = Semester.objects.filter(school=request.school, recordStart__lte=today, recordEnd__gte=today)
+    sems = Semester.objects.filter(school= school, recordStart__lte=today, recordEnd__gte=today)
     if sems:  # find the one ended last
         return reduce((lambda x, y:x if x.recordEnd > y.recordEnd else y), sems)
     return None

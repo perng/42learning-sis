@@ -8,10 +8,11 @@
     <h2 class="title">Sign Up Learning42 </h2>
     <div>
  <form action='{% url 'signup' %}' method=post>
+ {% csrf_token %}
 <input type="radio" name="domain_type" value="own"/> 
 Use <input type="text" name="own_domain_name"/> (e.g. sis.myschool.edu) , or <br/> 
-<input type="radio" name="domain_type" value="l42"/> 
-Use <input type="text" name="l42_domain_name"/>.learning42.com <br/>
+<input type="radio" name="domain_type" value="l42" checked="checked"/> 
+Use <input type="text" name="l42_domain_name" value="{{prefix}}"/>.learning42.com <br/>
 
 <input type="submit" name="submit"/>
 </form> 

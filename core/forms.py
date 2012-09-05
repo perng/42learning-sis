@@ -50,7 +50,7 @@ class SemesterForm(forms.ModelForm):
 class ClassForm(forms.ModelForm):
 	class Meta:
 		model = Class
-		fields = ('name', 'semester', 'elective', 'mandate', 'elective_required', 'headTeacher', 'assocTeacher1', 'assocTeacher2', 'recordAttendance', 'recordGrade', 'description')
+		fields = ('name',  'elective', 'mandate', 'elective_required', 'headTeacher', 'assocTeacher1', 'assocTeacher2', 'recordAttendance', 'recordGrade', 'description')
 
 class ClassFeeForm(forms.ModelForm):
 	class Meta:

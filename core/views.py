@@ -31,7 +31,7 @@ def home(request):
             view = request.session['view'] = 'parent'
 
     students = get_children(request)
-    teaches = request.user.get_profile().teaches(request)
+    teaches = request.user.get_profile().teaches()
     
     messages.add_message(request, messages.ERROR, 'Hello world.')
     messages.success(request, 'VIEW:'+view, fail_silently=False)
