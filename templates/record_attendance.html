@@ -39,9 +39,10 @@
             {% for s in students %}
             <tr>
                 <th> 
-                    <a href="{%url 'student_attendance' class_id=theclass.eid sid=s.eid %}"> 
+                   {#  <a href="{%url 'student_attendance' class_id=theclass.eid sid=s.eid %}"> #}
                         {{s.firstName}} {{s.lastName}} 
-                </a>  </th>
+                {# </a>  #}
+		</th>
                 {% for att in s.att_fields%}
                 <td> {{att}} </td> 
                 {% endfor %}
