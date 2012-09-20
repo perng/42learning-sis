@@ -53,17 +53,17 @@
                     {% endfor %}
                 </tr>
                 <tr> <th> Average </th> 
-                    {% for gdis in c.gradingitems %}
+                s   {% for gdis in category.gradingitems %}
                     <td> {{gdis.average|floatformat:2}} </td> 
                     {% endfor %}
                 </tr>
                 <tr> <th> Median </th> 
-                    {% for gdis in c.gradingitems %}
+                    {% for gdis in category.gradingitems %}
                     <td> {{gdis.median|floatformat:2}} </td> 
                     {% endfor %}
                 </tr>
                 <tr> <th> Lowest </th> 
-                    {% for gdis in c.gradingitems %}
+                    {% for gdis in category.gradingitems %}
                     <td> {{gdis.lowest|floatformat:2}} </td> 
                     {% endfor %}
                 </tr>

@@ -41,10 +41,10 @@
                 {% if c.headTeacher %}
                 {{c.headTeacher.get_profile.parent1_fullname }}
                 {% if c.assocTeacher1 %}
-                , {{c.assocTeacher1}}
+                , {{c.assocTeacher1.get_profile.parent1_fullname }}
                 {% endif %}
                 {% if c.assocTeacher2 %}
-                , {{c.assocTeacher2}}
+                , {{c.assocTeacher2.get_profile.parent1_filename}}
                 {% endif %}
                 {% endif %}
             </td>

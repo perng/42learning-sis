@@ -1,0 +1,27 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Class Enrollment{% endblock %}
+{% block content %} 
+<div class="admin2">
+    <h3 class="title"> Semester: {{ sem}} </h3>
+        <table border=1>
+            <tr>
+                <th>Class</th>
+                <th>Enrollment</th>
+                <th>Students</th>
+            </tr>
+
+            {% for c in classes%}
+            <tr>
+                <td align="center">{{c.name}} </td>
+                <td align="right">{{c.count}} </td>
+                <td align="left"> {{c.student_names}} </td>
+
+            </tr>
+            {% endfor %}
+        </table>
+</div>
+{% endblock %} 
+

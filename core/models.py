@@ -27,7 +27,7 @@ class School(models.Model):
     location = models.TextField(null=True, blank=True)
     mailStop = models.TextField(null=True, blank=True)
     phone = PhoneNumberField(help_text='Home Phone',null=True, blank=True)
-    
+
     #adminEmail = models.EmailField(blank=True, help_text='Principal email')
     #deanEmail = models.EmailField(blank=True, help_text='Dean email')
     #registrarEmail = models.EmailField(blank=True, help_text='Registrar email')
@@ -37,12 +37,12 @@ class School(models.Model):
     banner=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
     logo=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
     admin=models.ForeignKey(User, null=True)
-    
+
     def eid(self):
         return id_encode(self.id)
 
     def det_id(self):
-        return det_encode(self.id) 
+        return det_encode(self.id)
     def __repr__(self):
         return self.name
 
@@ -107,8 +107,8 @@ class Family(models.Model):
         return self.parent1FirstName + ' ' + self.parent1LastName
     def parent1_fullname(self):
         return self.parent1FirstName + ' ' + self.parent1LastName + ("("+self.parent1ChineseFullName+")"  if self.parent1ChineseFullName else '')
-        
-    
+
+
     def parent2(self):
         return self.parent2FirstName + ' ' + self.parent2LastName+ ("("+self.parent2ChineseFullName+")"  if self.parent2ChineseFullName else '')
     def address(self):
@@ -164,8 +164,8 @@ class Class(models.Model):
     assocTeacher2 = models.ForeignKey(User, related_name='AssocTeacher2', null=True, blank=True)
     recordAttendance = models.BooleanField(default=True)
     recordGrade = models.BooleanField(default=True)
-    
-    mandate=models.ForeignKey('Class', related_name='mandate_class', null=True, blank=True, 
+
+    mandate=models.ForeignKey('Class', related_name='mandate_class', null=True, blank=True,
                                 help_text='The class needs to be taken with this one')
 
     elective_required=models.BooleanField(verbose_name="Elective req'd", default=False, help_text='Required to take an elective class')
@@ -190,7 +190,9 @@ class Class(models.Model):
             return self.fee.basecc - self.fee.mdiscount
     def discounted_base_chk(self):
             return self.fee.basechk - self.fee.mdiscount
-        
+    def student_names(self):
+	return ', '.join([s.firstName+' '+s.lastName for s in self.student_set.all()])
+
 
 class EnrollDetail(models.Model):
     student = models.ForeignKey(Student)
@@ -221,7 +223,7 @@ class GradingCategory(models.Model):
     hasAssignment = models.BooleanField(default=False)
     def eid(self):
         return id_encode(self.id)
-    
+
 class GradingItem(models.Model):
     name = models.CharField(max_length=64)
     students = models.ManyToManyField(Student, through='Score')
@@ -241,11 +243,11 @@ class GradingItem(models.Model):
         return self.category.hasAssignment
     def eid(self):
         return id_encode(self.id)
-    
+
     def download_path(self):
         path='/'.join([self.category.classPtr.semester.semester+ ' '+self.category.classPtr.semester.schoolYear,
                            self.category.classPtr.name,self.category.name,
-                           self.name])       
+                           self.name])
         for c in '\:*?"<>|':
             path = path.replace(c,'')
         return  path
@@ -256,8 +258,8 @@ class GradingItem(models.Model):
 
     def download_url(self):
         path=self.download_path()
-        b='http://homework.nwcsny.org/index.php?folder=' 
-        
+        b='http://homework.nwcsny.org/index.php?folder='
+
         encoded_path=base64.b64encode(path)
         return b+encoded_path
 
@@ -307,7 +309,7 @@ class FeeConfig(models.Model):
     familyFee = models.FloatField(default=0, help_text='Registration Fee')
     lateFee = models.FloatField(default=0, help_text='Late Fee')
     lateDate = models.DateField(null=True, verbose_name='Late registration start date', help_text='Format: YYYY-MM-DD')
-    
+
     def get_discount(self, nStudent):
         if nStudent == 1:
             return self.discount1
@@ -359,12 +361,12 @@ types= ['string','float','int','dollar','text','boolean','date','url','email','t
 TYPE_CHOICES = tuple(zip(types,types) )
 
 class Config(models.Model):
-    school = models.ForeignKey(School)    
+    school = models.ForeignKey(School)
     name = models.CharField(max_length=100)
     verbose_name = models.CharField(max_length=100)
-    
+
     valueType = models.CharField(max_length=10)
-    
+
     stringValue = models.CharField(max_length=400, default='')
     floatValue = models.FloatField(null=True, default=0)
     intValue = models.IntegerField(null=True, default=0)
@@ -408,5 +410,5 @@ class Config(models.Model):
             self.textValue = str(value)
         elif t == 'email':
             self.emailValue = str(value)
-        
+
 

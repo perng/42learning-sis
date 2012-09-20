@@ -75,6 +75,14 @@ def record(request, class_id):
 
 @login_required
 def student_attendance(request, class_id, sid):
+    theclass = Class.objects.get(id=classid)
+    student= Student.objects.get(id=id_decode(sid))
+    sessions = theclass.classsession_set.order_by('date')
+    for session in sessions:
+        try:
+            session.att=Attendance.objects.get(student=student, session=session)
+        except:
+            pass
     return 
 
 @login_required

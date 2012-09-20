@@ -167,7 +167,7 @@ def create_default_grading_categories(theclass):
             for g in gcs[1:]:
                 g.delete()
         else:
-            gc=GradingCategory(classPtr=theclass, name=name, order=order )        
+            gc=GradingCategory(classPtr=theclass, name=name, order=order )
         gc.order=order
         gc.weight=weight
         gc.hasAssignment=assignment
@@ -211,7 +211,7 @@ def semester(request, sid):
 def edit_class(request, sem_id, class_id=0):
     print 'class_id', class_id,
 
-    create_class =  class_id 
+    create_class =  class_id
     semester=Semester.objects.get(id=id_decode(sem_id))
     if class_id:
         theclass = Class.objects.get(id=id_decode(class_id))
@@ -251,7 +251,7 @@ def sisadmin(request):
             admins = []
         print '--', staffs, admins
         for u in users:
-            is_staff, is_superuser = u.id in staffs, u.id in admins          
+            is_staff, is_superuser = u.id in staffs, u.id in admins
             u.is_staff, u.is_superuser = is_staff , is_superuser
             u.save()
     return my_render_to_response(request, 'sisadmin.html', locals())
@@ -279,7 +279,7 @@ def unpaid_payment(request):
 
 @admin_required
 def payment(request, filter=None):
-    
+
     semester = current_record_semester(request.session['school']) # the semester open for registration
     #if not semester:
     #    print 'no record semester, use the last one'
@@ -378,7 +378,7 @@ def offered_classes(request):
     if not sem or not classes:
         error=['No Class Information Yet. ']
     return my_render_to_response(request, 'offered_classes.html', locals())
-    
+
 @superuser_required
 def delete_class(request, class_id):
     theclass=Class.objects.get(id=id_decode(class_id))
@@ -388,7 +388,7 @@ def delete_class(request, class_id):
 
 @superuser_required
 def system_config(request):
-    
+
     if request.method== 'POST':
         for key in request.POST:
             x=key.split('-')
@@ -402,7 +402,7 @@ def system_config(request):
                 c.set_value(request.POST[key])
             c.save()
     configs=Config.objects.all()
-            
+
     return my_render_to_response(request, 'sys_config.html', locals())
 
 
@@ -416,26 +416,26 @@ def school_info(request):
             new=True
             request.session['school']=School()
             form = SchoolForm(request.POST, instance=request.session['school'])
-            
-        
+
+
         #sem.school=request.session['school']
         if 'password1' in request.POST:
             adminForm=RegistrationForm(request.POST)
         else:
             adminForm=None
-        
+
         if adminForm and adminForm.is_valid():
             admin=User.objects.create_user(username=adminForm.cleaned_data['email'],
                                                email=adminForm.cleaned_data['email'],
                                                password=adminForm.cleaned_data['password1'])
             role= Role(user=admin, is_admin=True)
             role.save()
-                                                        
+
         if form.is_valid():
             request.session['school'].admin=admin
             form.instance
             form.save()
-            
+
             return HttpResponseRedirect('/')
         else:
             print  'form not valid', dir(form)
@@ -467,7 +467,7 @@ def new_school_info(request):
             role= Role(user=admin, is_admin=True, school=school)
             role.save()
             request.session['school']=form.instance
-            
+
             return home(request)
         else:
             print  'form not valid', dir(form)
@@ -486,7 +486,7 @@ def valid_domain(domain):
             return False
     return True
 
-def signup(request):    
+def signup(request):
     if request.method == 'POST':
         domain=''
         if 'domain_type' not in request.POST:
@@ -497,7 +497,7 @@ def signup(request):
                 domain =request.POST['own_domain_name']
             else:
                 domain =request.POST['l42_domain_name']+BASE_SITE
-                
+
             if valid_domain(domain):
                 request.session['school'],_c=School.objects.get_or_create(domain=domain)
                 print 'domain', domain
@@ -505,13 +505,21 @@ def signup(request):
                     domain+=':'+ request.META['SERVER_PORT']
                 return my_render_to_response(request, 'signup_confirm.html', locals())
             else:
-                errors=['Domain name not correct']         
+                errors=['Domain name not correct']
                 print errors
-                
-                    
-    else: # GET 
+
+
+    else: # GET
         prefix=request.META['HTTP_HOST'].split(BASE_SITE)[0]
         if prefix=="signup":
-            prefix="" 
+            prefix=""
     return my_render_to_response(request, 'signup.html', locals())
-    
+
+@superuser_required
+def class_enrollment(request):
+    sem = current_reg_semester()
+    classes = Class.objects.filter(semester=sem).order_by( "elective","name")
+    for c in classes:
+        c.count = len(EnrollDetail.objects.filter(classPtr=c))
+    return my_render_to_response(request, 'class_enrollment.html', locals())
+

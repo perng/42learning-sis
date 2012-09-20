@@ -30,11 +30,13 @@
         <div id="wrapper">
 
             <div id="container">
-                <div class="clearfix">
-                    <div id="top-social-profiles">
-                        <ul class="widget-container"><li class="social-profiles-widget"> </li></ul>
-                    </div>
-                </div>
+		<div class="clearfix" style="height: 15px;">
+		   <!-- can add social tools 
+			<div id="top-social-profiles">
+	                        <ul class="widget-container"><li class="social-profiles-widget"> </li></ul>
+               	        </div>
+		   --!>
+		</div>
                 <div id="header">
                     <div class="logo">
                         <a href="/"><img src="{% static_path %}/images/nwcs-header-transparent1.png" alt="北威中文學校 Northern Westchester Chinese School" title="北威中文學校 Northern Westchester Chinese School" /></a>
@@ -68,25 +70,8 @@
                         </ul>
                     </div> <!-- #menu-secondary-container -->
                 </div>
-
-                <div id="main" >
-                    <div id="content" style="width: 715px" > <!--style.css default #content width: 460px -->
-                        <!-- don't know what msg is yet -->
-	                <div class="clearfix">
-        	            {% if errors %}
-                	    <ul class="messages">
-                       	    {% for error in errors %}
-
-                       	     <li class="error">{{ error }}</li>
-                       	    {% endfor %}
-                    	    </ul>
-                   	    {% endif %}
-                	</div><!-- end don't know -->
-
-			{% block content %}{% endblock %}
-                    </div>
-
-                    <div id="sidebar-primary" style="margin-left: -960px"> <!-- style.css default margin-left: -695 -->
+		<div id="main">
+                    <div id="sidebar-primary"> <!-- style.css default margin-left: -695 -->
                         <ul class="widget-container">
                             <li id="user" class="widget"><h3 class="widgettitle">Welcome! {% if request.user.is_authenticated %}{{ request.user.get_profile.parent1LastName }} Family {% endif %}</h3></li></ul>
                         <div class="widget">
@@ -109,6 +94,22 @@
                             </ul>
                         </div>
                     </div><!-- sidebarprimary-->
+
+	             <div id="content" > <!--style.css default #content width: 460px -->
+                        <!-- don't know what msg is yet -->
+                        <div class="clearfix">
+                            {% if errors %}
+                            <ul class="messages">
+                            {% for error in errors %}
+
+                             <li class="error">{{ error }}</li>
+                            {% endfor %}
+                            </ul> 
+                           {% endif %}
+                        </div><!-- end don't know -->
+
+                        {% block content %}{% endblock %}     
+                  </div>
                 </div><!-- main -->
 
                 <div id="footer">

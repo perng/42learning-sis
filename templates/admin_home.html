@@ -1,6 +1,6 @@
 {% extends 'base.html' %} 
 {% load core_tags %}
-{% load url from future %}
+{# {% load url from future %} #} 
 
 {% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
 {% block title %} Admin  Dashboard {% endblock %}
@@ -8,16 +8,18 @@
 <div class="admin2">
     <h2 class="title">Manage School</h2><br />
     <div class="admin">
-        <a class="adminbutton" href='{% url 'semesterlist' %}'>Manage Semesters and Classes</a> <br/><br/> 
-        <a class="adminbutton" href='{% url 'payment' %}'> All Payment</a> <br/> <br />
-        <a class="adminbutton" href='{% url 'unpaid_payment' %}'> Outstanding Due</a> <br/> <br />
+        <a class="adminbutton" href='{% url semesterlist %}'>Manage Semesters and Classes</a> <br/><br/> 
+        <a class="adminbutton" href='{% url payment %}'> All Payment</a> <br/> <br />
+        <a class="adminbutton" href='{% url unpaid_payment %}'> Outstanding Due</a> <br/> <br />
+        <a class="adminbutton" href='{% url class_enrollment %}'> Class Enrollment</a> <br/> <br /> 
 
-        <a class="adminbutton" href='{% url 'active_directory' %}'> Student Directory (active) </a> <br/> <br/>
-        <a class="adminbutton" href='{% url 'teacher_directory' %}'> Teacher Directory  </a> <br/> <br/>
+        <a class="adminbutton" href='{% url active_directory %}'> Student Directory (active) </a> <br/> <br/>
+        <a class="adminbutton" href='{% url teacher_directory %}'> Teacher Directory  </a> <br/> <br/>
         {# <a class="adminbutton" href='{% url family_directory %}'> Family Directory  </a> <br/> #} 
         <a class="adminbutton" href='{% url 'school_info' %}'> School Information  </a> <br/> <br/>
 
         {# <a class="adminbutton" href='{% url 'sys_config' %}'> System Configuration  </a> <br/> <br/> #}
+        <a class="adminbutton" href='{% url sys_config %}'> System Configuration  </a> <br/> <br/>
 
     </div>
 </div>
