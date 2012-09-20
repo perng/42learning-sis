@@ -4,7 +4,7 @@ import  copy
 from django.template import *
 #from django.template.defaultfilters import floatformat
 #from django.views.generic import TemplateView
-#from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 #from django.shortcuts import render_to_response
 #from django.contrib.auth.models import User
 #from django.core.context_processors import csrf
@@ -278,10 +278,14 @@ def assignments(request, cat_id):
         print request.POST
         name=request.POST['Name']
         gi,created=GradingItem.objects.get_or_create(category=category, name=name)
-        gi.date=request.POST['assign_date']
+        gi.date=None #request.POST['assign_date']
         gi.duedate=request.POST['due_date']
         gi.assignmentDescr=request.POST['Description']
-        gi.save()
+	try:
+        	gi.save()
+	except:
+		gi.duedate=None
+		gi.save()
 
         if created:
             gi.create_download_dir()
@@ -312,3 +316,26 @@ def new_assignment(request, cid):
         print request.POST
 
     return my_render_to_response(request, 'assignment.html', locals())
+
+
+@login_required
+def edit_assignment(request, aid):
+    gi = GradingItem.objects.get(id=id_decode(aid))
+    if request.method=='POST':
+	if 'Delete' in request.POST:
+		gi.delete()
+	else:
+	    giform=HomeWorkForm(request.POST, instance=gi)
+	    if giform.is_valid():
+                try:   
+                    gi.save()
+                except:
+                    gi.duedate=None
+                    gi.save()
+
+	return HttpResponseRedirect('/assignments/'+ gi.category.eid())
+    giform=HomeWorkForm(instance=gi)
+    request.method='GET'
+    return my_render_to_response(request, 'assignment_edit.html', locals())
+
+

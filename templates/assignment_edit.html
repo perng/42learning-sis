@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load core_tags %}
+{% load url from future %}
+
+
+{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %} Assignment  {% endblock %}
+
+{% block content %}
+<script>
+    $(function() {
+        $( "#assign_date" ).datepicker();
+        $( "#assign_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+        $( "#due_date" ).datepicker();
+        $( "#due_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+    });
+</script>
+<div class="teacher">
+    <h3 class="title"> Homework for Class: {{gi.category.classPtr.name}} </h3>
+
+
+    <h3> Edit Assignment </h3> 
+    <form class="red" action='{% url 'assignment_edit' aid=gi.eid %}' method='post'>
+        {{ giform.as_p }}
+
+        {% csrf_token %}
+        <input class="button" type="submit" name="Update" value="Update" />
+        <input class="button" type="submit" name="Delete" value="Delete" />
+    </form>
+</div>
+{% endblock %}

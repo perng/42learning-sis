@@ -36,7 +36,6 @@ urlpatterns = patterns('',
      url(r'^record/(?P<class_id>.+)$', record, name='record'),
      url(r'^record_attendance/(?P<class_id>.+)/(?P<show_session>.+)$', record_attendance, name='record_attendance'),
      url(r'^student_attendance/(?P<class_id>.+)/(?P<sid>.+)$', student_attendance, name='student_attendance'),
-
      
      url(r'^record_grade/(?P<class_id>.+)/(?P<cat_id>.+)/(?P<show_item>.+)$', record_grade, name='record_grade'),
      url(r'^accounts/profile', profile, name='profile'),
@@ -46,6 +45,7 @@ urlpatterns = patterns('',
      url(r'^del_score/(?P<gd_id>.+)$', del_score, name='del_score'),
      url(r'^calculate_total/(?P<class_id>.+)$', calculate_total, name='calculate_total'),
      url(r'^assignments/(?P<cat_id>.+)$', assignments, name='assignments'),
+     url(r'^assignment_edit/(?P<aid>.+)$', edit_assignment, name='assignment_edit'),
      url(r'^view_assignments/(?P<cat_id>.+$)', view_assignments, name='view_assignments'),
      url(r'^new_assignment/(?P<class_id>.+$)', new_assignment, name='new_assignment'),
 

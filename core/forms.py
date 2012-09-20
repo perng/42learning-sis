@@ -57,10 +57,10 @@ class FeeConfigForm(forms.ModelForm):
 		widgets = {'semester': HiddenInput()}
 
 class HomeWorkForm(forms.ModelForm):
-	name=CharField(max_length=128)
-	assign_date=DateField()
-	description=CharField(max_length=2048, widget=forms.Textarea)
-	due_date=DateField()
+	class Meta:
+		model = GradingItem
+		fields = ('name', 'assignmentDescr', 'duedate', )
+		widgets = {'duedate': SelectDateWidget()}
 #class UserAdmin(UserAdmin):
 #    form = UserForm
 #    list_display = ('email', 'first_name', 'last_name', 'is_staff')

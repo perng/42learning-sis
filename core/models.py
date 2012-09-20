@@ -185,7 +185,7 @@ class GradingItem(models.Model):
     average = models.FloatField(null=True)
     median = models.FloatField(null=True)
     assignmentDescr = models.TextField(blank=True, default='')
-    duedate = models.DateField(null=True, verbose_name='Due date', help_text='Format: YYYY-MM-DD')
+    duedate = models.DateField(null=True, verbose_name='Due date', )
 
     class Meta:
         unique_together = (('name', 'category'))
