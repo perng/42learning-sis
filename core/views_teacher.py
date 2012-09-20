@@ -332,6 +332,7 @@ def edit_assignment(request, aid):
                 except:
                     gi.duedate=None
                     gi.save()
+		gi.create_download_dir()
 
 	return HttpResponseRedirect('/assignments/'+ gi.category.eid())
     giform=HomeWorkForm(instance=gi)

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load core_tags %}
 {% load url from future %}
+{% load markup %}
 
 
 
@@ -27,7 +28,7 @@
         {% for gditem in gditems %}
         <tr> 
             <td><a href='{% url 'assignment_edit' aid=gditem.eid %}'> {{gditem.name}} </a> </td>
-            <td> {{gditem.assignmentDescr}}</td> 
+            <td> {{gditem.assignmentDescr|markdown}}</td> 
             <td> <a href="{{gditem.download_url}}"  target="_blank" > upload </a> </td> 
             <td> {{gditem.duedate.isoformat}} </td> 
         </tr> 
