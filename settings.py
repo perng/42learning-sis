@@ -152,7 +152,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions',
+    #'django_extensions',
     'django.contrib.markup',
     'sis.registration',
     #'registration',
@@ -203,7 +203,7 @@ EMAIL_HOST_PASSWORD='chinese'
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
 
-SESSION_COOKIE_SECURE = 'https' in site_static_path 
+SESSION_COOKIE_SECURE = 'https' in site_static_path
 LOGIN_REDIRECT_URL='/accounts/login/?next=/'
 if SESSION_COOKIE_SECURE:
 	SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
