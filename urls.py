@@ -6,8 +6,8 @@ from sis.core.views_teacher import *
 from sis.core.views_admin import *
 
 # Uncomment the next two lines to enable the admin:
-#from django.contrib import admin as aadmin
-#aadmin.autodiscover()
+from django.contrib import admin as aadmin
+aadmin.autodiscover()
 
 urlpatterns = patterns('',
      # General
@@ -72,7 +72,7 @@ urlpatterns = patterns('',
      url(r'^sys_config/', system_config, name='sys_config'),
      url(r'^help/', help, name='help'),
     # Uncomment the next line to enable the admin:
-    #url(r'^admin/', include(aadmin.site.urls)),
+    url(r'^admin/', include(aadmin.site.urls)),
 
 
 )

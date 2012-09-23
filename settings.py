@@ -131,6 +131,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS= (
+    'django.contrib.auth.context_processors.auth',
     'django.contrib.messages.context_processors.messages',
     )
 
@@ -164,7 +165,7 @@ INSTALLED_APPS = (
     'sis.core',
     #'south',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
