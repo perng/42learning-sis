@@ -29,11 +29,12 @@ class RegistrationForm(forms.Form):
     registration backend.
     
     """
-    username = forms.RegexField(regex=r'^[\w.@+-]+$',
-                                max_length=30,
-                                widget=forms.TextInput(attrs=attrs_dict),
-                                label=_("Username"),
-                                error_messages={'invalid': _("This value must contain only letters, numbers and underscores.")})
+    
+#    username = forms.RegexField(regex=r'^[\w.@+-]+$',
+#                                max_length=30,
+#                                widget=forms.TextInput(attrs=attrs_dict),
+#                                label=_("Username"),
+#                                error_messages={'invalid': _("This value may contain only letters, numbers and @/./+/-/_ characters.")})
     email = forms.EmailField(widget=forms.TextInput(attrs=dict(attrs_dict,
                                                                maxlength=75)),
                              label=_("E-mail"))
@@ -48,11 +49,11 @@ class RegistrationForm(forms.Form):
         in use.
         
         """
-        try:
-            user = User.objects.get(username__iexact=self.cleaned_data['username'])
-        except User.DoesNotExist:
+        existing = User.objects.filter(username__iexact=self.cleaned_data['username'])
+        if existing.exists():
+            raise forms.ValidationError(_("A user with that username already exists."))
+        else:
             return self.cleaned_data['username']
-        raise forms.ValidationError(_("A user with that username already exists."))
 
     def clean(self):
         """
