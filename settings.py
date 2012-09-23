@@ -125,6 +125,11 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+AUTHENTICATION_BACKENDS = (
+'sis.core.authbackends.EmailOrUsernameModelBackend',
+'django.contrib.auth.backends.ModelBackend'
+)
+
 TEMPLATE_CONTEXT_PROCESSORS= (
     'django.contrib.messages.context_processors.messages',
     )
@@ -206,5 +211,5 @@ EMAIL_USE_TLS=True
 SESSION_COOKIE_SECURE = 'https' in site_static_path
 LOGIN_REDIRECT_URL='/accounts/login/?next=/'
 if SESSION_COOKIE_SECURE:
-	SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
-	SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
+    SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = True
