@@ -7,10 +7,12 @@
 {% block title %} Assignment  {% endblock %}
 
 {% block content %}
+<script src="/static/js/nicEdit.js" type="text/javascript"></script>
+<script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
+						
 <script>
     $(function() {
         $( "#assign_date" ).datepicker();
-        $( "#assign_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
         $( "#due_date" ).datepicker();
         $( "#due_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
     });

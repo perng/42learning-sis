@@ -9,6 +9,9 @@
 {% block title %} Assignment  {% endblock %}
 
 {% block content %}
+<script src="/static/js/nicEdit.js" type="text/javascript"></script>
+<script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
+						
 <script>
     $(function() {
         $( "#assign_date" ).datepicker();
@@ -28,7 +31,7 @@
         {% for gditem in gditems %}
         <tr> 
             <td><a href='{% url 'assignment_edit' aid=gditem.eid %}'> {{gditem.name}} </a> </td>
-            <td> {{gditem.assignmentDescr|markdown}}</td> 
+            <td> {{gditem.assignmentDescr|safe}}</td> 
             <td> <a href="{{gditem.download_url}}"  target="_blank" > upload </a> </td> 
             <td> {{gditem.duedate.isoformat}} </td> 
         </tr> 
@@ -41,9 +44,9 @@
     <form class="red" action='{% url 'assignments' cat_id=category.eid %}' method='post'>
         <label> Name </label> <input type='text' name='Name'  value="{{category.name}} {{category.serial}}"/>  <br/>
         {# <label> Assign Date </label> {{assignment_date}}  <br/> #}
+        <label> Due Date </label> {{due_date}}  <br/>
 
         <label> Description </label>  <textarea name='Description'  value="{{category.assignmentDescr}}" rows=6 cols=60>  </textarea> <br/>
-        <label> Due Date </label> {{due_date}}  <br/>
 
         {% csrf_token %}
         <input class="button" type="submit" name="Update" value="Update" />
