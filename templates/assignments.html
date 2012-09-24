@@ -43,11 +43,11 @@
 
     <h3> New Assignment </h3> 
     <form class="red" action='{% url 'assignments' cat_id=category.eid %}' method='post'>
-        <label> Name </label> <input type='text' name='Name'  value="{{category.name}} {{category.serial}}"/>  <br/>
+        <label> Name: </label> <input type='text' name='Name'  value="{{category.name}} {{category.serial}}"/>  <br/>
         {# <label> Assign Date </label> {{assignment_date}}  <br/> #}
-        <label> Due Date </label> {{due_date}}  <br/>
+        <label> Due Date: </label> {{due_date}}  <br/>
 
-        <label> Description </label><div style="margin-left: 35px; margin-top: 3px;"><textarea name='Description' value="{{category.assignmentDescr}}" rows=10 cols=90></textarea><br/>
+        <label> Description: </label><div style="margin-left: 30px;"><textarea name='Description' value="{{category.assignmentDescr}}" rows=10 cols=90></textarea><br/>
          </div>
         {% csrf_token %}
         <input class="button" type="submit" name="Update" value="Update" />
