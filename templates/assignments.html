@@ -11,6 +11,7 @@
 {% block content %}
 <script src="/static/js/nicEdit.js" type="text/javascript"></script>
 <script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
+
 						
 <script>
     $(function() {
@@ -46,8 +47,8 @@
         {# <label> Assign Date </label> {{assignment_date}}  <br/> #}
         <label> Due Date </label> {{due_date}}  <br/>
 
-        <label> Description </label>  <textarea name='Description'  value="{{category.assignmentDescr}}" rows=6 cols=60>  </textarea> <br/>
-
+        <label> Description </label><div style="margin-left: 35px; margin-top: 3px;"><textarea name='Description' value="{{category.assignmentDescr}}" rows=10 cols=90></textarea><br/>
+         </div>
         {% csrf_token %}
         <input class="button" type="submit" name="Update" value="Update" />
     </form>
