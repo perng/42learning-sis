@@ -80,7 +80,9 @@ class Family(models.Model):
     def parent1_fullname(self):
         return self.parent1FirstName + ' ' + self.parent1LastName + ("("+self.parent1ChineseFullName+")"  if self.parent1ChineseFullName else '')
         
-    
+    def __str__(self):
+        return self.parent1FirstName + ' ' + self.parent1LastName 
+
     def parent2(self):
         return self.parent2FirstName + ' ' + self.parent2LastName+ ("("+self.parent2ChineseFullName+")"  if self.parent2ChineseFullName else '')
     def address(self):
@@ -155,7 +157,8 @@ class EnrollDetail(models.Model):
         unique_together = (('student', 'classPtr'))
     def eid(self):
         return id_encode(self.id)
-
+    def __str__(self):
+        return self.student.firstName+' '+self.student.lastName+'--'+self.classPtr.__str__()
 
 class Award(models.Model):
     student = models.ForeignKey(Student)
@@ -174,6 +177,8 @@ class GradingCategory(models.Model):
     hasAssignment = models.BooleanField(default=False)
     def eid(self):
         return id_encode(self.id)
+    def __str__(self):
+        return self.classPtr.name+' '+self.name
     
 class GradingItem(models.Model):
     name = models.CharField(max_length=64)
@@ -186,6 +191,9 @@ class GradingItem(models.Model):
     median = models.FloatField(null=True)
     assignmentDescr = models.TextField(blank=True, default='')
     duedate = models.DateField(null=True, verbose_name='Due date', )
+
+    def __str__(self):
+        return self.category.__str__()+' '+self.name
 
     class Meta:
         unique_together = (('name', 'category'))
