@@ -322,21 +322,66 @@ def new_assignment(request, cid):
 def edit_assignment(request, aid):
     gi = GradingItem.objects.get(id=id_decode(aid))
     if request.method=='POST':
-	if 'Delete' in request.POST:
-		gi.delete()
-	else:
-	    giform=HomeWorkForm(request.POST, instance=gi)
-	    if giform.is_valid():
+        if 'Delete' in request.POST:
+            gi.delete()
+        else:
+            giform=HomeWorkForm(request.POST, instance=gi)
+            if giform.is_valid():
                 try:   
                     gi.save()
                 except:
                     gi.duedate=None
                     gi.save()
-		gi.create_download_dir()
+                gi.create_download_dir()
 
-	return HttpResponseRedirect('/assignments/'+ gi.category.eid())
+        return HttpResponseRedirect('/assignments/'+ gi.category.eid())
     giform=HomeWorkForm(instance=gi)
     request.method='GET'
     return my_render_to_response(request, 'assignment_edit.html', locals())
+
+
+@login_required
+def prepare_report(request, class_id):
+    classid = id_decode(class_id)
+    theClass = Class.objects.get(id=classid)
+    students = theClass.student_set.order_by('lastName')
+    for s in students:
+        s.enrollment=s.enrolldetail_set.get( classPtr=theClass)
+    return my_render_to_response(request, 'prepare_report.html', locals())
+
+@login_required
+def evaluation_comment(request, enrolldetail_id):
+    return 
+
+att_dict={'P':'Present', 'A':'Absent', 'L':'Late'}
+
+def get_attendance(student, session):
+    try:
+        return att_dict[Attendance.objects.get(student=student, session=session).attended]
+    except:
+        return att_dict['P']
+    
+def make_rows(data, num):
+    if len(data)<= num:
+        return [data]
+    return [data[0:num]]+ make_rows(data[num:])
+
+
+@login_required
+def report_card(request, enrolldetail_id):
+    en=EnrollDetail.objects.get(id=id_decode(enrolldetail_id))
+    theClass=en.classPtr
+    student=en.student
+    semester = en.classPtr.semester
+    sessions=theClass.classsession_set.all()
+    num_sessions=len(sessions)
+    attendances=[(session.date, get_attendance(student, session)) for session in sessions]
+    attendances_rows=make_rows(attendances, 7)
+    print attendances
+    num_absent =len([a for a in attendances if a[1]=='A'])
+    num_late =len([a for a in attendances if a[1]=='L'])
+    num_present=num_sessions-num_absent
+
+    return my_render_to_response(request, 'reportcard.html', locals())
 
 

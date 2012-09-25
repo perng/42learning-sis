@@ -9,7 +9,7 @@
     <h2 class="title">Managed Classes</h2>
     <table class="red_table">
         <tr>
-            <th>Class </th><th>Attendance</th><th>Assign</th><th>Grade</th><th>Student</th>
+            <th>Class </th><th>Attendance</th><th>Assign</th><th>Grade</th><th>Student</th><th>Report</th>
 
         </tr>
         {% for c in teaches %}
@@ -37,6 +37,12 @@
                 {% else %} - {% endif %}
             </td> 
             <td><a href='{% url 'classroaster' cid=c.eid%}'>Contacts({{c.num_students}})</a></td>
+            <td>
+                {% if c.recordGrade %} 
+                <a href='{% url 'prepare_report' class_id=c.eid %}'>Report <br/> (not ready) </a>
+                {% else %} - {% endif %}
+            </td> 
+
         </tr> 
         {% endfor %}
     </table> 

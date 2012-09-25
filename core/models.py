@@ -144,8 +144,16 @@ class Class(models.Model):
     def discounted_base_chk(self):
             return self.fee.basechk - self.fee.mdiscount
     def student_names(self):
-	return ', '.join([s.firstName+' '+s.lastName for s in self.student_set.all()])
-        
+        return ', '.join([s.firstName+' '+s.lastName for s in self.student_set.all()])
+    def teachers(self):
+        t=''
+        if self.headTeacher:
+            t+= self.headTeacher.get_profile().parent1_fullname()
+        if self.assocTeacher1:
+            t+= ', '+self.assocTeacher1.get_profile().parent1_fullname()
+        if self.assocTeacher2:
+            t+= ', '+self.assocTeacher2.get_profile().parent1_fullname()
+        return t
 
 class EnrollDetail(models.Model):
     student = models.ForeignKey(Student)

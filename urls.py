@@ -38,6 +38,9 @@ urlpatterns = patterns('',
      url(r'^student_attendance/(?P<class_id>.+)/(?P<sid>.+)$', student_attendance, name='student_attendance'),
 
      url(r'^record_grade/(?P<class_id>.+)/(?P<cat_id>.+)/(?P<show_item>.+)$', record_grade, name='record_grade'),
+     url(r'^prepare_report/(?P<class_id>.+)$', prepare_report, name='prepare_report'),
+     url(r'^evaluation_comment/(?P<sid>.+)$', evaluation_comment, name='evaluation_comment'),
+
      url(r'^accounts/profile', profile, name='profile'),
      #(r'^accounts/', include('sis.registration.urls')),
      (r'^accounts/', include('sis.registration.backends.default.urls')),
@@ -48,6 +51,8 @@ urlpatterns = patterns('',
      url(r'^assignment_edit/(?P<aid>.+)$', edit_assignment, name='assignment_edit'),
      url(r'^view_assignments/(?P<cat_id>.+$)', view_assignments, name='view_assignments'),
      url(r'^new_assignment/(?P<class_id>.+$)', new_assignment, name='new_assignment'),
+     url(r'^evaluation_comment/(?P<enrolldetail_id>.+$)', evaluation_comment, name='evaluation_comment'),
+     url(r'^report_card/(?P<enrolldetail_id>.+$)', report_card, name='report_card'),
 
      # Admin
      url(r'^semester$', semesters, name='semesters'),

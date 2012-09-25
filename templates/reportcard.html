@@ -12,14 +12,33 @@
 
 <table class="basic">
 		<tr>
-		    <td class="title">Student Name: </td><td class="text">John Doe</td>
-		    <td class="title">Class: </td><td class="text">1A</td>  
-                    <td class="title">Teacher:</td><td class="text">Teacher A</td></tr>
+		    <td class="title">Student Name: </td><td class="text">{{ student }}</td>
+		    <td class="title">Class: </td><td class="text">{{theClass}}</td>  
+                    <td class="title">Teacher:</td><td class="text">{{theClass.teachers}}</td></tr>
 
-		<tr><td class="title">Semester:</td><td class="text">2012</td> 
-		    <td class="title">Attendentce: </td><td colspan = "3" class="text"> 10/12; Late for 2 times</td></tr>
+		<tr><td class="title">Semester:</td><td class="text">{{semester}}</td> 
+		    <td class="title">Attendentce: </td><td colspan = "3" class="text"> {{num_present}}/{{num_sessions}}; Late for {{num_late}} times</td></tr>
 		<tr><td class="title">Homework Turn in Rate: </td><td class="text"> 14/14 </td></tr>
 </table>
+<br /><br />
+<h2> Attendance </h2> 
+<table class="report">
+    {% for row in attendances_rows %}
+		<tr>
+		    <th></th>
+    	{% for session in row %}
+    		<th> {{session.0 | date:"m/d/y"}}</th> 
+    	{% endfor %} 
+    	</tr> 
+    	<tr> 
+		    <th>Attendance</th>
+    	{% for session in row %}
+    		<th> {{session.1}} </th> 
+    	{% endfor %} 
+    	
+		</tr>
+	{% endfor %} 
+</table> 
 <br /><br />
 <h2>Quiz</h2>
 <table class="report">
