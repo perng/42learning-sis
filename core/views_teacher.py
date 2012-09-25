@@ -351,7 +351,12 @@ def prepare_report(request, class_id):
 
 @login_required
 def evaluation_comment(request, enrolldetail_id):
-    return 
+    en=EnrollDetail.objects.get(id=id_decode(enrolldetail_id))
+    if request.method=='GET':
+        return my_render_to_response(request, 'evaluation_comment.html', locals())
+    en.note = request.POST['comment']
+    en.save()
+    return prepare_report(request, en.classPtr.eid())
 
 att_dict={'P':'Present', 'A':'Absent', 'L':'Late'}
 
@@ -366,7 +371,15 @@ def make_rows(data, num):
         return [data]
     return [data[0:num]]+ make_rows(data[num:])
 
-
+def get_score(student,item):
+    try:
+        s= Score.objects.get(student=student, gradingItem=item).score
+        if s:
+            return s
+    except:
+        pass
+    return 0.0
+        
 @login_required
 def report_card(request, enrolldetail_id):
     en=EnrollDetail.objects.get(id=id_decode(enrolldetail_id))
@@ -377,11 +390,26 @@ def report_card(request, enrolldetail_id):
     num_sessions=len(sessions)
     attendances=[(session.date, get_attendance(student, session)) for session in sessions]
     attendances_rows=make_rows(attendances, 7)
-    print attendances
     num_absent =len([a for a in attendances if a[1]=='A'])
     num_late =len([a for a in attendances if a[1]=='L'])
     num_present=num_sessions-num_absent
 
+    categories = theClass.gradingcategory_set.filter(weight__gt= 0)
+    student.final_score=0
+    for cat in categories:
+        items= cat.gradingitem_set.all()        
+        scores=[(item, get_score(student, item) ) for item in items]
+        print scores
+        cat.score_rows= make_rows(scores, 7)
+        if not scores:
+            cat.avg_score=0
+        else:
+            cat.avg_score = sum([score[1] for score in scores])/len(scores)
+        cat.class_avg = sum([item.average for item in items])/len(scores)
+
+        cat.weighted_score = cat.avg_score * cat.weight /100.0
+        student.final_score += cat.weighted_score
+    
     return my_render_to_response(request, 'reportcard.html', locals())
 
 

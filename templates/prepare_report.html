@@ -21,7 +21,7 @@
             <tr align='center'> 
                 <td> {{s}} </td>
                 <td> <a href="{% url 'evaluation_comment' enrolldetail_id=s.enrollment.eid %}"> Comment </a> </td> 
-                <td> <a href="{% url 'report_card' enrolldetail_id=s.enrollment.eid %}"> Preview </a> </td> 
+                <td> <a href="{% url 'report_card' enrolldetail_id=s.enrollment.eid %}" target="_blank"> Preview </a> </td> 
                 <td> <a href='mailto:{{s.family.user.email}}'> {{s.family.user.email}}</a>   </td> 
             </tr>
             {% endfor %}

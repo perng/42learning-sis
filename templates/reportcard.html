@@ -19,8 +19,36 @@
 		<tr><td class="title">Semester:</td><td class="text">{{semester}}</td> 
 		    <td class="title">Attendentce: </td><td colspan = "3" class="text"> {{num_present}}/{{num_sessions}}; Late for {{num_late}} times</td></tr>
 		<tr><td class="title">Homework Turn in Rate: </td><td class="text"> 14/14 </td></tr>
+		<tr> <td class="title"> Score: </td> <td class="text"> {{student.final_score}} </td> </tr> 
 </table>
 <br /><br />
+	<h2> Summary </h2>
+	<table class="report">
+		<tr>
+			<th> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+			<th> Raw Score </th>
+			<th> Percentage % </th>
+			<th> Weighted Score </th>
+			<th> Class Average </th>
+		<tr>
+		{% for cat in categories %}
+		<tr> 
+			<td> {{cat.name}} </td>
+			<td> {{cat.avg_score}}</td>
+			<td> {{cat.weight}}% </td>
+			<td> {{cat.weighted_score}}</td>
+			<td> {{cat.class_avg}} </td>
+			
+		</tr>
+		{% endfor %}
+		<tr>
+			<td colspan="3">Total of Weighted Scores</td>
+			<td> {{student.final_score}}</td>
+			<td> </td>
+		</tr>
+	</table>
+	<br /><br /> <br />	
+
 <h2> Attendance </h2> 
 <table class="report">
     {% for row in attendances_rows %}
@@ -31,135 +59,45 @@
     	{% endfor %} 
     	</tr> 
     	<tr> 
-		    <th>Attendance</th>
+		    <td>Attendance</td>
     	{% for session in row %}
-    		<th> {{session.1}} </th> 
+    		<td> {{session.1}} </td> 
     	{% endfor %} 
     	
 		</tr>
 	{% endfor %} 
 </table> 
+
+{% for cat in categories %}
 <br /><br />
-<h2>Quiz</h2>
+ <h2>{{cat.name}}</h2>
+{% if cat.score_rows %}
+
 <table class="report">
+   {% for row in cat.score_rows %}
 		<tr>
-		    <th></th>
-		    <th>week 1</th>
-		    <th>week 2</th>
-		    <th>week 3</th>
-		    <th>week 4</th>
-		    <th>week 5</th>
-		    <th>week 6</th>
-		    <th>week 7</th>
-		</tr>
-		<tr>
-		    <td>Score</td>
-		    <td>89 </td>
-		    <td>91 </td>
-		    <td>92 </td>
-		    <td>93 </td>
-		    <td>94 </td>
-		    <td>96 </td>
-		    <td>100 </td>
-		</tr>
-		<tr>
-                    <th></th>
-                    <th>week 8</th>
-                    <th>week 9</th>
-                    <th>week 10</th>
-                    <th>week 11</th>
-                    <th>week 12</th>
-                    <th>week 13</th>
-                    <th>week 14</th>
-                </tr>
-                <tr>
-                    <td>Score</td>
-                    <td>89 </td>
-                    <td>91 </td>
-                    <td>92 </td>
-                    <td>93 </td>
-                    <td>94 </td>
-                    <td>96 </td>
-                    <td>100 </td>
-                </tr>
+		    <th></th>		    
+     {% for score in row %}
+		    <th>{{score.0.name}}</th>
+	 {% endfor %}
+	    </tr><tr>
+	    <td> Score </td>
+     {% for score in row %}
+		    <td>{{score.1}}</td>
+	 {% endfor %}
+	    </tr>
+	   
+   {% endfor %}
+   </table> 
+    <br/> 
+	 
+ {% else %} No score records 
+ {% endif %}
+ 
+{% endfor %}
 
-</table>
-
-<br />
-<dl>
-        <dt> Homework </dt>
-        <dd>         
-                <ol>
-      	    		 	<li><span class="listitem">s1 </span></li>
-                                <li><span class="listitem">s2 </span></li>
-                                <li><span class="listitem">s3 </span></li>
-                                <li><span class="listitem">s4 </span></li>
-                                <li><span class="listitem">s5 </span></li>
-                                <li><span class="listitem">s6 </span></li>
-                                <li><span class="listitem">s7 </span></li>
-                                <li><span class="listitem">s8 </span></li>
-                                <li><span class="listitem">s9 </span></li>
-                                <li><span class="listitem">s10 </span></li>
-                                <li><span class="listitem">s11 </span></li>
-                                <li><span class="listitem">s12 </span></li>
-                                <li><span class="listitem">s13 </span></li>
-                                <li><span class="listitem">s14 </span></li>
-
-                </ol>
-        </dd>
-</dl>
-	
 
 	<br /> <br />
-	<table class="report">
-		<tr>
-			<th> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
-			<th> Raw Score </th>
-			<th> Percentage % </th>
-			<th> Weighted Score </th>
-			<th> Class Average </th>
-			<th> Highest Score </th>
-		<tr>
-		<tr> 
-			<td> Ave. of Quiz </td>
-			<td> </td>
-			<td> 30% </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr>
-		<tr> 
-                        <td> Midterm Exam </td>
-                        <td> </td>
-                        <td> 15% </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                </tr>
-		<tr> 
-                        <td> Final Exam </td>
-                        <td> </td>
-                        <td> 15% </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                </tr>
-		<tr> 
-                        <td> Homework </td>
-                        <td> </td>
-                        <td> 40% </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                </tr>
-		<tr>
-			<td colspan="3">Total of Weighted Scores</td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
-		</tr>
-	</table>
-	<br /><br /> <br />	
 
 	<h2> Levels of Chinese </h2>
 	<table width="80%">
@@ -190,5 +128,6 @@
 	</table>
 	<br />
 	<h2> Teacher's Feedback</h2>
+	{{en.note|safe}}
     </body>
 </html> 

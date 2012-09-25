@@ -39,7 +39,7 @@ urlpatterns = patterns('',
 
      url(r'^record_grade/(?P<class_id>.+)/(?P<cat_id>.+)/(?P<show_item>.+)$', record_grade, name='record_grade'),
      url(r'^prepare_report/(?P<class_id>.+)$', prepare_report, name='prepare_report'),
-     url(r'^evaluation_comment/(?P<sid>.+)$', evaluation_comment, name='evaluation_comment'),
+     url(r'^evaluation_comment/(?P<enrolldetail_id>.+)$', evaluation_comment, name='evaluation_comment'),
 
      url(r'^accounts/profile', profile, name='profile'),
      #(r'^accounts/', include('sis.registration.urls')),
