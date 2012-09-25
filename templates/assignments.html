@@ -3,22 +3,27 @@
 {% load url from future %}
 {% load markup %}
 
+{% block theme %} 
 
+<link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> 
+<link rel="stylesheet" type="text/css" href="{% static_path %}/css/jquery.cleditor.css" />
 
-{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
+<script type="text/javascript" src="{% static_path %}/js/jquery.cleditor.min.js"></script>
+
+{% endblock %}
+
 {% block title %} Assignment  {% endblock %}
 
 {% block content %}
-<script src="/static/js/nicEdit.js" type="text/javascript"></script>
-<script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
 
-						
 <script>
     $(function() {
         $( "#assign_date" ).datepicker();
         $( "#assign_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
         $( "#due_date" ).datepicker();
         $( "#due_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+	
+	 $("#Description").cleditor();	
     });
 </script>
 <div class="teacher">
@@ -47,10 +52,11 @@
         {# <label> Assign Date </label> {{assignment_date}}  <br/> #}
         <label> Due Date: </label> {{due_date}}  <br/>
 
-        <label> Description: </label><div style="margin-left: 30px;"><textarea name='Description' value="{{category.assignmentDescr}}" rows=10 cols=90></textarea><br/>
+        <label> Description: </label><br /><div style="margin-left: 30px;"><textarea id="Description" name='Description' value="{{category.assignmentDescr}}" rows=0 cols=0></textarea><br/>
          </div>
         {% csrf_token %}
         <input class="button" type="submit" name="Update" value="Update" />
     </form>
+         
 </div>
 {% endblock %}
