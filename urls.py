@@ -53,6 +53,7 @@ urlpatterns = patterns('',
      url(r'^new_assignment/(?P<class_id>.+$)', new_assignment, name='new_assignment'),
      url(r'^evaluation_comment/(?P<enrolldetail_id>.+$)', evaluation_comment, name='evaluation_comment'),
      url(r'^report_card/(?P<enrolldetail_id>.+$)', report_card, name='report_card'),
+     url(r'^notify_report_card/(?P<enrolldetail_id>.+$)', notify_report_card, name='notify_report_card'),
 
      # Admin
      url(r'^semester$', semesters, name='semesters'),

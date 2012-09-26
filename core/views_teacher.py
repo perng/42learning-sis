@@ -5,6 +5,8 @@ from django.template import *
 #from django.template.defaultfilters import floatformat
 #from django.views.generic import TemplateView
 from django.http import HttpResponse, HttpResponseRedirect
+from django.template.loader import render_to_string
+
 #from django.shortcuts import render_to_response
 #from django.contrib.auth.models import User
 #from django.core.context_processors import csrf
@@ -15,6 +17,7 @@ from django.contrib.auth.decorators import login_required #, user_passes_test
 from sis.core.models import *
 from sis.core.forms import *
 from sis.core.util import *
+from django.contrib.sites.models import Site 
 
 
 @login_required
@@ -413,3 +416,18 @@ def report_card(request, enrolldetail_id):
     return my_render_to_response(request, 'reportcard.html', locals())
 
 
+@login_required
+def notify_report_card(request, enrolldetail_id):
+    en=EnrollDetail.objects.get(id=id_decode(enrolldetail_id))
+    site = Site.objects.get_current()
+
+    theClass=en.classPtr
+    student=en.student
+    subject = render_to_string('report_card_email_subject.txt', locals())
+    # Email subject *must not* contain newlines
+    subject = ''.join(subject.splitlines())
+        
+    message = render_to_string('report_card_email.txt', locals())
+        
+    en.student.family.user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
+    return generic_message(request, 'Parents Notified', 'teacher', 'Parents have been notified that report cards are ready.' )

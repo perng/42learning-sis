@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
     <head>
+    <title> Northern Westchester Chinese School Report Card for Class {{theClass}} </title> 
 	<link href="../static/css/report.css" rel="stylesheet" type="text/css" />
     </head>
 
@@ -70,7 +71,7 @@
 
 {% for cat in categories %}
 <br /><br />
- <h2>{{cat.name}}</h2>
+ <h2>{{cat.name}}  ({{cat.weight}}%)</h2>
 {% if cat.score_rows %}
 
 <table class="report">

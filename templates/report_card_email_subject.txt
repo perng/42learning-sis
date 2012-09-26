@@ -1,0 +1,2 @@
+{% load i18n %}
+{% trans "Report card of " %} {{ theClass }} {% trans "for" %} {{student}}

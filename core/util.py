@@ -16,9 +16,14 @@ def secure_required(view_func):
     return _wrapped_view_func
 
 
+    
+
 def my_render_to_response(request,template,c):
     c.update(csrf(request))
     return render_to_response(template, c)    
+
+def generic_message(request, title, view, message):
+    return render_to_response('generic_message.html', locals())
 
 def getMedian(numericValues):
     theValues = sorted(numericValues)

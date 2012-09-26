@@ -27,7 +27,7 @@
 
     <form class="red" action='{% url 'evaluation_comment' enrolldetail_id=en.eid %}' method='post'>
         <div style="margin-left: 30px;">
-        <textarea id="comment" name='comment' value="{{enrolldetail.note}}" rows=0 cols=0></textarea><br/>
+        <textarea id="comment" name='comment'  rows=0 cols=0>{{en.note}}</textarea><br/>
          </div>
         {% csrf_token %}
         <input class="button" type="submit" name="Update" value="Update" />

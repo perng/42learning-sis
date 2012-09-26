@@ -76,14 +76,6 @@
 
     <br/>
 
-    <form class="red" action="/calculate_total/{{theclass.eid}}" method="post">
-        <input type='hidden' name='category' value='{{category.eid}}'/> 
-        {% csrf_token %}
-        <h3> Class Setup </h3> 
-        <input type="checkbox" name="total_ready" value="total_ready"> Final Scores are ready </input></br>
-        <input type="checkbox" name="show_stats" value="show_stats" {% if request.session.show_stats %} checked="checked" {% endif %}> Show highest, lowest, average, and median for each item. </input><br/><br />
-        <input class="button" type="submit" name="calculate_total" value="Update Setting"/>
-    </form>
     {% endif%}
 </div>
 {% endblock %}

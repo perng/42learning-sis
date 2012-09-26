@@ -19,7 +19,7 @@
         <tr> 
             <td> {{gditem.duedate.isoformat}} </td> 
             <td>{{gditem.name}} </td>
-            <td> {{gditem.assignmentDescr}}</td> 
+            <td> {{gditem.assignmentDescr|safe}}</td> 
             <td> <a href="{{gditem.download_url}}"  target="_blank" > download </a> </td> 
         </tr> 
 

@@ -1,0 +1,11 @@
+
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/{%if view == 'teacher'%}red{%elif view == 'parent' %}green{% else%}blue{%endif%}.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  {{title}} {% endblock %}
+{% block content %} 
+<div class="{{view}}">
+	{{message}}
+</div>
+{% endblock %}

@@ -1,0 +1,4 @@
+{% load i18n %}
+
+{% trans "Report card of " %} {{ theClass }} {% trans "for" %} {{student}} is ready at
+<a href="http://{{site.domain}}{% url 'report_card' enrolldetail_id=en.eid %}"> Here </a> 

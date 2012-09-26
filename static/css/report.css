@@ -54,7 +54,7 @@ ol {
   padding:0;
   counter-reset:item;
 }
- 
+/*
 li {
   display:inline;
   padding:0;
@@ -63,11 +63,11 @@ li {
 }
 
 li:before {
-   content: "(week "counter(item, decimal-leading-zero)")"; 
+    content: "(week "counter(item, decimal-leading-zero)")";  
    margin-right: 8px;
    text-align:center;
 }
-
+*/
 .listitem {
    display:inline-block;
    width: 20px;
