@@ -3,14 +3,28 @@
 {% load url from future %}
 
 
-{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block theme %} 
+<link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> 
+<link href="{% static_path %}/css/record_attendance.css" rel="stylesheet" type="text/css" /> 
+{% endblock %}
 {% block title %}  Record Attendances: {{theclass.name}} {% endblock %}
 {% block content %} 
 <script>
-    $(function() {
-        $( "#extra_att_date" ).datepicker();
-        $( "#extra_att_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-    });
+	$(function() {
+		$("#calendar").datepicker({ altField: 'input#date', altFormat: 'yy-mm-dd' });
+
+
+		$('#add').click(function() {  
+    			return !$('#select1 option:selected').remove().appendTo('#select2');  
+   		});  
+   		
+		$('#remove').click(function() {  
+    			return !$('#select2 option:selected').remove().appendTo('#select1');  
+   		}); 
+		$('#summit').click(function() {
+
+		}); 
+	});
 </script>
 
 {% if error %}
@@ -18,43 +32,41 @@
 {% else %}
 <div class="teacher">
     <h3 class="title"> Class: {{theclass.name}} Attendance</h3>
-    <form class="grade" action='{% url 'record_attendance' class_id=theclass.eid show_session="_" %}' method='post'>
-        {% csrf_token %}
-        {% ifnotequal show_session snom1 %}
-        <a href='{% url 'record_attendance' class_id=theclass.eid show_session=snom1 %}'>  Prev </a>
-        {% endifnotequal %}
-        {% ifnotequal show_session snop1 %}
-        <a href='{% url 'record_attendance' class_id=theclass.eid show_session=snop1 %}'>  Next </a>
-        {% endifnotequal %}
-
-        <table class="grade_table">
-            <tr> 
-                <th> Date </th>
-                {% for cs in sessions %}
-                <th>                 {{cs.date.isoformat}} (<a href="{% url 'del_attendance' cs_id=cs.eid %}"> del </a>) </th>
-                {% endfor %}
-                {# <th> <input type="text" name="extra-att-date"/>  </th> #}
-                <th> {{extra_att_date }} </th> 
-            </tr>
-            {% for s in students %}
-            <tr>
-                <th> 
-                   {#  <a href="{%url 'student_attendance' class_id=theclass.eid sid=s.eid %}"> #}
-                        {{s.firstName}} {{s.lastName}} 
-                {# </a>  #}
-		</th>
-                {% for att in s.att_fields%}
-                <td> {{att}} </td> 
-                {% endfor %}
-                <td> {{s.extra_att}} </td> 
-            </tr>
-            {% endfor %}
-        </table>
-
-        <input class="button" type="submit" name="update-att" value="Update Attendance"/>
-    </form> 
-    Click "Prev" and "Next" to see older or newer records. <br/>
-    P: Present, A: Absent, L: Late, E: Early Depart
+</div>
+<br />
+<div class="teacher" style="height: 450px;">
+   <div class="sidebar1"> 
+	<h4 class="title">Step 1: Pick a date: </h4>
+    	<div id="calendar"></div> 	
+    </div>
+    <div class="mainpane">
+	<h4 class="title">Step 2: Record</h4>
+	<br />
+	<label>Date to record: </label>
+	<input id="date" disabled="disabled type="textbox"/><br/><br />
+	<div class="att_sub">
+	  <label>Presence</label><br /> 
+       	  <select multiple id="select1">  
+   		<option value="1">Option 1</option>  
+   		<option value="2">Option 2</option>  
+   		<option value="3">Option 3</option>  
+   		<option value="4">Option 4</option>  
+  	  </select>  
+        </div>
+	<div class="att_sub">
+	  <br /><br /> <br /><br/>
+	  <br /><br /> <br /><br/>
+          <a href="#" id="add">Absent&gt;&gt;</a>  
+  	  <a href="#" id="remove">&lt;&lt;Presence</a>  
+	</div>
+	<div class="att_sub"> 
+	  <label>Absent</label><br /> 
+  	  <select multiple id="select2"></select>  
+ 	</div>  
+    </div>
+</div>
+<div class="attfooter">
+	<h4 class="title"><a href="#" id="summit"> Step 3: Summit</a></h4>
 </div>
 {% endif %}
 
