@@ -16,6 +16,9 @@
         <link href="{% static_path %}/css/button.css" rel="stylesheet" type="text/css" />
         <link href="{% static_path %}/css/form.css" rel="stylesheet" type="text/css" />
         <link href="{% static_path %}/css/menu_style.css" rel="stylesheet" type="text/css" />
+	<link href="{% static_path %}/css/font-awesome.css" rel="stylesheet" type="text/css">
+	<link href="{% static_path %}/css/font-awesome-site.css" rel="stylesheet" type="text/css">
+	<link href="{% static_path %}/css/prettify.css" rel="stylesheet" type="text/css">
 
         <script src="{% static_path %}/js/jquery.min.js" type="text/javascript"></script>
         <script src="{% static_path %}/js/jquery-ui-1.8.23.custom.min.js" type="text/javascript"></script>
@@ -73,7 +76,7 @@
 		<div id="main">
                     <div id="sidebar-primary"> <!-- style.css default margin-left: -695 -->
                         <ul class="widget-container">
-                            <li id="user" class="widget"><h3 class="widgettitle">Welcome! {% if request.user.is_authenticated %}{{ request.user.get_profile.parent1LastName }} Family {% endif %}</h3></li></ul>
+                            <li id="user" class="widget"></i><h3 class="widgettitle">Welcome! {% if request.user.is_authenticated %}{{ request.user.get_profile.parent1LastName }} Family {% endif %}</h3></li></ul>
                         <div class="widget">
                             <ul id="side_menu">
 
@@ -86,7 +89,7 @@
 
                                 {% if request.user.is_authenticated %}
 
-                                <li><a href="{% url 'familyinfo' %}"> My Family Profile </a></li> 
+                                <li><a href="{% url 'familyinfo' %}">My Family Profile </a></li> 
                                 {# <li><a href="{% url 'roster' %}"> Parent Duty Roster </a></li>  #}
                                 <li><a href="{% url 'auth_password_change' %}">Change password</a></li>
                                 <li><a href="{% url 'auth_logout' %}">Log out</a></li>  

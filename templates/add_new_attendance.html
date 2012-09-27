@@ -1,0 +1,72 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+{% load url from future %}
+
+{% block theme %} 
+<link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> 
+<link href="{% static_path %}/css/record_attendance.css" rel="stylesheet" type="text/css" /> 
+{% endblock %}
+{% block title %}  Record Attendances: {{theclass.name}} {% endblock %}
+{% block content %} 
+<script>
+
+$(function() {
+		$('#datepicker').datepicker({
+	        dateFormat: 'm/d/yy',
+     		beforeShow: function (input, inst) {
+         	var offset = $(input).offset();
+        	 var height = $(input).height();
+         	window.setTimeout(function () {
+             	inst.dpDiv.css({ top: (offset.top + height + 4) + 'px', left: offset.left + 'px' })
+         	}, 1);
+     		}
+
+ 	});
+
+
+ });
+
+</script>
+
+{% if error %}
+{{error}}
+{% else %}
+<div class="teacher">
+    <div style="padding: 15px;">
+    <h2> New Record</h2>
+    <br />
+    <br />
+    <h4 style="padding: 5px;">Step 1: pick a date: <i class="icon-hand-right"></i> 
+    <input id="datepicker" /></h4><br/><br />
+     <h4 style="padding: 5px;">Step 2: record attendance <i class="icon-file"></i></h4>
+	<form method="post" action="" >
+	<table class="grade_table">
+            <tr>
+                <th> Name </th>
+                <th> Present </th>
+                <th> Absent </th>
+                <th> Late </th>
+                <th> Early Depart </th>
+            </tr>
+	    <tr>
+		<td> Andrea Perng </td>
+		<td><input name="andreaperng" type="radio" /></td>
+		<td><input name="andreaperng" type="radio" /></td>
+		<td><input name="andreaperng" type="radio" /></td>
+		<td><input name="andreaperng" type="radio" /></td>
+	    </tr>
+	    <tr>
+		<td> Arthur Perng </td>
+		<td><input name="arthurperng" type="radio" /></td>
+		<td><input name="arthurperng" type="radio" /></td>
+		<td><input name="arthurperng" type="radio" /></td>
+		<td><input name="arthurperng" type="radio" /></td>
+	    </tr>
+	</table>
+	<input type="submit" class="btn btn-success" value="Submit" id="submit" />
+	</form>
+	</div>
+</div>
+{% endif %}
+
+{% endblock %}
