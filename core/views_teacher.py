@@ -239,38 +239,11 @@ def del_score(request, gd_id):
     for score in gd.score_set.all():
         score.delete()
     gd.delete()
+    calculate_total(request, )
     return HttpResponseRedirect('/record_grade/%s/%s/_' % (id_encode(theClass.id),id_encode(gd.category.id)))
 
 
-@login_required
-def calculate_total(request, class_id, calculate=False):
-    request.session['show_stats'] = 'show_stats' in request.POST
-    class_id = id_decode(class_id)
-    theclass = Class.objects.get(id=class_id)
-    theclass.total_ready = 'total_ready' in request.POST
 
-
-    categories = theclass.gradingcategory_set.all()
-    students = theclass.student_set.all()
-    for s in students:
-        s.ed = EnrollDetail.objects.get(student=s, classPtr=theclass)
-        s.ed.final_score = 0
-        for c in categories:
-            gis = c.gradingitem_set.all()
-            for gi in gis:
-                gi_len = len(gis)
-                if not gi_len:
-                    break
-                s.ed.final_score += c.weight * sum([sc.score for sc in Score.objects.filter(student=s, gradingItem=gi)]) / gi_len / 100
-    scores = [s.ed.final_score for s in students]
-    scores.sort(reverse=True)
-    for s in students:
-        s.ed.rank = scores.index(s.ed.final_score) + 1
-        s.ed.save()
-    cat_id = request.POST['category']
-    print request.POST
-    print 'cat_id', cat_id
-    return HttpResponseRedirect('/record_grade/%s/%s/0' % (theclass.eid(), cat_id))
 
 
 @login_required
@@ -278,17 +251,16 @@ def assignments(request, cat_id):
     cat_id_decoded = id_decode(cat_id)
     category = GradingCategory.objects.get(id=cat_id_decoded)
     if request.method=='POST':
-        print request.POST
         name=request.POST['Name']
         gi,created=GradingItem.objects.get_or_create(category=category, name=name)
         gi.date=None #request.POST['assign_date']
         gi.duedate=request.POST['due_date']
         gi.assignmentDescr=request.POST['Description']
-	try:
-        	gi.save()
-	except:
-		gi.duedate=None
-		gi.save()
+        try:
+            gi.save()
+        except:
+            gi.duedate=None
+            gi.save()
 
         if created:
             gi.create_download_dir()
@@ -329,15 +301,22 @@ def edit_assignment(request, aid):
             gi.delete()
         else:
             giform=HomeWorkForm(request.POST, instance=gi)
-            if giform.is_valid():
-                try:   
-                    gi.save()
-                except:
-                    gi.duedate=None
-                    gi.save()
+            name=request.POST['Name']
+            gi.date=None #request.POST['assign_date']
+            gi.duedate=request.POST['due_date']
+            gi.assignmentDescr=request.POST['Description']
+
+            try:   
+                gi.save()
+            except:
+                gi.duedate=None
+                gi.save()
                 gi.create_download_dir()
 
         return HttpResponseRedirect('/assignments/'+ gi.category.eid())
+    due_date = DateField().widget.render('due_date', gi.duedate, attrs={'id':'due_date'})
+    print 'due_date', due_date
+
     giform=HomeWorkForm(instance=gi)
     request.method='GET'
     return my_render_to_response(request, 'assignment_edit.html', locals())
@@ -372,7 +351,7 @@ def get_attendance(student, session):
 def make_rows(data, num):
     if len(data)<= num:
         return [data]
-    return [data[0:num]]+ make_rows(data[num:])
+    return [data[0:num]]+ make_rows(data[num:],7)
 
 def get_score(student,item):
     try:
@@ -407,8 +386,8 @@ def report_card(request, enrolldetail_id):
         if not scores:
             cat.avg_score=0
         else:
-            cat.avg_score = sum([score[1] for score in scores])/len(scores)
-        cat.class_avg = sum([item.average for item in items])/len(scores)
+            cat.avg_score = sum([(score[1] if score[1]!=None else 0) for score in scores])/len(scores)
+        cat.class_avg = sum([(item.average if item.average!=None else 0) for item in items])/len(scores)
 
         cat.weighted_score = cat.avg_score * cat.weight /100.0
         student.final_score += cat.weighted_score
@@ -417,17 +396,18 @@ def report_card(request, enrolldetail_id):
 
 
 @login_required
-def notify_report_card(request, enrolldetail_id):
-    en=EnrollDetail.objects.get(id=id_decode(enrolldetail_id))
+def notify_report_card(request, class_id):
+    theClass = Class.objects.get(id=id_decode(class_id))
     site = Site.objects.get_current()
-
-    theClass=en.classPtr
-    student=en.student
-    subject = render_to_string('report_card_email_subject.txt', locals())
-    # Email subject *must not* contain newlines
-    subject = ''.join(subject.splitlines())
+    ens= EnrollDetail.objects.filter(classPtr=theClass)
+    for en in ens:
+        theClass=en.classPtr
+        student=en.student
+        subject = render_to_string('report_card_email_subject.txt', locals())
+        # Email subject *must not* contain newlines
+        subject = ''.join(subject.splitlines())
         
-    message = render_to_string('report_card_email.txt', locals())
-        
-    en.student.family.user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
+        message = render_to_string('report_card_email.txt', locals())
+    
+        en.student.family.user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
     return generic_message(request, 'Parents Notified', 'teacher', 'Parents have been notified that report cards are ready.' )

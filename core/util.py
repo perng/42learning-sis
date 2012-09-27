@@ -70,6 +70,20 @@ def id_decode(did):
         did2 = int(de(did2))
     return did2
 
+
+def median(data):
+    num = len(data)
+    if num == 0:
+        return 0
+    if num % 2 == 1: 
+        data[(num-1)/2]
+    else:
+        if num ==1:
+            return data[0]
+        else: 
+            return (data[num/2]+data[num/2-1])/2
+
+
 if __name__ == '__main__':
     for i in range(10000):
         x = random.randint(1, 1000)

@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 {% load core_tags %}
-{% load url from future %}
-{% load markup %}
 
 {% block theme %} 
 
@@ -12,14 +10,14 @@
 
 {% endblock %}
 
-{% block title %} Assignment  {% endblock %}
+{% block title %} Assignments  {% endblock %}
 
 {% block content %}
 
 <script>
     $(function() {
-        $( "#assign_date" ).datepicker();
-        $( "#assign_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+        //$( "#assign_date" ).datepicker();
+        //$( "#assign_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
         $( "#due_date" ).datepicker();
         $( "#due_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
 	
@@ -27,7 +25,7 @@
     });
 </script>
 <div class="teacher">
-    <h3 class="title"> Homework for Class {{category.classPtr.name}} </h3>
+    <h3 class="title"> Assignments for Class {{category.classPtr.name}} </h3>
 
 
     {% if gditems %}
@@ -52,7 +50,8 @@
         {# <label> Assign Date </label> {{assignment_date}}  <br/> #}
         <label> Due Date: </label> {{due_date}}  <br/>
 
-        <label> Description: </label><br /><div style="margin-left: 30px;"><textarea id="Description" name='Description' value="{{category.assignmentDescr}}" rows=0 cols=0></textarea><br/>
+        <label> Description: </label><br /><div style="margin-left: 30px;">
+        <textarea id="Description" name='Description' value="{{category.assignmentDescr}}" rows=0 cols=0></textarea><br/>
          </div>
         {% csrf_token %}
         <div style="margin-left: 30px;"><input class="button" type="submit" name="Update" value="Update" /></div>

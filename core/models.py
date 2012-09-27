@@ -5,7 +5,8 @@ from django.db.models import Q
 from operator import  attrgetter #, itemgetter
 
 from django.contrib.localflavor.us.models import  PhoneNumberField #, USPostalCodeField
-from sis.core.util import id_encode
+from sis.core.util import id_encode, median
+
 
 
 this_year = datetime.date.today().year
@@ -155,6 +156,25 @@ class Class(models.Model):
             t+= ', '+self.assocTeacher2.get_profile().parent1_fullname()
         return t
 
+    def calculate_total(self):
+        categories = self.gradingcategory_set.all()
+        students = self.student_set.all()
+        for s in students:
+            s.ed = EnrollDetail.objects.get(student=s, classPtr=self)
+            s.ed.final_score = 0
+            for c in categories:
+                gis = c.gradingitem_set.all()
+                for gi in gis:
+                    gi.calculate_total()
+                    s.ed.final_score += c.weight * sum([sc.score for sc in Score.objects.filter(student=s, gradingItem=gi)]) / len(gis) / 100
+            s.save()
+        scores = [s.ed.final_score for s in students]
+        scores.sort(reverse=True)
+        for s in students:
+            s.ed.rank = scores.index(s.ed.final_score) + 1
+            s.ed.save()
+
+
 class EnrollDetail(models.Model):
     student = models.ForeignKey(Student)
     classPtr = models.ForeignKey(Class)
@@ -200,6 +220,19 @@ class GradingItem(models.Model):
     assignmentDescr = models.TextField(blank=True, default='')
     duedate = models.DateField(null=True, verbose_name='Due date', )
 
+    def calculate_statistics(self):
+        num_students= len(self.students)
+        scores=Score.objects.filter(gradingItem=self)
+        scores=[s.score for s  in scores if s!=None]
+        scores=[s for s  in scores if s!=None]
+        scores.sort()
+        num_scores=len(scores)
+        if num_scores >0:
+            self.highest=scores[-1]
+            self.lowest=scores[0]
+            self.average=sum(scores)/num_scores
+            self.median = median(scores)
+
     def __str__(self):
         return self.category.__str__()+' '+self.name
 
@@ -212,9 +245,31 @@ class GradingItem(models.Model):
         return id_encode(self.id)
     
     def download_path(self):
-        path='/'.join([self.category.classPtr.semester.semester+ ' '+self.category.classPtr.semester.schoolYear,
-                           self.category.classPtr.name,self.category.name,
-                           self.name])       
+        try: 
+            base64.b64encode(self.category.classPtr.semester.semester)
+            semester=self.category.classPtr.semester.semester
+        except:
+            semester=str(self.category.classPtr.semester.semester.id)
+        try:
+            base64.b64encode(self.category.classPtr.name)
+            theClass = self.category.classPtr.name
+        except:
+            theClass = str(self.category.classPtr.id)
+        try:
+            base64.b64encode(self.category.name)
+            category = self.category.name
+        except:
+            category = str(self.category.id)
+
+        try:
+            base64.b64encode(self.name)
+            name = self.name
+        except:
+            name = str(self.id)
+            
+             
+        path='/'.join([semester+ ' '+self.category.classPtr.semester.schoolYear,
+                           theClass, category, name])       
         for c in '\:*?"<>|':
             path = path.replace(c,'')
         return  path
