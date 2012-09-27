@@ -239,13 +239,18 @@ def del_score(request, gd_id):
     for score in gd.score_set.all():
         score.delete()
     gd.delete()
-    calculate_total(request, )
+    #calculate_total(request, )
     return HttpResponseRedirect('/record_grade/%s/%s/_' % (id_encode(theClass.id),id_encode(gd.category.id)))
 
-
-
-
-
+@login_required
+def add_new_attendance(request, class_id):
+    theClass= Class.objects.get(id=id_decode(class_id))
+    ens = theClass.enrolldetail_set.all()
+    students = [en.student for en in ens]
+    if request.method == 'GET':
+        return my_render_to_response(request, 'add_new_attendance.html', locals())
+    print request.POST
+    
 @login_required
 def assignments(request, cat_id):
     cat_id_decoded = id_decode(cat_id)

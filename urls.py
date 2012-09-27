@@ -45,6 +45,8 @@ urlpatterns = patterns('',
      #(r'^accounts/', include('sis.registration.urls')),
      (r'^accounts/', include('sis.registration.backends.default.urls')),
      url(r'^del_attendance/(?P<cs_id>.+)$', del_attendance, name='del_attendance'),
+     url(r'^add_new_attendance/(?P<class_id>.+$)', add_new_attendance, name='add_new_attendance' ),
+
      url(r'^del_score/(?P<gd_id>.+)$', del_score, name='del_score'),
      #url(r'^calculate_total/(?P<class_id>.+)$', calculate_total, name='calculate_total'),
      url(r'^assignments/(?P<cat_id>.+)$', assignments, name='assignments'),

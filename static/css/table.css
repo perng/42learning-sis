@@ -124,9 +124,8 @@ table-layout:fixed;
 {
 font-size:1em;
 text-align:center;
-/*border:1px solid #CDC9C9;*/
 border:1px solid #6F4242;
-overflow: hidden;
+overflow: hidden; 
 word-wrap:break-word;
 }
 

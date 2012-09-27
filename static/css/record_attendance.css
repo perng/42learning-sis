@@ -1,80 +1,17 @@
-.mainpane {
-        float:right;
-        width:405px;
-        height: 440px;
-        margin-top: 5px;
-        background: #F3F3E6;
-        padding: 0px 5px 5px 10px;
-        border: 1px solid #D4D4D4;
-        -webkit-box-shadow: 0 0 15px #D4D4D4;
-        -moz-box-shadow: 0 0 15px #d4d4d4;
-        box-shadow: 0 0 15px #D4D4D4;
-        border-radius: 5px;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
+.rotate90 
+{
+ 	clear:both;
+	text-align: center;
+	vertical-align: middle;
+	width: 120px;
+	margin: -30px;
+	white-space: nowrap;
+        -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
 
-.sidebar1 {
-        float:left;
-        width:280px;
-        height: 440px;
-        margin-top: 5px;
-        background: #F3F3E6;
-        padding: 0px 5px 5px 10px;
-        border: 1px solid #D4D4D4;
-        -webkit-box-shadow: 0 0 15px #D4D4D4;
-        -moz-box-shadow: 0 0 15px #d4d4d4;
-        box-shadow: 0 0 15px #D4D4D4;
-        border-radius: 5px;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
-}
-
-.attfooter {
-        clear:both;
-        width:730px;
-        margin-top: 5px;
-        background: #F3F3E6;
-        padding: 0px 5px 5px 10px;
-        border: 1px solid #D4D4D4;
-        -webkit-box-shadow: 0 0 15px #D4D4D4;
-        -moz-box-shadow: 0 0 15px #d4d4d4;
-        box-shadow: 0 0 15px #D4D4D4;
-        border-radius: 5px;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
-}
 
 div.ui-datepicker {
-                font-size:13px;
+                font-size:12px;
 }
-
-a#remove, a#add {
-   display: block;
-   border: 1px solid #aaa;
-   text-decoration: none;
-   background-color: #fafafa;
-   color: #123456;
-   margin: 2px;
-   clear:both;
-}
-
-div.att_sub {
-   float:left;
-   text-align: center;
-   margin: 5px;
-}
-
-select#select1, select#select2
-{
-   width: 140px;
-   height: 300px;
-   border: 1px solid #D4D4D4;
-   -webkit-box-shadow: 0 0 15px #D4D4D4;
-   -moz-box-shadow: 0 0 15px #d4d4d4;
-   box-shadow: 0 0 15px #D4D4D4;
-   border-radius: 5px;
-   -moz-border-radius: 5px;
-   -webkit-border-radius: 5px;
-}
-

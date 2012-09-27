@@ -1,0 +1,67 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+{% load url from future %}
+
+{% block theme %} 
+<link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> 
+<link href="{% static_path %}/css/record_attendance.css" rel="stylesheet" type="text/css" /> 
+{% endblock %}
+{% block title %}  Add New Record Attendances: {{theClass.name}} {% endblock %}
+{% block content %} 
+<script>
+
+$(function() {
+		$('#datepicker').datepicker({
+	        dateFormat: 'm-d-yy',
+     		beforeShow: function (input, inst) {
+         	var offset = $(input).offset();
+        	 var height = $(input).height();
+         	window.setTimeout(function () {
+             	inst.dpDiv.css({ top: (offset.top + height + 4) + 'px', left: offset.left + 'px' })
+         	}, 1);
+     		}
+
+ 	});
+
+
+ });
+
+</script>
+
+{% if error %}
+{{error}}
+{% else %}
+<div class="teacher">
+    <div style="padding: 15px;">
+    <h2> New Attendance Record for {{theClass.name}}</h2>
+    <br />
+	<form method="post" action="{% url 'add_new_attendance' class_id=theClass.eid %}" >
+    <h4 style="padding: 5px;">Step 1: pick a date: <i class="icon-hand-right"></i> 
+    <input id="datepicker" name='date' /><br/>
+     <h4 style="padding: 5px;">Step 2: record attendance <i class="icon-file"></i></h4>
+	<table class="grade_table">
+            <tr>
+                <th> Name </th>
+                <th> Present </th>
+                <th> Absent </th>
+                <th> Late </th>
+                <th> Early Depart </th>
+            </tr>
+        {% for s in students %}
+	    <tr>
+		<td> {{s}} </td>
+		<td><input name="present-{{s.eid}}" type="radio" /></td>
+		<td><input name="absent-{{s.eid}}" type="radio" /></td>
+		<td><input name="late-{{s.eid}}" type="radio" /></td>
+		<td><input name="earlydepart-{{s.eid}}" type="radio" /></td>
+	    </tr>
+		{% endfor %}
+	</table>
+	<input type="submit" class="btn btn-success" value="Submit" id="submit" />
+	{% csrf_token %}
+	</form>
+	</div>
+</div>
+{% endif %}
+
+{% endblock %}
