@@ -39,6 +39,7 @@ $(function() {
     <h4 style="padding: 5px;">Step 1: pick a date: <i class="icon-hand-right"></i> 
     <input id="datepicker" name='date' /><br/>
      <h4 style="padding: 5px;">Step 2: record attendance <i class="icon-file"></i></h4>
+    <input type='hidden' name='class_id' value='{{theClass.eid}}' /></div>
 	<table class="grade_table">
             <tr>
                 <th> Name </th>
@@ -50,10 +51,10 @@ $(function() {
         {% for s in students %}
 	    <tr>
 		<td> {{s}} </td>
-		<td><input name="present-{{s.eid}}" type="radio" /></td>
-		<td><input name="absent-{{s.eid}}" type="radio" /></td>
-		<td><input name="late-{{s.eid}}" type="radio" /></td>
-		<td><input name="earlydepart-{{s.eid}}" type="radio" /></td>
+		<td><input name="{{s.id}}" type="radio" value="present" checked/></td>
+		<td><input name="{{s.id}}" type="radio" value="absent"/></td>
+		<td><input name="{{s.id}}" type="radio"  value="late"/></td>
+		<td><input name="{{s.id}}" type="radio" value="earlydepart"/></td>
 	    </tr>
 		{% endfor %}
 	</table>

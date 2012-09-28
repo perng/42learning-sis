@@ -34,7 +34,7 @@ urlpatterns = patterns('',
      url(r'^grading_policy/(?P<cid>.+)$', grading_policy, name='grading_policy'),
      url(r'^classroaster/(?P<cid>.+)$', classroaster, name='classroaster'),
      url(r'^record/(?P<class_id>.+)$', record, name='record'),
-     url(r'^record_attendance/(?P<class_id>.+)/(?P<show_session>.+)$', record_attendance, name='record_attendance'),
+     url(r'^record_attendance/(?P<class_id>.+)$', record_attendance, name='record_attendance'),
      url(r'^student_attendance/(?P<class_id>.+)/(?P<sid>.+)$', student_attendance, name='student_attendance'),
 
      url(r'^record_grade/(?P<class_id>.+)/(?P<cat_id>.+)/(?P<show_item>.+)$', record_grade, name='record_grade'),
