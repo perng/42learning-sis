@@ -1,5 +1,5 @@
 
-import  copy
+import  copy, datetime
 #from django.template.loader import get_template
 from django.template import *
 #from django.template.defaultfilters import floatformat
@@ -13,7 +13,7 @@ from django.template.loader import render_to_string
 #from django.contrib import messages
 from django.contrib.auth.decorators import login_required #, user_passes_test
 #from django.contrib.admin import widgets
-
+from django.shortcuts import  get_object_or_404,redirect
 from sis.core.models import *
 from sis.core.forms import *
 from sis.core.util import *
@@ -30,7 +30,7 @@ def grading_policy(request, cid):
     permitted = classid in teaches_class_ids or request.user.is_superuser
     errors=[]
     if permitted:
-        theclass = Class.objects.get(id=classid)
+        theClass = Class.objects.get(id=classid)
         if request.method == 'POST':
             keys = [tuple(k.split('-') + [request.POST[k]]) for k in request.POST if '-' in k]
             keys = [(l, id_decode(cid), v) for l, cid, v in keys]
@@ -54,7 +54,7 @@ def grading_policy(request, cid):
             for category in cats.values():
                 category.save()
 
-        categories = theclass.gradingcategory_set.all()
+        categories = theClass.gradingcategory_set.all()
     else:
         error = 'You are not a teacher of this class'
 
@@ -71,16 +71,16 @@ def classroaster(request, cid):
 @login_required
 def record(request, class_id):
     classid = id_decode(class_id)
-    theclass = Class.objects.get(id=classid)
-    categories = theclass.gradingcategory_set.order_by('order')
+    theClass = Class.objects.get(id=classid)
+    categories = theClass.gradingcategory_set.order_by('order')
     return my_render_to_response(request, 'record.html', locals())
 
 
 @login_required
 def student_attendance(request, class_id, sid):
-    theclass = Class.objects.get(id=class_id)
+    theClass = Class.objects.get(id=class_id)
     student= Student.objects.get(id=id_decode(sid))
-    sessions = theclass.classsession_set.order_by('date')
+    sessions = theClass.classsession_set.order_by('date')
     for session in sessions:
         try:
             session.att=Attendance.objects.get(student=student, session=session)
@@ -91,9 +91,9 @@ def student_attendance(request, class_id, sid):
 @login_required
 def record_attendance(request, class_id):
     classid = id_decode(class_id)
-    theclass = Class.objects.get(id=classid)
-    students = theclass.student_set.order_by('lastName')
-    sessions = theclass.classsession_set.order_by('date')
+    theClass = Class.objects.get(id=classid)
+    students = theClass.student_set.order_by('lastName')
+    sessions = theClass.classsession_set.order_by('date')
 
     if request.method == 'POST':
         print 'attendance post'
@@ -109,7 +109,7 @@ def record_attendance(request, class_id):
                 att_keys = [key for key in request.POST if key.startswith('attextra')]
                 att_values = [request.POST[key] for key in att_keys]
                 sids = [int(key.split('-')[1]) for key in att_keys]
-                session = ClassSession(classPtr=theclass, date=date)
+                session = ClassSession(classPtr=theClass, date=date)
                 session.save()
                 for sid, att in zip(sids, att_values):
                     student = [s for s in students if  s.id == sid][0]
@@ -143,10 +143,10 @@ def record_attendance(request, class_id):
 def record_grade(request, class_id, cat_id, show_item):
     print 'record grade'
     classid = id_decode(class_id)
-    theclass = Class.objects.get(id=classid)
+    theClass = Class.objects.get(id=classid)
     category = GradingCategory.objects.get(id=id_decode(cat_id))
     print 'category', category.name
-    students = theclass.student_set.order_by('lastName')
+    students = theClass.student_set.order_by('lastName')
 
     if request.method == 'POST':
         score_item_changed = {}
@@ -216,7 +216,7 @@ def del_attendance(request, cs_id):
     for att in cs.attendance_set.all():
         att.delete()
     cs.delete()
-    return HttpResponseRedirect('/record_attendance/%s/_' % (id_encode(theClass.id),))
+    return HttpResponseRedirect('/record_attendance/%s' % (id_encode(theClass.id),))
 
 @login_required
 def del_score(request, gd_id):
@@ -231,13 +231,65 @@ def del_score(request, gd_id):
 
 @login_required
 def add_new_attendance(request, class_id):
+    new=True
     theClass= Class.objects.get(id=id_decode(class_id))
     ens = theClass.enrolldetail_set.all()
     students = [en.student for en in ens]
+    date=datetime.datetime.today().strftime("%m-%d-%y")
+    print 'date', date
     if request.method == 'GET':
-        return my_render_to_response(request, 'add_new_attendance.html', locals())
+        return my_render_to_response(request, 'edit_attendance.html', locals())
+
     print request.POST
-    
+    try:
+        date=datetime.datetime.strptime( request.POST['date'] ,'%m-%d-%y')
+    except Exception, e:
+        print e
+        error= 'Date is required.'
+        return my_render_to_response(request, 'edit_attendance.html', locals())
+    cs=ClassSession(classPtr=theClass, date=date)
+    cs.save()
+    for k in request.POST:
+        if not k.startswith('att-'):
+            continue
+        a,sid = k.split('-')
+        student = get_object_or_404(Student, pk=id_decode(sid))
+        att=Attendance(student=student, session=cs, attended=request.POST[k][0])
+        att.save()
+    #request.method='GET'
+    return redirect('record_attendance', class_id= theClass.eid())
+
+
+
+@login_required
+def edit_attendance(request, cs_id):
+    cs=get_object_or_404(ClassSession, id=id_decode(cs_id))
+    theClass= cs.classPtr
+    ens = theClass.enrolldetail_set.all()
+    students = [en.student for en in ens]
+    if request.method == 'GET':
+        for s in students:
+            s.att=Attendance.objects.get(session=cs, student=s).attended
+        date = cs.date
+        return my_render_to_response(request, 'edit_attendance.html', locals())
+
+    try:
+        cs.date=date=datetime.datetime.strptime( request.POST['date'] ,'%m-%d-%y')
+        cs.save()
+    except Exception, e:
+        print e
+        error= 'Date is required.'
+        return my_render_to_response(request, 'edit_attendance.html', locals())
+    for k in request.POST:
+        if not k.startswith('att-'):
+            continue
+        a,sid = k.split('-')
+        student = get_object_or_404(Student, pk=id_decode(sid))
+        att=Attendance.objects.get(student=student, session=cs )
+        att.attended=attended=request.POST[k][0]
+        att.save()
+    return my_render_to_response(request, 'record_attendance.html', locals())
+
     
 @login_required
 def assignments(request, cat_id):

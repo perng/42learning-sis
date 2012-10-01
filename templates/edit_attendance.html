@@ -6,13 +6,13 @@
 <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> 
 <link href="{% static_path %}/css/record_attendance.css" rel="stylesheet" type="text/css" /> 
 {% endblock %}
-{% block title %}  Add New Record Attendances: {{theClass.name}} {% endblock %}
+{% block title %}  {% if new %} Add New {% else %} Edit {% endif %} Attendance Record: {{theClass.name}} {% endblock %}
 {% block content %} 
 <script>
 
 $(function() {
 		$('#datepicker').datepicker({
-	        dateFormat: 'm-d-yy',
+	        dateFormat: 'm-d-y',
      		beforeShow: function (input, inst) {
          	var offset = $(input).offset();
         	 var height = $(input).height();
@@ -37,9 +37,9 @@ $(function() {
     <br />
 	<form method="post" action="{% url 'add_new_attendance' class_id=theClass.eid %}" >
     <h4 style="padding: 5px;">Step 1: pick a date: <i class="icon-hand-right"></i> 
-    <input id="datepicker" name='date' /><br/>
+    <input id="datepicker" name='date'  value="{{date| date:"m-d-y"}}"/><br/>
      <h4 style="padding: 5px;">Step 2: record attendance <i class="icon-file"></i></h4>
-    <input type='hidden' name='class_id' value='{{theClass.eid}}' /></div>
+    <input type='hidden' name='class_id' value='{{theClass.eid}}' />
 	<table class="grade_table">
             <tr>
                 <th> Name </th>
@@ -51,10 +51,11 @@ $(function() {
         {% for s in students %}
 	    <tr>
 		<td> {{s}} </td>
-		<td><input name="{{s.id}}" type="radio" value="present" checked/></td>
-		<td><input name="{{s.id}}" type="radio" value="absent"/></td>
-		<td><input name="{{s.id}}" type="radio"  value="late"/></td>
-		<td><input name="{{s.id}}" type="radio" value="earlydepart"/></td>
+		<td><input name="att-{{s.eid}}" type="radio" value="Present" {%if s.att == 'P' %} checked {% endif %} {% if new %} checked {% endif %}
+		/></td>
+		<td><input name="att-{{s.cid}}" type="radio" value="Absent" {%if s.att == 'A' %} checked {% endif %}/></td>
+		<td><input name="att-{{s.cid}}" type="radio"  value="Late" {%if s.att == 'L' %} checked {% endif %}/></td>
+		<td><input name="att-{{s.cid}}" type="radio" value="Earlydepart" {%if s.att == 'E' %} checked {% endif %}/></td>
 	    </tr>
 		{% endfor %}
 	</table>

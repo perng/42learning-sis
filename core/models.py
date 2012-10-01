@@ -64,11 +64,11 @@ class Family(models.Model):
 
     def teaches(self):
         semester = current_reg_semester()
-	try:
+        try:
             classes = list(Class.objects.filter(Q(semester=semester) &(Q(headTeacher=self.user) | Q(assocTeacher1=self.user) | Q(assocTeacher2=self.user))))
             classes.sort(key=attrgetter('name'))
-	except:
-		return []
+        except:
+            return []
         return classes
     def is_parent(self):
         return self.student_set.all()
@@ -88,6 +88,10 @@ class Family(models.Model):
         return self.parent2FirstName + ' ' + self.parent2LastName+ ("("+self.parent2ChineseFullName+")"  if self.parent2ChineseFullName else '')
     def address(self):
         return ','.join([self.streetNumber, self.city, self.state, self.zipcode])
+    def emails(self):
+        if self.altEmail:
+            return self.user.email +','+ self.altEmail
+        return self.user.email
 
 LANG_CHOICES = (('English', 'English'), ('Mandarin', 'Mandarin'), ('Cantonese', 'Cantonese'), ('Other', 'Other'))
 GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'))
@@ -102,7 +106,8 @@ class Student(models.Model):
     family = models.ForeignKey(Family)
     enroll = models.ManyToManyField('Class'  , through='EnrollDetail')
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
     def __str__(self):
         return self.firstName + ' ' + self.lastName
     class Meta:

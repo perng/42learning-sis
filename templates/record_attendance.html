@@ -3,7 +3,7 @@
 {% load url from future %}
 
 {% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
-{% block title %}  Record Attendances: {{theclass.name}} {% endblock %}
+{% block title %}  Record Attendances: {{theClass.name}} {% endblock %}
 {% block content %} 
 
 {% if error %}
@@ -11,9 +11,9 @@
 {% else %}
 <div class="teacher">
     <div style="padding: 15px;">
-    <h2> Class: {{theclass.name}} Attendance</h2>
+    <h2> Class: {{theClass.name}} Attendance</h2>
     <br />
-    <a href="{% url 'add_new_attendance' class_id=theclass.eid %}" class="btn btn-success" style="text-decoration: none;"><i class="icon-plus"></i> Add New Record </a>
+    <a href="{% url 'add_new_attendance' class_id=theClass.eid %}" class="btn btn-success" style="text-decoration: none;"><i class="icon-plus"></i> Add New Record </a>
     <br /><br /><br />
     Current Records: 
     <table class="grade_table ui-widget-content ui-corner-all">
@@ -25,8 +25,8 @@
         {% for session in sessions %}
 	    <tr>
 		<td> {{session.date| date:"y-m-d"}} </td>
-		<td> <a href="" class="btn btn-warning btn-mini" style="text-decoration: none; color: white;" > <i class="icon-pencil"> </i> Edit&nbsp; </a></td>
-		<td> <a href="" class="btn btn-danger btn-mini" style="text-decoration: none; color: white;"> <i class="icon-trash"></i> Delete&nbsp; </a> </td>
+		<td> <a href="{% url 'edit_attendance' cs_id=session.eid %}" class="btn btn-warning btn-mini" style="text-decoration: none; color: white;" > <i class="icon-pencil"> </i> Edit&nbsp; </a></td>
+		<td> <a href="{% url 'del_attendance' cs_id=session.eid %}" class="btn btn-danger btn-mini" style="text-decoration: none; color: white;"> <i class="icon-trash"></i> Delete&nbsp; </a> </td>
             </tr>
 		{% endfor %}
       </table>
