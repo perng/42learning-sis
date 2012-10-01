@@ -1,0 +1,69 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+{% load url from future %}
+
+{% block theme %} 
+<link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> 
+<link href="{% static_path %}/css/record_attendance.css" rel="stylesheet" type="text/css" /> 
+{% endblock %}
+{% block title %}  {% if new %} Add New {% else %} Edit {% endif %} Attendance Record: {{theClass.name}} {% endblock %}
+{% block content %} 
+<script>
+
+$(function() {
+		$('#datepicker').datepicker({
+	        dateFormat: 'm-d-y',
+     		beforeShow: function (input, inst) {
+         	var offset = $(input).offset();
+        	 var height = $(input).height();
+         	window.setTimeout(function () {
+             	inst.dpDiv.css({ top: (offset.top + height + 4) + 'px', left: offset.left + 'px' })
+         	}, 1);
+     		}
+
+ 	});
+
+
+ });
+
+</script>
+
+{% if error %}
+{{error}}
+{% else %}
+<div class="teacher">
+    <div style="padding: 15px;">
+    <h2> New Attendance Record for {{theClass.name}}</h2>
+    <br />
+	<form method="post" action="{% url 'add_new_attendance' class_id=theClass.eid %}" >
+    <h4 style="padding: 5px;">Step 1: pick a date: <i class="icon-hand-right"></i> 
+    <input id="datepicker" name='date'  value="{{date| date:"m-d-y"}}"/><br/>
+     <h4 style="padding: 5px;">Step 2: record attendance <i class="icon-file"></i></h4>
+    <input type='hidden' name='class_id' value='{{theClass.eid}}' />
+	<table class="grade_table">
+            <tr>
+                <th> Name </th>
+                <th> Present </th>
+                <th> Absent </th>
+                <th> Late </th>
+                <th> Early Depart </th>
+            </tr>
+        {% for s in students %}
+	    <tr>
+		<td> {{s}} </td>
+		<td><input name="att-{{s.eid}}" type="radio" value="Present" {%if s.att == 'P' %} checked {% endif %} {% if new %} checked {% endif %}
+		/></td>
+		<td><input name="att-{{s.cid}}" type="radio" value="Absent" {%if s.att == 'A' %} checked {% endif %}/></td>
+		<td><input name="att-{{s.cid}}" type="radio"  value="Late" {%if s.att == 'L' %} checked {% endif %}/></td>
+		<td><input name="att-{{s.cid}}" type="radio" value="Earlydepart" {%if s.att == 'E' %} checked {% endif %}/></td>
+	    </tr>
+		{% endfor %}
+	</table>
+	<input type="submit" class="btn btn-success" value="Submit" id="submit" />
+	{% csrf_token %}
+	</form>
+	</div>
+</div>
+{% endif %}
+
+{% endblock %}
