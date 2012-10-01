@@ -21,7 +21,7 @@
             {% endif %}
             <td> 
                 {% if c.recordAttendance %} 
-                <a href='{% url 'record_attendance' class_id=c.eid show_session='_' %}'> Attendance </a> 
+                <a href='{% url 'record_attendance' class_id=c.eid  %}'> Attendance </a> 
                 {% else %}
                 -
                 {% endif %} 

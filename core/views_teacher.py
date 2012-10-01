@@ -78,7 +78,7 @@ def record(request, class_id):
 
 @login_required
 def student_attendance(request, class_id, sid):
-    theclass = Class.objects.get(id=classid)
+    theclass = Class.objects.get(id=class_id)
     student= Student.objects.get(id=id_decode(sid))
     sessions = theclass.classsession_set.order_by('date')
     for session in sessions:
@@ -89,7 +89,7 @@ def student_attendance(request, class_id, sid):
     return 
 
 @login_required
-def record_attendance(request, class_id, show_session):
+def record_attendance(request, class_id):
     classid = id_decode(class_id)
     theclass = Class.objects.get(id=classid)
     students = theclass.student_set.order_by('lastName')
@@ -127,19 +127,6 @@ def record_attendance(request, class_id, show_session):
                 att.save()
 
 
-    if sessions:
-        sno = len(sessions)
-
-        show_session = sno - 1 if show_session == '_' else int(show_session)
-        snom1 = max(0, show_session - 1)
-        snop1 = min(sno - 1, show_session + 1)
-        print 'snom1, snop1', snom1, snop1
-        sessions = [sessions[show_session]]
-    else:
-        snom1 = 0
-        snop1 = 0
-        print 'snom1, snop1', snom1, snop1
-        session = []
 
 
     for s in students:
@@ -250,6 +237,7 @@ def add_new_attendance(request, class_id):
     if request.method == 'GET':
         return my_render_to_response(request, 'add_new_attendance.html', locals())
     print request.POST
+    
     
 @login_required
 def assignments(request, cat_id):
