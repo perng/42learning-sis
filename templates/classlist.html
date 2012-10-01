@@ -22,7 +22,7 @@
     <form class="classform" action='{% url 'classlist' sem.eid %}'  method='post'>
     
         {% csrf_token %}
-        <table class="normal">
+        <table class="table table-bordered table-striped table-condensed" style="font-size:0.9em;">
             <tr>
                 <th>Class </th>
                 <th>Base (Credit Card)</th>

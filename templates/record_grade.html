@@ -22,7 +22,7 @@
     <form class="red" action='{% url 'record_grade' class_id=theclass.eid cat_id=category.eid show_item="_" %}' method='post'>
         {% csrf_token %}
         <div class="tbody">
-            <table class="normal">
+            <table class="table  table-bordered table-condensed" style="font-size:0.9em;">
                 <tr> 
                     <th> Item </th>
                     {% for gdis in category.gradingitems %}

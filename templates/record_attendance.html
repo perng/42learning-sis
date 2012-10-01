@@ -2,7 +2,9 @@
 {% load core_tags %}
 {% load url from future %}
 
-{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block theme %} 
+<link href="{% static_path %}/css/record_attendance.css" rel="stylesheet" type="text/css" /> 
+<link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
 {% block title %}  Record Attendances: {{theclass.name}} {% endblock %}
 {% block content %} 
 
@@ -14,9 +16,9 @@
     <h2> Class: {{theclass.name}} Attendance</h2>
     <br />
     <a href="{% url 'add_new_attendance' class_id=theclass.eid %}" class="btn btn-success" style="text-decoration: none;"><i class="icon-plus"></i> Add New Record </a>
-    <br /><br /><br />
-    Current Records: 
-    <table class="grade_table ui-widget-content ui-corner-all">
+    <br /><br />
+    <div class="record-tab">
+    <table class="table  table-bordered table-striped table-condensed">
             <tr> 
                 <th> Date </th>
 		<th> Edit</th>
@@ -38,6 +40,7 @@
 		<td> <a href="" class="btn btn-danger btn-mini" style="text-decoration: none; color: white;"> <i class="icon-trash"></i> Delete&nbsp; </a> </td>
             </tr>
       </table>
+      </div>
      </div>
 </div>
 {% endif %}

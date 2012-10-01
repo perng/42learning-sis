@@ -3,69 +3,24 @@ max-width:760px;
 overflow-x:auto;
 }
 
-.normal
+.green_table, .blue_table, .red_table
 {
-font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-width: 100%;
-border-collapse:collapse;
-table-layout:fixed;
-text-align: center;
-
-}
-
-.normal td, .normal th 
-{
-font-size:1em;
-text-align:center;
-border:1px solid #CDC9C9;
-padding:3px 7px 2px 7px;
-overflow: hidden; 
-word-wrap:break-word;
-}
-
-.normal th 
-{
-font-size:1.1em;
-text-align:center;
-padding-top:5px;
-padding-bottom:4px;
-color:#000000;
-}
-
-.normal tr.alt td 
-{
-color:#000000;
-background-color:#EAF2D3;
-}
-
-.green_table, .blue_table
-{
-font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-width:100%;
-border-collapse:collapse;
-table-layout:fixed;
 text-align: center;
 }
 
 .green_table td, .green_table th,.blue_table td, .blue_table th
 {
-font-size:1.1em;
-/*border:1px solid #98bf21; */
+font-size:1.0em;
 border:1px solid #2B6652;
-padding:3px 7px 2px 7px;
 background-color:#fff;
 }
 
 .green_table th, .blue_table th
 {
-font-size:1.1em;
+font-size:1.0em;
 text-align: center;
 text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
-font-weight:bold;
 text-transform:uppercase;
-padding-top:5px;
-padding-bottom:4px;
-/*background-color:#63A80F; */
 background-color:#32745E; 
 color:#ffffff;
 }
@@ -76,65 +31,24 @@ color:#000000;
 background-color:#EAF2D3;
 }
 
-.red_table
-{
-font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-width:100%;
-border-collapse:collapse;
-table-layout:fixed;
-text-align: center;
-}
-
 .red_table td, .red_table th
 {
-font-size:1.1em;
+font-size:1.0em;
 border:1px solid  #6F4242;
-padding:3px 7px 2px 7px;
 overflow: hidden;
 word-wrap:break-word;
 }
 
 .red_table th
 {
-font-size:1.1em;
+font-size:1.0em;
 text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
-font-weight:bold;
 text-transform:uppercase;
-padding-top:5px;
-padding-bottom:4px;
 background-color: #802A2A;
 color:#ffffff;
 }
 
 .red_table tr.alt td
-{
-color:#000000;
-background-color:#EAF2D3;
-}
-
-.grade_table
-{
-font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-width: 100%;
-border-collapse:collapse;
-table-layout:fixed;
-}
-
-.grade_table td, .grade_table th
-{
-font-size:1em;
-text-align:center;
-border:1px solid #6F4242;
-overflow: hidden; 
-word-wrap:break-word;
-}
-
-.grade_table th
-{
-color:#000000;
-}
-
-.grade_table tr.alt td
 {
 color:#000000;
 background-color:#EAF2D3;

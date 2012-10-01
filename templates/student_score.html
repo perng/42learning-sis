@@ -14,7 +14,7 @@
     {% for c in student.enrolledClasses %}
     <h3> {{c.name}} </h3>
     {% if c.show_attendance %}
-    <table class="normal">
+    <table class="table  table-bordered table-striped table-condensed" style="font-size:0.9em;">
         <tr>
             <th> Date </th> 
             {% for cs in c.sessions %}
@@ -36,7 +36,7 @@
         {% for cat in c.categories %}
         {% if cat.gds %}
         <h4> {{cat.name}} </h4> 
-        <table class="normal">
+        <table class="table  table-bordered table-striped table-condensed" style="font-size:0.9em;">
             <tr>
                 <th>Name</th> <th> Date</th> <th>Score</th><th>Highest</th><th>Median</th>
             </tr>
