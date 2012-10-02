@@ -14,7 +14,7 @@
 {% else %}
 <div class="teacher">
     <div style="padding: 15px;">
-    <h2> Class: {{theClass.name}} Attendance</h2>
+    <h3 class="inCenter"> Class: {{theClass.name}} Attendance</h3>
     <br />
     <a href="{% url 'add_new_attendance' class_id=theClass.eid %}" class="btn btn-success" style="text-decoration: none;"><i class="icon-plus"></i> Add New Record </a>
     <br /><br />

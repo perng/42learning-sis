@@ -528,4 +528,8 @@ div.widget ul#side_menu li a.selected {
         -webkit-border-radius: 5px;
 }
 
+.inCenter {
+	text-align: center;
+}
+
 
