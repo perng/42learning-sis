@@ -465,7 +465,7 @@ div.widget ul#side_menu li a.selected {
 .widget ul li {
     padding: 0 0 9px 14px;
     margin: 0 0 8px 0;
-    background: url(/static/images/widget-list.png) left 2px no-repeat;
+    /* background: url(/static/images/widget-list.png) left 2px no-repeat; */
     border-bottom: 1px dotted #989898;
 }
 

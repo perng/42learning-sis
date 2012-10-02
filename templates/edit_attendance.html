@@ -33,7 +33,7 @@ $(function() {
 {% else %}
 <div class="teacher">
     <div style="padding: 15px;">
-    <h3 class="inCenter"> New Attendance Record for {{theClass.name}}</h3>
+    <h3 class="inCenter"> {% if new %} New {% else %} Edit {% endif %} Attendance Record for {{theClass.name}}</h3>
     <form method="post" action="{% url 'add_new_attendance' class_id=theClass.eid %}" >
      
         <div class="well"><h5 style="padding: 5px;">Step 1: pick a date: <i class="icon-hand-right"></i> 

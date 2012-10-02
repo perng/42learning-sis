@@ -1,0 +1,55 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+{% load url from future %}
+
+{% block theme %} 
+<link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> 
+<link href="{% static_path %}/css/record_attendance.css" rel="stylesheet" type="text/css" /> 
+{% endblock %}
+{% block title %}  {% if new %} Add New {% else %} Edit {% endif %} {{category.name}} Record: {{theClass.name}} {% endblock %}
+{% block content %} 
+<script>
+
+$(function() {
+		$('#datepicker').datepicker({
+	        dateFormat: 'm-d-y',
+     		beforeShow: function (input, inst) {
+         	var offset = $(input).offset();
+        	 var height = $(input).height();
+         	window.setTimeout(function () {
+             	inst.dpDiv.css({ top: (offset.top + height + 4) + 'px', left: offset.left + 'px' })
+         	}, 1);
+     		}
+
+ 	});
+
+
+ });
+
+</script>
+
+{% if error %}
+{{error}}
+{% else %}
+<div class="teacher">
+    <div style="padding: 5px;">
+    <h3 class="inCenter"> {% if new %} New {% else %} Edit {% endif %} {{category.name}} Record</h3>
+    <form method="post" action="" >
+      <legend>Class: {{theClass.name}} </legend>
+	<table class="table table-bordered table-striped table-condensed">
+    	<tr>
+                <td> Date </td>
+                <td> <input id="datepicker" name='date' placeholder="Pick recording date" value="{{date| date:"m-d-y"}}"/> </td>
+	</tr>
+	<tr>
+		<td> Student 1 </td>
+		<td> <input id="student1" class="input-large" placeholder="Enter score here" /></td>
+	</tr> 
+	</table>	
+       <input type="submit" class="btn btn-success" value="Submit" id="submit" />
+     </form>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
