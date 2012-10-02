@@ -30,14 +30,15 @@ $(function() {
 {% else %}
 <div class="teacher">
     <div style="padding: 15px;">
-    <h2> New Attendance Record for {{theClass.name}}</h2>
-    <br />
-	<form method="post" action="{% url 'add_new_attendance' class_id=theClass.eid %}" >
-    <h4 style="padding: 5px;">Step 1: pick a date: <i class="icon-hand-right"></i> 
-    <input id="datepicker" name='date'  value="{{date| date:"m-d-y"}}"/><br/>
-     <h4 style="padding: 5px;">Step 2: record attendance <i class="icon-file"></i></h4>
+    <h3 class="inCenter"> {% if new %} New {% else %} Edit {% endif %} Attendance Record for {{theClass.name}}</h3>
+    <form method="post" action="{% url 'add_new_attendance' class_id=theClass.eid %}" >
+     
+        <div class="well"><h5 style="padding: 5px;">Step 1: pick a date: <i class="icon-hand-right"></i> 
+    <input id="datepicker" name='date'  value="{{date| date:"m-d-y"}}"/></h5></div>
+      <div class="well">
+     <h5 style="padding: 5px;">Step 2: record attendance <i class="icon-file"></i></h5>
     <input type='hidden' name='class_id' value='{{theClass.eid}}' />
-	<table class="grade_table">
+	<table class="table table-bordered table-striped table-condensed"">
             <tr>
                 <th> Name </th>
                 <th> Present </th>
@@ -58,6 +59,7 @@ $(function() {
 	</table>
 	<input type="submit" class="btn btn-success" value="Submit" id="submit" />
 	{% csrf_token %}
+        </div>
 	</form>
 	</div>
 </div>

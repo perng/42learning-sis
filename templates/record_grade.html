@@ -2,80 +2,42 @@
 {% load core_tags %}
 {% load url from future %}
 
-{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
-{% block title %}  Record {{ category.name }} Scores: {{theClass.name}} {% endblock %}
+{% block theme %} 
+<link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> 
+<link href="{% static_path %}/css/record_attendance.css" rel="stylesheet" type="text/css" /> 
+{% endblock %}
+{% block title %}  Record {{category.name}}: {{theClass.name}} {% endblock %}
 {% block content %} 
-
 
 {% if error %}
 {{error}}
 {% else %}
-<script>
-    $(function() {
-        $( "#extra_score_date" ).datepicker();
-        $( "#extra_score_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-    });
-</script>
 <div class="teacher">
-    <h3 class="title">  <a href='{% url 'record' theClass.eid %}'> Class: {{theClass.name}}</a> </h3>
-    <h3 class="title"> {{category.name}}  {{category.weight}}% </h3>
-    <form class="red" action='{% url 'record_grade' class_id=theClass.eid cat_id=category.eid show_item="_" %}' method='post'>
-        {% csrf_token %}
-        <div class="tbody">
-            <table class="table  table-bordered table-condensed" style="font-size:0.9em;">
-                <tr> 
-                    <th> Item </th>
-                    {% for gdis in category.gradingitems %}
-                    <th> {{gdis.name}} (<a href="{% url 'del_score' gd_id=gdis.eid%}"> del </a>) </th>
-                    {% endfor %}
-                    <th> <input type="text" name="extra-score-name" value="{{category.name}} {{category.serial}}"/>  </th> 
-                </tr>
-                <tr>
-                    <th> Date </th>
-                    {% for gdis in category.gradingitems %}
-                    <th> {{gdis.date.isoformat}}  </th>
-                    {% endfor %}
-                    <th> <input type="text" id="extra_score_date" name="extra-score-date"/>  </th> 
-                </tr>
-                {% for s in category.students %}
-                <tr>
-                    <th> {{s.firstName}} {{s.lastName}} </th>
-                    {% for score in s.scores%}
-                    <td width="8"> {{score}} </td> 
-                    {% endfor %}
-                    <td> {{s.extra_score}} </td> 
-                </tr>
-                {% endfor %}
-                {% if request.session.show_stats %}
-                <tr> <th> Highest </th> 
-                    {% for gdis in category.gradingitems %}
-                    <td> {{gdis.highest|floatformat:2}} </td> 
-                    {% endfor %}
-                </tr>
-                <tr> <th> Average </th> 
-                s   {% for gdis in category.gradingitems %}
-                    <td> {{gdis.average|floatformat:2}} </td> 
-                    {% endfor %}
-                </tr>
-                <tr> <th> Median </th> 
-                    {% for gdis in category.gradingitems %}
-                    <td> {{gdis.median|floatformat:2}} </td> 
-                    {% endfor %}
-                </tr>
-                <tr> <th> Lowest </th> 
-                    {% for gdis in category.gradingitems %}
-                    <td> {{gdis.lowest|floatformat:2}} </td> 
-                    {% endfor %}
-                </tr>
-                {% endif %}
-            </table>
-        </div>
-        <input type='hidden' name='category' value='{{category.eid}}'/> 
-        <input class="button" type="submit" name="update-score" value="Update {{c.name}}"/>
-    </form>
-
-    <br/>
-
-    {% endif%}
+    <div style="padding: 5px;">
+    <h3 class="inCenter">  <a href='{% url 'record' theClass.eid %}'> Class: {{theClass.name}}</a> </h3>
+    <h4 class="inCenter"> {{category.name}}  {{category.weight}}% </h4><br />
+    <a href="" class="btn btn-info" style="text-decoration: none;"><i class="icon-plus"></i> Add New {{category.name}} Record </a>
+    <br />
+    <div class="record-tab"> 
+    <table class="table table-bordered table-striped table-condensed">
+            <tr> 
+                <th> {{category.name}}# </th>
+		<th> Date </th>
+		<th> Edit</th>
+		<th> Delete</th>
+            </tr>
+        {% for session in sessions %}
+	    <tr>
+		<td>quiz/exam/home work</td>
+		<td> {{session.date| date:"y-m-d"}} </td>
+		<td> <a href="" class="btn btn-warning btn-mini" style="text-decoration: none; color: white;" > <i class="icon-pencil"> </i> Edit&nbsp; </a></td>
+		<td> <a href="" class="btn btn-danger btn-mini" style="text-decoration: none; color: white;"> <i class="icon-trash"></i> Delete&nbsp; </a> </td>
+            </tr>
+		{% endfor %}
+      </table>
+     </div>
+     </div>
 </div>
+{% endif %}
+
 {% endblock %}
