@@ -33,14 +33,14 @@ $(function() {
 {% else %}
 <div class="teacher">
     <div style="padding: 15px;">
-    <h2> New Attendance Record for {{theClass.name}}</h2>
+    <h3> New Attendance Record for {{theClass.name}}</h3>
     <br />
 	<form method="post" action="{% url 'add_new_attendance' class_id=theClass.eid %}" >
-    <h4 style="padding: 5px;">Step 1: pick a date: <i class="icon-hand-right"></i> 
-    <input id="datepicker" name='date'  value="{{date| date:"m-d-y"}}"/><br/>
-     <h4 style="padding: 5px;">Step 2: record attendance <i class="icon-file"></i></h4>
+    <h5 style="padding: 5px;">Step 1: pick a date: <i class="icon-hand-right"></i> 
+    <input id="datepicker" name='date'  value="{{date| date:"m-d-y"}}"/></h5><br/>
+     <h5 style="padding: 5px;">Step 2: record attendance <i class="icon-file"></i></h5>
     <input type='hidden' name='class_id' value='{{theClass.eid}}' />
-	<table class="grade_table">
+	<table class="table table-bordered table-striped table-condensed"">
             <tr>
                 <th> Name </th>
                 <th> Present </th>
