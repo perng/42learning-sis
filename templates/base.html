@@ -80,20 +80,19 @@
                             <li id="user" class="widget"></i><h3 class="widgettitle">Welcome! {% if request.user.is_authenticated %}{{ request.user.get_profile.parent1LastName }} Family {% endif %}</h3></li></ul>
                         <div class="widget">
                             <ul id="side_menu" class="nav nav-list">
-
                                 {% if request.user.is_authenticated %}
-                                <li><a href="{% url 'home' %}"><a href="#"><i class="icon-home"></i>Home</a></li> 
+                                <li><a href="{% url 'home' %}"><a href="/"><i class="icon-home"></i> Home</a></li> 
                                 {% else %}
-                                <li><a href="{% url 'auth_login'  %}?next=/"><i class="icon-pencil"></i>Log in</a></li>  
+                                <li><a href="{% url 'auth_login'  %}?next=/"><i class="icon-pencil"></i> Log in</a></li>  
                                 {% endif %}
-                                <li><a href="{% url 'offered_classes' %}"><i class="icon-book"></i>Offered Classes</a></li> 
+                                <li><a href="{% url 'offered_classes' %}"><i class="icon-book"></i> Offered Classes</a></li> 
 
                                 {% if request.user.is_authenticated %}
 
-                                <li><a href="{% url 'familyinfo' %}"><i class="icon-cogs"></i>My Family Profile </a></li> 
-                                {# <li><a href="{% url 'roster' %}"><i class="icon-user"></i>Parent Duty Roster </a></li>  #}
-                                <li><a href="{% url 'auth_password_change' %}"><i class="icon-key"></i>Change password</a></li>
-                                <li><a href="{% url 'auth_logout' %}"><i class="icon-unlock"></i>Log out</a></li>  
+                                <li><a href="{% url 'familyinfo' %}"><i class="icon-cogs"></i> My Family Profile </a></li> 
+                                {# <li><a href="{% url 'roster' %}"><i class="icon-user"></i> Parent Duty Roster </a></li>  #}
+                                <li><a href="{% url 'auth_password_change' %}"><i class="icon-key"></i> Change Password</a></li>
+                                <li><a href="{% url 'auth_logout' %}"><i class="icon-unlock"></i> Log out</a></li>  
                                 {% endif %}
                                 <li> <a href="{% url 'help' %}"><i class="icon-question-sign"></i> Help </a></li>
                             </ul>

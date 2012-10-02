@@ -6,14 +6,14 @@
 {% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
 {% block title %}  Record Grade {% endblock %}
 {% block content %} 
-<div class="teacher">
+<div class="teacher" style="min-height: 300px; padding: 10px;">
     <h2 class="title"> <a href='{% url 'record' theClass.eid %}'> Class: {{theClass}}</a> </h2> 
-    <div style="padding-left: 160px;">
+	<div style="padding: 20px 200px 40px 200px;">
         {% for cat in categories %}
         {% if cat.weight %}
-        <a  class="teacherbutton" href='{% url 'record_grade' class_id=theClass.eid cat_id=cat.eid show_item="_" %}'> {{cat.name}} </a> <br/><br/>
+        <a  class="btn btn-large btn-block btn-darkred"  href='{% url 'record_grade' class_id=theClass.eid cat_id=cat.eid show_item="_" %}'> {{cat.name}} </a> 
         {% endif %}
         {% endfor %}
-    </div>
+	</div>
 </div>
 {% endblock %}

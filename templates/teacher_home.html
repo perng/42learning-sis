@@ -6,11 +6,15 @@
 {% block title %}  Dashboard {% endblock %}
 {% block content %} 
 <div class="teacher">
-    <h2 class="title">Managed Classes</h2>
+    <h2 class="title">Managed Classes</h2><br />
     <table class="red_table">
         <tr>
-            <th>Class </th><th>Attendance</th><th>Assign</th><th>Grade</th><th>Student</th><th>Report</th>
-
+            <th><i class="icon-book"></i> Class </th>
+	    <th><i class="icon-group"></i> Record</th>
+            <th><i class="icon-list-alt"></i> Assign</th>
+	    <th><i class="icon-ok-circle"></i> Grade</th>
+	    <th><i class="icon-phone"></i> Student</th>
+	    <th><i class="icon-table"></i> Report</th>
         </tr>
         {% for c in teaches %}
         <tr>
@@ -33,7 +37,9 @@
             </td> 
             <td>
                 {% if c.recordGrade %} 
-                <a href='{% url 'record' class_id=c.eid %}'>Record </a>
+                <a class="btn btn-mini btn-success" href='{% url 'record' class_id=c.eid %}'>Quiz </a>
+                <a class="btn btn-mini btn-warning" href='{% url 'record' class_id=c.eid %}'>Exam </a>
+                <a class="btn btn-mini btn-info" href='{% url 'record' class_id=c.eid %}'>Home Work </a>
                 {% else %} - {% endif %}
             </td> 
             <td><a href='{% url 'classroaster' cid=c.eid%}'>Contacts({{c.num_students}})</a></td>

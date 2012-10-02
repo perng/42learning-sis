@@ -9,9 +9,9 @@
     <form action="/familyinfo"  method="POST"> 
     {# <form action="{% url 'familyinfo' %}" method="POST">  #}
         {{ form.non_field_errorss }}
-
-        <fieldset style="width:275px">
-            <legend>My Information </legend>  
+	<div class="row-fluid">
+        <fieldset class="well the-fieldset span6" >
+            <legend class="the-legend">My Information </legend>  
             <label id="required" {% if form.parent1FirstName.errors%} class="warning" {% endif %} > 
                 {{form.parent1FirstName.help_text}}* </label> {{form.parent1FirstName}} <br/>
 
@@ -20,14 +20,16 @@
 
             <label>{{form.parent1ChineseFullName.help_text}}</label>{{form.parent1ChineseFullName}} {{form.parent1ChineseFullName.errors}} 
         </fieldset>
-        <fieldset style="width:275px">
-            <legend>Spouse Information</legend>   
+        <fieldset class="well the-fieldset span6" >
+            <legend class="the-legend">Spouse Information</legend>   
             <label> {{form.parent2FirstName.help_text}}</label>{{form.parent2FirstName}} {{form.parent2FirstName.errors}} <br />
             <label> {{form.parent2LastName.help_text}}</label> {{form.parent2LastName}} {{form.parent2LastName.errors}} <br />
             <label> {{form.parent2ChineseFullName.help_text}}</label>{{form.parent2ChineseFullName}} {{form.parent2ChineseFullName.errors}} 
         </fieldset>
-        <fieldset>
-            <legend>Address</legend>
+	</div>
+	<div class="row-fluid">
+        <fieldset class="well the-fieldset span12">
+            <legend class="the-legend">Address</legend>
             <label id="required" {% if form.streetNumber.errors%} class="warning" {% endif %} > 
                 {{form.streetNumber.help_text}}* </label>  {{form.streetNumber}} <br /> 
 
@@ -40,8 +42,10 @@
             <label id="required" {% if form.zipcode.errors%} class="warning" {% endif %} > 
                 {{form.zipcode.help_text}}*</label> {{form.zipcode}} <br />   
         </fieldset>
-        <fieldset>
-            <legend>Phones and Email</legend>
+	</div>
+	<div class="row-fluid">
+        <fieldset class="well the-fieldset span12">
+            <legend class="the-legend">Phones and Email</legend>
             <label id="required" {% if form.homePhone.errors%} class="warning" {% endif %} > 
                 {{form.homePhone.help_text}}* </label>  {{form.homePhone}} <br />
             <label> {{form.mobilePhone.help_text}}</label> {{form.mobilePhone}} 	<br /> 
@@ -49,16 +53,16 @@
             <label>{{form.altEmail.help_text}} </label>{{form.altEmail}}  <br />
             {#  {{form.participation.help_text}}  {{form.participation}} <label class="warning" >  {{form.participation.errors.as_text}}</label>   #}
         </fieldset>
-        {% csrf_token %}
-        <br/>
         * required <br/>
-	<ul>
-        <input class="button" style="width: 180px; margin-left:100px;"type="submit" name="Update" value="Update" />
-        </ul>
-	<br/>
+	</div>
+        {% csrf_token %}
+	<div class="row-fluid">
+  	<button type="submit" class="btn btn-info span4 offset3">Submit</button>
+	</div>
 
         {% if form.non_field_errors %} <ul class="errorlist">  {{form.non_field_errors.as_ul }} </ul> {% endif %}
     </form> 
+    <br />
     {% if form.errorss %}
     <p style="color: red;">
     Please correct the errors{{ form.errorss|pluralize }} below.

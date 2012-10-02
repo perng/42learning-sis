@@ -10,14 +10,14 @@ text-align: center;
 
 .green_table td, .green_table th,.blue_table td, .blue_table th
 {
-font-size:1.0em;
+font-size:0.9em;
 border:1px solid #2B6652;
 background-color:#fff;
 }
 
 .green_table th, .blue_table th
 {
-font-size:1.0em;
+font-size: 0.85em;
 text-align: center;
 text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
 text-transform:uppercase;
@@ -33,7 +33,7 @@ background-color:#EAF2D3;
 
 .red_table td, .red_table th
 {
-font-size:1.0em;
+font-size:0.9em;
 border:1px solid  #6F4242;
 overflow: hidden;
 word-wrap:break-word;
@@ -41,8 +41,8 @@ word-wrap:break-word;
 
 .red_table th
 {
-font-size:1.0em;
-text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
+font-size:0.85em;
+text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8); 
 text-transform:uppercase;
 background-color: #802A2A;
 color:#ffffff;
