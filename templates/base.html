@@ -81,7 +81,7 @@
                         <div class="widget">
                             <ul id="side_menu" class="nav nav-list">
                                 {% if request.user.is_authenticated %}
-                                <li><a href="{% url 'home' %}"><a href="/"><i class="icon-home"></i> Home</a></li> 
+                                <li><a href="{% url 'home' %}"><i class="icon-home"></i>Home</a></li> 
                                 {% else %}
                                 <li><a href="{% url 'auth_login'  %}?next=/"><i class="icon-pencil"></i> Log in</a></li>  
                                 {% endif %}

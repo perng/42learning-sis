@@ -63,7 +63,7 @@ class Family(models.Model):
         return id_encode(self.id)
 
     def teaches(self):
-        semester = current_reg_semester()
+        semester = current_record_semester()
         try:
             classes = list(Class.objects.filter(Q(semester=semester) &(Q(headTeacher=self.user) | Q(assocTeacher1=self.user) | Q(assocTeacher2=self.user))))
             classes.sort(key=attrgetter('name'))
