@@ -31,7 +31,8 @@ $(function() {
 <div class="teacher">
     <div style="padding: 15px;">
     <h3 class="inCenter"> {% if new %} New {% else %} Edit {% endif %} Attendance Record for {{theClass.name}}</h3>
-    <form method="post" action="{% url 'add_new_attendance' class_id=theClass.eid %}" >
+    <form method="post" 
+       action="{% if new %}{% url 'add_new_attendance' class_id=theClass.eid %}{% else %}{% url 'edit_attendance' cs_id=cs.eid %}{% endif %}" >
      
         <div class="well"><h5 style="padding: 5px;">Step 1: pick a date: <i class="icon-hand-right"></i> 
     <input id="datepicker" name='date'  value="{{date| date:"m-d-y"}}"/></h5></div>

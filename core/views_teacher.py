@@ -231,15 +231,16 @@ def del_score(request, gd_id):
 
 @login_required
 def add_new_attendance(request, class_id):
+    print 'add_new_attendance'
     new=True
     theClass= Class.objects.get(id=id_decode(class_id))
     ens = theClass.enrolldetail_set.all()
     students = [en.student for en in ens]
-    date=datetime.datetime.today().strftime("%m-%d-%y")
+    date=datetime.datetime.today()
     print 'date', date
     if request.method == 'GET':
         return my_render_to_response(request, 'edit_attendance.html', locals())
-
+        assert False
     print request.POST
     try:
         date=datetime.datetime.strptime( request.POST['date'] ,'%m-%d-%y')
@@ -263,6 +264,8 @@ def add_new_attendance(request, class_id):
 
 @login_required
 def edit_attendance(request, cs_id):
+    print 'edit_attendance'
+    new=False
     cs=get_object_or_404(ClassSession, id=id_decode(cs_id))
     theClass= cs.classPtr
     ens = theClass.enrolldetail_set.all()
@@ -271,6 +274,7 @@ def edit_attendance(request, cs_id):
         for s in students:
             s.att=Attendance.objects.get(session=cs, student=s).attended
         date = cs.date
+        print 'date', date
         return my_render_to_response(request, 'edit_attendance.html', locals())
 
     try:
@@ -288,7 +292,7 @@ def edit_attendance(request, cs_id):
         att=Attendance.objects.get(student=student, session=cs )
         att.attended=attended=request.POST[k][0]
         att.save()
-    return my_render_to_response(request, 'record_attendance.html', locals())
+    return redirect( 'record_attendance', class_id=theClass.eid())
 
     
 @login_required
