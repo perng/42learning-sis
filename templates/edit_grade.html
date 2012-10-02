@@ -34,19 +34,24 @@ $(function() {
 <div class="teacher">
     <div style="padding: 5px;">
     <h3 class="inCenter"> {% if new %} New {% else %} Edit {% endif %} {{category.name}} Record</h3>
-    <form method="post" action="" >
+    <form method="post" action="{% if new %} {% url 'add_new_grade' cat_id=category.eid %} {% else %} {% url 'edit_grade' gi_id=gi.eid %} {% endif %} " >
       <legend>Class: {{theClass.name}} </legend>
 	<table class="table table-bordered table-striped table-condensed">
     	<tr>
-                <td> Date </td>
-                <td> <input id="datepicker" name='date' placeholder="Pick recording date" value="{{date| date:"m-d-y"}}"/> </td>
-	</tr>
+           <td> Date </td> <td> <input id="datepicker" name='date' placeholder="Pick recording date" value="{{date| date:"m-d-y"}}"/> </td> 
+		<tr>  <td> Name </td>  
+		   <td> <input id="name" name="name"  value="{{name}}" class="input-large" placeholder="Enter score here" /></td>
+		   </tr>
+
+	{% for s in students %}
 	<tr>
-		<td> Student 1 </td>
-		<td> <input id="student1" class="input-large" placeholder="Enter score here" /></td>
+		<td> {{s}} </td>
+		<td> <input name="score-{{s.eid}}"  value="{{s.score}}" class="input-large" placeholder="Enter score here" /></td>
 	</tr> 
+	{% endfor %}
 	</table>	
        <input type="submit" class="btn btn-success" value="Submit" id="submit" />
+       {% csrf_token %}
      </form>
     </div>
 </div>

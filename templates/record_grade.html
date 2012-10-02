@@ -16,7 +16,7 @@
     <div style="padding: 5px;">
     <h3 class="inCenter">  <a href='{% url 'record' theClass.eid %}'> Class: {{theClass.name}}</a> </h3>
     <h4 class="inCenter"> {{category.name}}  {{category.weight}}% </h4><br />
-    <a href="" class="btn btn-info" style="text-decoration: none;"><i class="icon-plus"></i> Add New {{category.name}} Record </a>
+    <a href="{% url 'add_new_grade' cat_id=category.eid %}" class="btn btn-info" style="text-decoration: none;"><i class="icon-plus"></i> Add New {{category.name}} Record </a>
     <br />
     <div class="record-tab"> 
     <table class="table table-bordered table-striped table-condensed">
@@ -26,12 +26,12 @@
 		<th> Edit</th>
 		<th> Delete</th>
             </tr>
-        {% for session in sessions %}
+        {% for gi in gis %}
 	    <tr>
-		<td>quiz/exam/home work</td>
-		<td> {{session.date| date:"y-m-d"}} </td>
-		<td> <a href="" class="btn btn-warning btn-mini" style="text-decoration: none; color: white;" > <i class="icon-pencil"> </i> Edit&nbsp; </a></td>
-		<td> <a href="" class="btn btn-danger btn-mini" style="text-decoration: none; color: white;"> <i class="icon-trash"></i> Delete&nbsp; </a> </td>
+		<td> {{gi.name}} </td>
+		<td> {{gi.date| date:"y-m-d"}} </td>
+		<td> <a href="{% url 'edit_grade' gi.eid %}" class="btn btn-warning btn-mini" style="text-decoration: none; color: white;" > <i class="icon-pencil"> </i> Edit&nbsp; </a></td>
+		<td> <a href="{% url 'del_grade' gi.eid %}" class="btn btn-danger btn-mini" style="text-decoration: none; color: white;"> <i class="icon-trash"></i> Delete&nbsp; </a> </td>
             </tr>
 		{% endfor %}
       </table>

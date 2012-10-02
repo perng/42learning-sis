@@ -13,7 +13,7 @@ from django.template.loader import render_to_string
 #from django.contrib import messages
 from django.contrib.auth.decorators import login_required #, user_passes_test
 #from django.contrib.admin import widgets
-from django.shortcuts import  get_object_or_404,redirect
+from django.shortcuts import  get_object_or_404, redirect
 from sis.core.models import *
 from sis.core.forms import *
 from sis.core.util import *
@@ -91,122 +91,97 @@ def student_attendance(request, class_id, sid):
 @login_required
 def record_attendance(request, class_id):
     classid = id_decode(class_id)
-    theClass = Class.objects.get(id=classid)
-    students = theClass.student_set.order_by('lastName')
+    theClass = get_object_or_404(Class, id=classid)
     sessions = theClass.classsession_set.order_by('date')
-
-    if request.method == 'POST':
-        print 'attendance post'
-        # Update attendance changes
-        d = request.POST['extra-att-date'] if 'extra-att-date' in request.POST else request.POST['extra-score-date']
-        if '-' in d:
-            print 'adding extra'
-            year, month, day = tuple(d.split('-'))
-            year, month, day = 2000 + int(year[-2:]), int(month), int(day)
-            date = datetime.date(year, month, day)
-
-            if 'extra-att-date' in request.POST:
-                att_keys = [key for key in request.POST if key.startswith('attextra')]
-                att_values = [request.POST[key] for key in att_keys]
-                sids = [int(key.split('-')[1]) for key in att_keys]
-                session = ClassSession(classPtr=theClass, date=date)
-                session.save()
-                for sid, att in zip(sids, att_values):
-                    student = [s for s in students if  s.id == sid][0]
-                    a = Attendance(student=student, session=session, attended=att)
-                    a.save()
-        att_keys = [key for key in request.POST if key.startswith('att-')]
-        att_values = [request.POST[key] for key in att_keys]
-        print att_keys, att_values
-        att_ids = [int(key.split('-')[1]) for key in att_keys]
-
-        for iid, value in zip(att_ids, att_values):
-            att = Attendance.objects.get(id=iid)
-            if att.attended != value:
-                att.attended = value
-                att.save()
-
-
-
-
-    for s in students:
-        atts = [Attendance.objects.get_or_create(student=s, session=session)[0] for session in sessions] #there maybe students added after previous record
-        s.att_fields = [forms.Select(choices=ATT_CHOICES).render('att-%d' % (a.id,), a.attended) for a in atts]
-        s.extra_att = forms.Select(choices=ATT_CHOICES).render('attextra-' + str(s.id), '')
-    #extra_att_date=DateField(widget = widgets.AdminDateWidget).widget.render('extra-att-date',datetime.datetime.today())
-    #extra_att_date=DateField(widget = widgets.AdminDateWidget).widget.render('extra-att-date',datetime.datetime.today(),attrs={'id':'extra_att_date'})
-    extra_att_date = DateField().widget.render('extra-att-date', datetime.datetime.today(), attrs={'id':'extra_att_date'})
 
     return my_render_to_response(request, 'record_attendance.html', locals())
 
 @login_required
-def record_grade(request, class_id, cat_id, show_item):
-    print 'record grade'
-    classid = id_decode(class_id)
-    theClass = Class.objects.get(id=classid)
-    category = GradingCategory.objects.get(id=id_decode(cat_id))
-    print 'category', category.name
-    students = theClass.student_set.order_by('lastName')
-
-    if request.method == 'POST':
-        score_item_changed = {}
+def edit_grade(request,  gi_id):
+    new=False
+    gi=get_object_or_404(GradingItem, id=id_decode(gi_id))
+    category=gi.category
+    theClass = category.classPtr
+    if request.method=='GET':
+        ens = theClass.enrolldetail_set.all()
+        students = [en.student for en in ens]
+        name, date=gi.name, gi.date
+        for s in students:
+            try:
+                s.score=Score.objects.get(student=s, gradingItem=gi).score
+            except Exception, e:
+                print e
+                s.score=''
+    
+        return my_render_to_response(request, 'edit_grade.html', locals())
+    else:
         print request.POST
-        d = request.POST['extra-score-date']
-        if '-' in d:
-            print 'adding extra'
-            year, month, day = tuple(d.split('-'))
-            year, month, day = 2000 + int(year[-2:]), int(month), int(day)
-            date = datetime.date(year, month, day)
-            if 'extra-score-date' in request.POST:
-                print 'extra-score-date'
-                category = GradingCategory.objects.get(id=id_decode(cat_id))
-                score_keys = [key for key in request.POST if key.startswith('scoreextra')]
-                score_values = [float(request.POST[key]) if key in request.POST and request.POST[key].isdigit() else 0  for key in score_keys]
-                ids = [int(key.split('-')[1]) for key in score_keys]
-                gding = GradingItem(category=category, date=date, name=request.POST['extra-score-name'])
-                gding.save()
-                for sid, score in zip(ids, score_values):
-                    student = [s for s in students if  s.id == sid][0]
-                    g = Score(student=student, gradingItem=gding, score=score)
-                    g.save()
-                    score_item_changed[gding.id] = gding
-        # Update score changes
-        score_keys = [key for key in request.POST if key.startswith('score-')]
-        score_values = [request.POST[key] for key in score_keys]
-        score_ids = [int(key.split('-')[1]) for key in score_keys]
-        for iid, value in zip(score_ids, score_values):
-            score = Score.objects.get(id=iid)
-            if score.score != value:
-                score.score = value
+        try:
+            gi.date=datetime.datetime.strptime( request.POST['date'] ,'%m-%d-%y')
+        except Exception, e:
+            pass
+        gi.name = request.POST['name']
+        gi.save()
+
+        score_keys =[key for key in request.POST if key.startswith('score')]
+        sids = [int(key.split('-')[1]) for key in score_keys]
+        for k in score_keys:
+            try:
+                student=get_object_or_404(Student, id=id_decode(k.split('-')[1]))
+                ss=float(request.POST[k])
+                score, created=Score.objects.get_or_create(gradingItem=gi, student=student)
+                score.score=ss
                 score.save()
-                gding = score.gradingItem
-                score_item_changed[gding.id] = gding
-        # update aggregates
-        for i, g in score_item_changed.iteritems():
-            ss = [score.score for score in g.score_set.all()]
-            g.highest = max(ss)
-            g.lowest = min(ss)
-            g.average = sum(ss) / len(ss)
-            g.median = getMedian(ss)
-            g.save()
+            except Exception, e:
+                print e
+                error = 'Grade must be numerical'
+        return redirect('record_grade', cat_id=category.eid() )
 
-    #data for score
-    category.students = [copy.copy(s) for s in students] # make a copy of students
+@login_required
+def add_new_grade(request,  cat_id):
+    new=True
+    category = GradingCategory.objects.get(id=id_decode(cat_id))
+    theClass = category.classPtr
+    ens = theClass.enrolldetail_set.all()
+    students = [en.student for en in ens]
+    date=datetime.datetime.today()
     category.gradingitems = category.gradingitem_set.order_by('date')
-    category.serial = len(category.gradingitems) + 1
-    for s in category.students:
-        scores=[]
-        for g in category.gradingitems:
-            score, created=Score.objects.get_or_create(student=s, gradingItem=g)
-            if created or not score.score:
-                score.score=0
-            scores += [score]
-        s.scores = [forms.FloatField(min_value=0, max_value=120).widget.render('score-' + str(score.id), ('%f' % (score.score,)).rstrip('0').rstrip('.')) for score in scores]
-        s.extra_score = forms.FloatField(min_value=0, max_value=120).widget.render('scoreextra-%d' % (s.id,), None)
+    serial = len(category.gradingitems) + 1
+    name = category.name+' '+str(serial)
+    if request.method=='POST':
+        try:
+            date=datetime.datetime.strptime( request.POST['date'] ,'%m-%d-%y')
+        except Exception, e:
+            date = None
+        name = request.POST['name']
+        gi = GradingItem(category=category, date=date, name=name)
+        gi.save()
 
+        score_keys =[key for key in request.POST if key.startswith('score')]
+        sids = [int(key.split('-')[1]) for key in score_keys]
+        for k in score_keys:
+            try:
+                student=get_object_or_404(Student, id=id_decode(k.split('-')[1]))
+                s=Score(gradingItem=gi, student=student, score=float(request.POST[k]))
+                s.save()
+            except Exception, e:
+                print e
+                error = 'Grade must be numerical'
+        print 'no error'
+        return redirect('record_grade', cat_id=category.eid() )
+    else:
+        return my_render_to_response(request, 'edit_grade.html', locals())
+
+@login_required
+def record_grade(request,  cat_id):
+    print 'record grade'
+    category = GradingCategory.objects.get(id=id_decode(cat_id))
+    theClass = category.classPtr
+    print 'category', category.name
+    gis = category.gradingitem_set.order_by('date')
     return my_render_to_response(request, 'record_grade.html', locals())
-
-
+    
+    
 
 @login_required
 def del_attendance(request, cs_id):
@@ -219,15 +194,13 @@ def del_attendance(request, cs_id):
     return HttpResponseRedirect('/record_attendance/%s' % (id_encode(theClass.id),))
 
 @login_required
-def del_score(request, gd_id):
-    gd_id = id_decode(gd_id)
-    gd = GradingItem.objects.get(id=gd_id)
-    theClass = gd.category.classPtr
-    for score in gd.score_set.all():
-        score.delete()
-    gd.delete()
+def del_grade(request, gi_id):
+    gd_id = id_decode(gi_id)
+    gi = GradingItem.objects.get(id=gd_id)
+    #theClass = gi.category.classPtr
+    gi.delete()
     #calculate_total(request, )
-    return HttpResponseRedirect('/record_grade/%s/%s/_' % (id_encode(theClass.id),id_encode(gd.category.id)))
+    return redirect('record_grade' , id_encode(gi.category.id))
 
 @login_required
 def add_new_attendance(request, class_id):

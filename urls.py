@@ -37,7 +37,11 @@ urlpatterns = patterns('',
      url(r'^record_attendance/(?P<class_id>.+)$', record_attendance, name='record_attendance'),
      url(r'^student_attendance/(?P<class_id>.+)/(?P<sid>.+)$', student_attendance, name='student_attendance'),
 
-     url(r'^record_grade/(?P<class_id>.+)/(?P<cat_id>.+)/(?P<show_item>.+)$', record_grade, name='record_grade'),
+     url(r'^record_grade/(?P<cat_id>.+)$', record_grade, name='record_grade'),
+     url(r'^add_new_grade/(?P<cat_id>.+)$', add_new_grade, name='add_new_grade'),
+     url(r'^edit_grade/(?P<gi_id>.+)$', edit_grade, name='edit_grade'),
+     url(r'^del_grade/(?P<gi_id>.+)$', del_grade, name='del_grade'),
+
      url(r'^prepare_report/(?P<class_id>.+)$', prepare_report, name='prepare_report'),
      url(r'^evaluation_comment/(?P<enrolldetail_id>.+)$', evaluation_comment, name='evaluation_comment'),
 
@@ -49,7 +53,6 @@ urlpatterns = patterns('',
 
      url(r'^add_new_attendance/(?P<class_id>.+$)', add_new_attendance, name='add_new_attendance' ),
 
-     url(r'^del_score/(?P<gd_id>.+)$', del_score, name='del_score'),
      #url(r'^calculate_total/(?P<class_id>.+)$', calculate_total, name='calculate_total'),
      url(r'^assignments/(?P<cat_id>.+)$', assignments, name='assignments'),
      url(r'^assignment_edit/(?P<aid>.+)$', edit_assignment, name='assignment_edit'),

@@ -11,7 +11,7 @@
     <div style="padding-left: 160px;">
         {% for cat in categories %}
         {% if cat.weight %}
-        <a  class="teacherbutton" href='{% url 'record_grade' class_id=theClass.eid cat_id=cat.eid show_item="_" %}'> {{cat.name}} </a> <br/><br/>
+        <a  class="teacherbutton" href='{% url 'record_grade'  cat_id=cat.eid  %}'> {{cat.name}} ({{cat.weight}}%) </a>  <br/><br/>
         {% endif %}
         {% endfor %}
     </div>
