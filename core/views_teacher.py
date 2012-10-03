@@ -323,7 +323,7 @@ def edit_assignment(request, aid):
             gi.delete()
         else:
             giform=HomeWorkForm(request.POST, instance=gi)
-            name=request.POST['Name']
+            #name=request.POST['Name']
             gi.date=None #request.POST['assign_date']
             gi.duedate=request.POST['due_date']
             gi.assignmentDescr=request.POST['Description']

@@ -26,7 +26,7 @@
 
     <h3> Edit Assignment </h3> 
     <form class="red" action='{% url 'assignment_edit' aid=gi.eid %}' method='post'>
-        <label> Name: </label> <input type='text' name='Name'  value="{{gi.name}} "/>  <br/>
+        <label> Name: </label> <input type='text' name='Name'  value="{{gi.name}}" disabled="disabled"/> change not allowed <br/>
         {# <label> Assign Date </label> {{assignment_date}}  <br/> #}
         <label> Due Date: </label> {{due_date}}  <br/>
 
