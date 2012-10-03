@@ -10,7 +10,7 @@
     <table class="red_table">
         <tr>
             <th><i class="icon-book"></i> Class </th>
-	    <th><i class="icon-group"></i> Record</th>
+	    <th><i class="icon-group"></i> Attendance</th>
             <th><i class="icon-list-alt"></i> Assign</th>
 	    <th><i class="icon-ok-circle"></i> Grade</th>
 	    <th><i class="icon-phone"></i> Student</th>
@@ -19,13 +19,13 @@
         {% for c in teaches %}
         <tr>
             {% if c.recordGrade %} 
-            <td><a href='{% url 'grading_policy' cid=c.eid%}'>{{c.name}}</a></td>  
+            <td><a href='{% url 'grading_policy' cid=c.eid%}'>{{c.name}}<i class="icon-book"></i></a></td>  
             {% else %}
             <td>{{c.name}}</td>
             {% endif %}
             <td> 
                 {% if c.recordAttendance %} 
-                <a href='{% url 'record_attendance' class_id=c.eid  %}'> Attendance </a> 
+                <a href='{% url 'record_attendance' class_id=c.eid  %}'> <i class="icon-group"></i> </a> 
                 {% else %}
                 -
                 {% endif %} 
@@ -37,9 +37,13 @@
             </td> 
             <td>
                 {% if c.recordGrade %} 
-                <a class="btn btn-mini btn-success" href='{% url 'record' class_id=c.eid %}'>Quiz </a>
-                <a class="btn btn-mini btn-warning" href='{% url 'record' class_id=c.eid %}'>Exam </a>
-                <a class="btn btn-mini btn-info" href='{% url 'record' class_id=c.eid %}'>Home Work </a>
+                {% for cat in c.gradingcategory_set.all %}
+                  {% if cat.weight > 0 %}
+                <a class="btn btn-mini btn-success" href='{% url 'record_grade' cat_id=cat.eid %}'>{{cat.name}} </a>
+                {% endif %} 
+                {% endfor %}
+                {# <a class="btn btn-mini btn-warning" href='{% url 'record' class_id=c.eid %}'>Exam </a> #}
+                {# <a class="btn btn-mini btn-info" href='{% url 'record' class_id=c.eid %}'>Home Work </a> #}
                 {% else %} - {% endif %}
             </td> 
             <td><a href='{% url 'classroaster' cid=c.eid%}'>Contacts({{c.num_students}})</a></td>
