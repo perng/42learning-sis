@@ -39,7 +39,7 @@
                 {% if c.recordGrade %} 
                 {% for cat in c.gradingcategory_set.all %}
                   {% if cat.weight > 0 %}
-                <a class="btn btn-mini btn-success" href='{% url 'record_grade' cat_id=cat.eid %}'>{{cat.name}} </a>
+                <a class="btn btn-mini btn1" href='{% url 'record_grade' cat_id=cat.eid %}'>{{cat.name}} </a>
                 {% endif %} 
                 {% endfor %}
                 {# <a class="btn btn-mini btn-warning" href='{% url 'record' class_id=c.eid %}'>Exam </a> #}
