@@ -50,7 +50,8 @@ $(function() {
 	</tr> 
 	{% endfor %}
 	</table>	
-       <input type="submit" class="btn btn-success" value="Submit" id="submit" />
+  		<button type="submit" class="btn btn-success" id="submit">Submit</button>
+  		<a href="/"><button type="button" class="btn">Cancel</button></a>
        {% csrf_token %}
      </form>
     </div>
