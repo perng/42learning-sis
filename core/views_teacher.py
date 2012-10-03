@@ -146,8 +146,8 @@ def add_new_grade(request,  cat_id):
     students = [en.student for en in ens]
     date=datetime.datetime.today()
     category.gradingitems = category.gradingitem_set.order_by('date')
-    serial = len(category.gradingitems) + 1
-    name = category.name+' '+str(serial)
+    #serial = len(category.gradingitems) + 1
+    name = '' # category.name+' '+str(serial)
     if request.method=='POST':
         try:
             date=datetime.datetime.strptime( request.POST['date'] ,'%m-%d-%y')
