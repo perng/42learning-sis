@@ -8,6 +8,7 @@
 {% endblock %}
 {% block title %}  {% if new %} Add New {% else %} Edit {% endif %} {{category.name}} Record: {{theClass.name}} {% endblock %}
 {% block content %} 
+<script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
 <script>
 
 $(function() {
@@ -23,7 +24,6 @@ $(function() {
 
  	});
 
-
  });
 
 </script>
@@ -34,19 +34,19 @@ $(function() {
 <div class="teacher">
     <div style="padding: 5px;">
     <h3 class="inCenter"> {% if new %} New {% else %} Edit {% endif %} {{category.name}} Record</h3>
-    <form method="post" action="{% if new %} {% url 'add_new_grade' cat_id=category.eid %} {% else %} {% url 'edit_grade' gi_id=gi.eid %} {% endif %} " >
+    <form id="grades" method="post" action="{% if new %} {% url 'add_new_grade' cat_id=category.eid %} {% else %} {% url 'edit_grade' gi_id=gi.eid %} {% endif %} " >
       <legend>Class: {{theClass.name}} </legend>
 	<table class="table table-bordered table-striped table-condensed">
     	<tr>
-           <td> Date </td> <td> <input id="datepicker" name='date' placeholder="Pick recording date" value="{{date| date:"m-d-y"}}"/> </td> 
+           <td> Date </td> <td><input id="datepicker" name='date' placeholder="Pick recording date" value="{{date| date:"m-d-y"}}"/> </td> 
 		<tr>  <td> Name </td>  
-		   <td> <input id="name" name="name"  value="{{name}}" class="input-large" placeholder="Enter {{category.name}} name" /></td>
+		   <td> <input id="name" name="name"  value="{{name}}" class="input-large required" placeholder="Enter {{category.name}} name" /> <span class="muted">Enter {{category.name}} name in English</span></td>
 		   </tr>
 
 	{% for s in students %}
 	<tr>
 		<td> {{s}} </td>
-		<td> <input name="score-{{s.eid}}"  value="{{s.score}}" class="input-large" placeholder="Enter score here" /></td>
+		<td> <input name="score-{{s.eid}}"  value="{{s.score}}" class="input-large" placeholder="Enter score here" /> <span class="muted">Number between 0 and 100. </span></td>
 	</tr> 
 	{% endfor %}
 	</table>	
