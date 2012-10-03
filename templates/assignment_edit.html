@@ -1,18 +1,23 @@
 {% extends "base.html" %}
 {% load core_tags %}
-{% load url from future %}
 
 
-{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> 
+<link rel="stylesheet" type="text/css" href="{% static_path %}/css/jquery.cleditor.css" />
+
+<script type="text/javascript" src="{% static_path %}/js/jquery.cleditor.min.js"></script>
+
+{% endblock %}
 {% block title %} Assignment  {% endblock %}
 
 {% block content %}
+						
 <script>
     $(function() {
         $( "#assign_date" ).datepicker();
-        $( "#assign_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
         $( "#due_date" ).datepicker();
-        $( "#due_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+        $( "#due_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" ).val("{{gi.duedate|date:"y-m-d"}}");
+	 $("#Description").cleditor();	
     });
 </script>
 <div class="teacher">
@@ -21,7 +26,15 @@
 
     <h3> Edit Assignment </h3> 
     <form class="red" action='{% url 'assignment_edit' aid=gi.eid %}' method='post'>
-        {{ giform.as_p }}
+        <label> Name: </label> <input type='text' name='Name'  value="{{gi.name}}" disabled="disabled"/> change not allowed <br/>
+        {# <label> Assign Date </label> {{assignment_date}}  <br/> #}
+        <label> Due Date: </label> {{due_date}}  <br/>
+
+        <label> Description: </label><br />
+        <div style="margin-left: 30px;"><textarea id="Description" name='Description'
+          rows=0 cols=0>{{gi.assignmentDescr}}</textarea><br/>
+         </div>
+        {% csrf_token %}
 
         {% csrf_token %}
         <input class="button" type="submit" name="Update" value="Update" />

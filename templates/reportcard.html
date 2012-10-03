@@ -3,71 +3,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
     <head>
+    <title> Northern Westchester Chinese School Report Card for Class {{theClass}} </title> 
 	<link href="../static/css/report.css" rel="stylesheet" type="text/css" />
     </head>
 
 
 <body>
 <h2 class="t1"> Northern Westchester Chinese School Report Card </h2>
-<div>
 
-<h2>Basic Information</h2>
-		<label>Student Name: <label>John Doe<br />
-		<label>Class: </label>1A  <label>Teacher</label>Teacher A<br />
-		<label>Semester: <label>2012 (year) September (month) to 2013 (year) January (month)<br />
-		<label>Attendentce: </label> (# of Attendance) / (# of scheduled attendance )  Late (# of late attendance) </br>
-		<label>Homework turn in rate: </label> (# of turned in) / (total # of homework) </br>
-</div>
+<table class="basic">
+		<tr>
+		    <td class="title">Student Name: </td><td class="text">{{ student }}</td>
+		    <td class="title">Class: </td><td class="text">{{theClass}}</td>  
+                    <td class="title">Teacher:</td><td class="text">{{theClass.teachers}}</td></tr>
 
-<div>
-<dl>
-	<dt> Quiz </dt>
-	<dd> 
-		<ol>
-		  		<li>s1 </li>
-		  		<li>s1 </li>
-		  		<li>s1 </li>
-		  		<li>s1 </li>
-		  		<li>s1 </li>
-		  		<li>s1 </li>
-		  		<li>s1 </li>
-		  		<li>s1 </li>
-		  		<li>s1 </li>
-		  		<li>s1 </li>
-		  		<li>s1 </li>
-		  		<li>s1 </li>
-		  		<li>s1 </li>
-		  		<li>s1 </li>
-		</ol>
-	</dd>
-</dl>
-</div>
-<br />
-<div>
-<dl>
-        <dt> Homework </dt>
-        <dd>         
-                <ol>
-                                <li> s1 </li>
-                                <li> s2 </li>
-                                <li> s3 </li>
-                                <li> s4 </li>
-                                <li> s5 </li>
-                                <li> s6 </li>
-                                <li> s7 </li>
-                                <li> s8 </li>
-                                <li> s9 </li>
-                                <li> s10 </li>
-                                <li> s11 </li>
-                                <li> s12 </li>
-                </ol>
-        </dd>
-</dl>
-	
-
-</div>
-
-	<br /> <br />
+		<tr><td class="title">Semester:</td><td class="text">{{semester}}</td> 
+		    <td class="title">Attendentce: </td><td colspan = "3" class="text"> {{num_present}}/{{num_sessions}}; Late for {{num_late}} times</td></tr>
+		<tr><td class="title">Homework Turn in Rate: </td><td class="text"> 14/14 </td></tr>
+		<tr> <td class="title"> Score: </td> <td class="text"> {{student.final_score}} </td> </tr> 
+</table>
+<br /><br />
+	<h2> Summary </h2>
 	<table class="report">
 		<tr>
 			<th> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
@@ -75,48 +31,74 @@
 			<th> Percentage % </th>
 			<th> Weighted Score </th>
 			<th> Class Average </th>
-			<th> Highest Score </th>
 		<tr>
+		{% for cat in categories %}
 		<tr> 
-			<td> Ave. of Quiz </td>
-			<td> </td>
-			<td> 30% </td>
-			<td> </td>
-			<td> </td>
-			<td> </td>
+			<td> {{cat.name}} </td>
+			<td> {{cat.avg_score}}</td>
+			<td> {{cat.weight}}% </td>
+			<td> {{cat.weighted_score}}</td>
+			<td> {{cat.class_avg}} </td>
+			
 		</tr>
-		<tr> 
-                        <td> Midterm Exam </td>
-                        <td> </td>
-                        <td> 15% </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                </tr>
-		<tr> 
-                        <td> Final Exam </td>
-                        <td> </td>
-                        <td> 15% </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                </tr>
-		<tr> 
-                        <td> Homework </td>
-                        <td> </td>
-                        <td> 40% </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                </tr>
+		{% endfor %}
 		<tr>
-			<th colspan="3">Total of Weighted Socres</th>
-			<td> </td>
-			<td> </td>
-			<td> </td>
+			<td colspan="3">Total of Weighted Scores</td>
+			<td> {{student.final_score}}</td>
+			<td> {{theClass.average}} </td>
 		</tr>
 	</table>
-	<br /><br />	
+	<br /><br /> <br />	
+
+<h2> Attendance </h2> 
+<table class="report">
+    {% for row in attendances_rows %}
+		<tr>
+		    <th></th>
+    	{% for session in row %}
+    		<th> {{session.0 | date:"m/d/y"}}</th> 
+    	{% endfor %} 
+    	</tr> 
+    	<tr> 
+		    <td>Attendance</td>
+    	{% for session in row %}
+    		<td> {{session.1}} </td> 
+    	{% endfor %} 
+    	
+		</tr>
+	{% endfor %} 
+</table> 
+
+{% for cat in categories %}
+<br /><br />
+ <h2>{{cat.name}}  ({{cat.weight}}%)</h2>
+{% if cat.score_rows %}
+
+<table class="report">
+   {% for row in cat.score_rows %}
+		<tr>
+		    <th></th>		    
+     {% for score in row %}
+		    <th>{{score.0.name}}</th>
+	 {% endfor %}
+	    </tr><tr>
+	    <td> Score </td>
+     {% for score in row %}
+		    <td>{{score.1}}</td>
+	 {% endfor %}
+	    </tr>
+	   
+   {% endfor %}
+   </table> 
+    <br/> 
+	 
+ {% else %} No score records 
+ {% endif %}
+ 
+{% endfor %}
+
+
+	<br /> <br />
 
 	<h2> Levels of Chinese </h2>
 	<table width="80%">
@@ -147,5 +129,6 @@
 	</table>
 	<br />
 	<h2> Teacher's Feedback</h2>
+	{{en.note|safe}}
     </body>
 </html> 

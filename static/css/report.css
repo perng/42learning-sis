@@ -1,9 +1,9 @@
 .t1 {
     color: #333333;
-    margin: 0px 0 10px 0;
+    margin: 0px 0 50px 0;
     padding-top: 10px;
-    font-size: 1.8em;
-    line-height: 24px;
+    font-size: 1.9em;
+    line-height: 28px;
     font-weight: bold;
     text-align: center;
 }
@@ -18,24 +18,33 @@ h2 {
 h3 {
     font-size: 1.1em;
     font-weight: bold;
-    padding: 0;
+    padding-left:20px;
     margin: 0 0 10px 0;
 }
 
-div {
-   font-size: 1em;
-   font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-   margin: 0 0 10px 0;
+
+.basic {
+    font-size: 1.3em;
+}
+ 
+.basic tr .title {
+    font-weight:bold;
+    padding:5px; 
+    text-align: left;
+}
+ 
+.basic tr .text {
+    padding-left:10px;
+    padding-right:25px;
+    text-align: left;
+    
 }
 
-.listdiv {
-   width: 10em;
-}
 
 dt {
-    font-size: 1.1em;
+    font-size: 1.3em;
     font-weight: bold;
-    padding: 0;
+    padding: 0 0 10px 0;
     margin: 0 0 10px 0;
 }
 
@@ -45,22 +54,28 @@ ol {
   padding:0;
   counter-reset:item;
 }
- 
+/*
 li {
   display:inline;
-  margin-left: 10px;
-  margin-right: 40px;
   padding:0;
+  margin: 5px 40px 0px 10px;
   counter-increment:item;
 }
 
 li:before {
-   content:"(" counter(item) ")";
+    content: "(week "counter(item, decimal-leading-zero)")";  
+   margin-right: 8px;
+   text-align:center;
+}
+*/
+.listitem {
+   display:inline-block;
+   width: 20px;
 }
 
 .report
 {
-font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+font-family:Georgia, "Trebuchet MS", Arial, Helvetica, sans-serif;
 width: 80%;
 border-collapse:collapse;
 table-layout:fixed;
@@ -84,7 +99,9 @@ font-size:1.1em;
 text-align:center;
 padding-top:5px;
 padding-bottom:4px;
-color:#000000;
+background:#5f9be3;
+color:#fff;
+
 }
 
 .report tr.alt td

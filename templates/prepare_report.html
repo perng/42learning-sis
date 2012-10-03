@@ -1,0 +1,63 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+{% load url from future %}
+
+
+{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Prepare Report Card for {{theClass}} {% endblock %}
+{% block content %} 
+<div class="teacher">
+    <h2 class="title">Prepare Report Card for {{theClass}}</h2>
+    {% if students %}
+    <div class="tbody">
+        <table class="red_table"> 
+            <tr align='center'> 
+                <th> Student </th> 
+                <th> Evaluation Comment </th> 
+                <th> Preview Report </th> 
+                {#<th> Deliver Report </th> #}
+            </tr>
+            {% for s in students %}
+            <tr align='center'> 
+                <td> {{s}} </td>
+                <td> <a href="{% url 'evaluation_comment' enrolldetail_id=s.enrollment.eid %}"> Comment </a> </td> 
+                <td> <a href="{% url 'report_card' enrolldetail_id=s.enrollment.eid %}" target="_blank"> Preview </a> </td> 
+                {# <td> <a href="{% url 'notify_report_card' enrolldetail_id=s.enrollment.eid %}">  Notify Parent</a>   </td> #}
+            </tr>
+            {% endfor %}
+        </table> 
+        <br/>
+    </div>
+
+  <br/> 
+     <form action="{% url 'notify_report_card' class_id=theClass.eid%}"  method="post">
+       <input class="button" type="submit" name="notify" value="Report cards are ready. Notify all parents"/> 
+               {% csrf_token %}
+       
+      </form>
+
+
+    <form class="red" action="/calculate_total/{{theclass.eid}}" method="post">
+        <input type='hidden' name='category' value='{{category.eid}}'/> 
+        {% csrf_token %}
+        <h3> Class Setup </h3> 
+        <input type="checkbox" name="total_ready" value="total_ready"> Final Scores are ready </input></br>
+        <input type="checkbox" name="show_stats" value="show_stats" {% if request.session.show_stats %} checked="checked" {% endif %}> Show highest, lowest, average, and median for each item. </input><br/><br />
+        <input class="button" type="submit" name="calculate_total" value="Update Setting"/>
+    </form>
+	
+        <a href='mailto:{% for s in students %}{{s.family.user.email}},{% endfor %}'> Email all students </a> 
+        <div> 
+            All emails: {% for s in students %}{{s.family.user.email}},{% endfor %}
+        </div> 
+
+    {% else %}
+
+    <h2> No student enrolled yet.  </h2> 
+    {% endif %}
+
+
+</div>
+
+
+{% endblock %}

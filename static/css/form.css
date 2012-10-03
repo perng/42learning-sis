@@ -103,6 +103,7 @@ form .button{
 .signform label {
         display: block;  /* block float the labels to left column, set a width */
         float: left;
+	font-size: 13px;
         width: 150px;
         padding: 1px 1px 1px 2px;
         margin: 8px 0 0; /* set top margin same as form input - textarea etc. elements */
@@ -114,7 +115,8 @@ form .button{
         width:auto;       /* set width of form elements to auto-size, otherwise watch for wrap on resize */
         margin:8px 0 0 10px; /* set margin on left of form elements rather than right of
                               label aligns textarea better in IE */
-        padding:4px 2px;
+        padding:1px;
+	font-size: 13px;
         border:solid 1px #aacfe4;
 	-moz-border-radius:0.4em;
 	-khtml-border-radius:0.4em;

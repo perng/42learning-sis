@@ -295,7 +295,7 @@ def payment(request, filter=None):
 
 @superuser_required
 def active_directory(request, active_only=True):
-    semester = current_reg_semester()
+    semester = current_record_semester()
     classes = semester.class_set.all()
     print 'classes', classes
     families = {}
@@ -346,6 +346,8 @@ def teacher_directory(request):
 
 def offered_classes(request):
     sem = current_reg_semester()
+    if not sem:
+        sem= current_record_semester()
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
     return my_render_to_response(request, 'offered_classes.html', locals())
     

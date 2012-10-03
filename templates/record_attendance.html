@@ -2,59 +2,39 @@
 {% load core_tags %}
 {% load url from future %}
 
-
-{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
-{% block title %}  Record Attendances: {{theclass.name}} {% endblock %}
+{% block theme %} 
+<link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> 
+<link href="{% static_path %}/css/record_attendance.css" rel="stylesheet" type="text/css" /> 
+{% endblock %}
+{% block title %}  Record Attendances: {{theClass.name}} {% endblock %}
 {% block content %} 
-<script>
-    $(function() {
-        $( "#extra_att_date" ).datepicker();
-        $( "#extra_att_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-    });
-</script>
 
 {% if error %}
 {{error}}
 {% else %}
 <div class="teacher">
-    <h3 class="title"> Class: {{theclass.name}} Attendance</h3>
-    <form class="grade" action='{% url 'record_attendance' class_id=theclass.eid show_session="_" %}' method='post'>
-        {% csrf_token %}
-        {% ifnotequal show_session snom1 %}
-        <a href='{% url 'record_attendance' class_id=theclass.eid show_session=snom1 %}'>  Prev </a>
-        {% endifnotequal %}
-        {% ifnotequal show_session snop1 %}
-        <a href='{% url 'record_attendance' class_id=theclass.eid show_session=snop1 %}'>  Next </a>
-        {% endifnotequal %}
-
-        <table class="grade_table">
+    <div style="padding: 15px;">
+    <h3 class="inCenter"> Class: {{theClass.name}} Attendance</h3>
+    <br />
+    <a href="{% url 'add_new_attendance' class_id=theClass.eid %}" class="btn btn-success" style="text-decoration: none;"><i class="icon-plus"></i> Add New Record </a>
+    <br />
+    <div class="record-tab"> 
+    <table class="table table-bordered table-striped table-condensed">
             <tr> 
                 <th> Date </th>
-                {% for cs in sessions %}
-                <th>                 {{cs.date.isoformat}} (<a href="{% url 'del_attendance' cs_id=cs.eid %}"> del </a>) </th>
-                {% endfor %}
-                {# <th> <input type="text" name="extra-att-date"/>  </th> #}
-                <th> {{extra_att_date }} </th> 
+		<th> Edit</th>
+		<th> Delete</th>
             </tr>
-            {% for s in students %}
-            <tr>
-                <th> 
-                   {#  <a href="{%url 'student_attendance' class_id=theclass.eid sid=s.eid %}"> #}
-                        {{s.firstName}} {{s.lastName}} 
-                {# </a>  #}
-		</th>
-                {% for att in s.att_fields%}
-                <td> {{att}} </td> 
-                {% endfor %}
-                <td> {{s.extra_att}} </td> 
+        {% for session in sessions %}
+	    <tr>
+		<td> {{session.date| date:"y-m-d"}} </td>
+		<td> <a href="{% url 'edit_attendance' cs_id=session.eid %}" class="btn btn-warning btn-mini" style="text-decoration: none; color: white;" > <i class="icon-pencil"> </i> Edit&nbsp; </a></td>
+		<td> <a href="{% url 'del_attendance' cs_id=session.eid %}" class="btn btn-danger btn-mini" style="text-decoration: none; color: white;"> <i class="icon-trash"></i> Delete&nbsp; </a> </td>
             </tr>
-            {% endfor %}
-        </table>
-
-        <input class="button" type="submit" name="update-att" value="Update Attendance"/>
-    </form> 
-    Click "Prev" and "Next" to see older or newer records. <br/>
-    P: Present, A: Absent, L: Late, E: Early Depart
+		{% endfor %}
+      </table>
+     </div>
+     </div>
 </div>
 {% endif %}
 

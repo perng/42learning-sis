@@ -3,9 +3,9 @@ from django.contrib.sites.models import RequestSite
 from django.contrib.sites.models import Site
 
 from sis.registration import signals
-from sis.registration.forms import RegistrationForm
+from sis.registration.forms import RegistrationFormUniqueEmail
 from sis.registration.models import RegistrationProfile
-
+from django.contrib.auth.models import User
 
 class DefaultBackend(object):
     """
@@ -71,6 +71,10 @@ class DefaultBackend(object):
 
         """
         username, email, password = kwargs['email'], kwargs['email'], kwargs['password1']
+        #eusers= User.objects.filter(email=email)[:]
+        #if eusers:
+        #    return None
+        
         if Site._meta.installed:
             site = Site.objects.get_current()
         else:
@@ -120,7 +124,7 @@ class DefaultBackend(object):
         Return the default form class used for user registration.
 
         """
-        return RegistrationForm
+        return RegistrationFormUniqueEmail
 
     def post_registration_redirect(self, request, user):
         """

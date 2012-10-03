@@ -12,7 +12,9 @@
     <div>
         <table class="green_table">
             <tr>
-                <th> Students</th><th>Check</th> <th> Assignment </th>
+                <th class="btn-green"><i class="icon-user"></i> Students</th>
+		<th class="btn-green"><i class="icon-table"></i> Check</th> 
+		<th class="btn-green"><i class="icon-file"></i> Assignment </th>
             </tr>
             {% for student in students %}
             <tr>
@@ -28,9 +30,9 @@
             {% endfor %}
         </table>
     </div>
-    <div>
-        <a class="button" href='{% url 'edit_student' %}'> Add Student </a> 
-        <a class="button" href={% url 'enroll_form' %}> Enroll </a> <br/>
+    <div class="inCenter">
+        <a class="btn btn-medium btn-green" href='{% url 'edit_student' %}'> <i class="icon-plus"></i> Add Student </a> 
+        <a class="btn btn-medium btn-green" href={% url 'enroll_form' %}><i class="icon-edit"></i> Enroll </a> <br/>
     </div> 
 </div>
 {% endblock %} 

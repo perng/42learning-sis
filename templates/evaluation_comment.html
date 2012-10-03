@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load core_tags %}
+{% load url from future %}
+{% load markup %}
+
+{% block theme %} 
+
+<link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> 
+<link rel="stylesheet" type="text/css" href="{% static_path %}/css/jquery.cleditor.css" />
+
+<script type="text/javascript" src="{% static_path %}/js/jquery.cleditor.min.js"></script>
+
+<script>
+    $(function() {
+ 	 $("#comment").cleditor();	
+    });
+</script>
+
+{% endblock %}
+
+{% block title %} Evaluation  {% endblock %}
+
+{% block content %}
+
+<div class="teacher">
+    <h3 class="title"> {{en.classPtr}}: Evaluation for {{en.student}} </h3>
+
+    <form class="red" action='{% url 'evaluation_comment' enrolldetail_id=en.eid %}' method='post'>
+        <div style="margin-left: 30px;">
+        <textarea id="comment" name='comment'  rows=0 cols=0>{{en.note}}</textarea><br/>
+         </div>
+        {% csrf_token %}
+        <input class="button" type="submit" name="Update" value="Update" />
+    </form>
+         
+</div>
+{% endblock %}
