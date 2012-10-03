@@ -40,7 +40,7 @@ $(function() {
     	<tr>
            <td> Date </td> <td> <input id="datepicker" name='date' placeholder="Pick recording date" value="{{date| date:"m-d-y"}}"/> </td> 
 		<tr>  <td> Name </td>  
-		   <td> <input id="name" name="name"  value="{{name}}" class="input-large" placeholder="Enter score here" /></td>
+		   <td> <input id="name" name="name"  value="{{name}}" class="input-large" placeholder="Enter {{category.name}} name" /></td>
 		   </tr>
 
 	{% for s in students %}
