@@ -5,6 +5,7 @@
 
 <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> 
 <link rel="stylesheet" type="text/css" href="{% static_path %}/css/jquery.cleditor.css" />
+<link href="{% static_path %}/css/record_attendance.css" rel="stylesheet" type="text/css" />
 
 <script type="text/javascript" src="{% static_path %}/js/jquery.cleditor.min.js"></script>
 
@@ -13,11 +14,8 @@
 {% block title %} Assignments  {% endblock %}
 
 {% block content %}
-
 <script>
     $(function() {
-        //$( "#assign_date" ).datepicker();
-        //$( "#assign_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
         $( "#due_date" ).datepicker();
         $( "#due_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
 	
@@ -25,23 +23,50 @@
     });
 </script>
 <div class="teacher">
-    <h3 class="title"> Assignments for Class {{category.classPtr.name}} </h3>
-
+    <div style="padding: 5px;">
+    <h3 class="inCenter"> Assignments for Class {{category.classPtr.name}} </h3>
 
     {% if gditems %}
-    <table  class="red_table"> 
-        <tr> <th> Name </th>  <th> Description </th> <th> Files </th> <th> Due Date </th> </tr>
-
-        {% for gditem in gditems %}
-        <tr> 
-            <td><a href='{% url 'assignment_edit' aid=gditem.eid %}'> {{gditem.name}} </a> </td>
-            <td> {{gditem.assignmentDescr|safe}}</td> 
-            <td> <a href="{{gditem.download_url}}"  target="_blank" > upload </a> </td> 
-            <td> {{gditem.duedate.isoformat}} </td> 
-        </tr> 
-
-        {% endfor %}
-    </table>
+    <div class="record-tab">
+	<div class="accordion" id="assignment">
+	   <div class="accordion-group">
+                        <div class="accordion-heading">
+	   			<div class="row-fluid">
+					<div class="span4" style="padding-left: 15px;"><h5>Name </h5></div>
+					<div class="span4"><h5>Due Date  </h5></div>
+	   			</div>
+			</div>
+	  </div> 
+	   {% for gditem in gditems %}
+  		<div class="accordion-group">
+    			<div class="accordion-heading">
+          		  <div class="row-fluid">
+      			     <div class="span4">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#assignment" 
+					href="#{{gditem.duedate.isoformat}}" style="text-decoration:underline;">
+  					{{gditem.name}}	
+      			        </a>
+			     </div>
+      			     <div class="span4" style="padding-top: 5px;" >{{gditem.duedate.isoformat}}</div>
+			     <div class="span4" style="padding-top: 5px;">
+				<a href="{{gditem.download_url}}"  target="_blank" >
+					<button class="btn btn-small btn-info" type="button">Upload Files</i></button></a> 
+			        <a href="" target="_blank">
+					<button class="btn btn-small btn-warning" type="button">Edit</i></button></a>
+			        <a href="" target="_blank">
+					<button class="btn btn-small btn-danger" type="button">Delete</i></button></a>
+			    </div>
+    		    	 </div>
+			</div>
+    			<div id="{{gditem.duedate.isoformat}}" class="accordion-body collapse">
+      			  <div class="accordion-inner well"><span class="label label-info">Homework Description:</span>
+        			<p>{{gditem.assignmentDescr|safe}} </p>
+      			  </div>
+    			</div>
+  		</div>
+	  {% endfor %}
+	</div>
+    </div>
     {% endif %}
 
     <h3> New Assignment </h3> 
@@ -56,6 +81,6 @@
         {% csrf_token %}
         <div style="margin-left: 30px;"><input class="button" type="submit" name="Update" value="Update" /></div>
     </form>
-         
+  </div>       
 </div>
 {% endblock %}
