@@ -87,6 +87,11 @@ class Family(models.Model):
         return self.parent2FirstName + ' ' + self.parent2LastName+ ("("+self.parent2ChineseFullName+")"  if self.parent2ChineseFullName else '')
     def address(self):
         return ','.join([self.streetNumber, self.city, self.state, self.zipcode])
+    def emails(self):
+        if self.altEmail:
+            return self.user.email +','+ self.altEmail
+        return self.user.email
+
 
 LANG_CHOICES = (('English', 'English'), ('Mandarin', 'Mandarin'), ('Cantonese', 'Cantonese'), ('Other', 'Other'))
 GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'))

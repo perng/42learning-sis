@@ -29,14 +29,14 @@
                 <td> {{s.gender}} </td>
                 <td> {{s.homeLanguage}} </td>
                 <td> {{s.family.parent1FirstName}} {{s.family.parent1LastName}},<br/>{{s.family.parent2FirstName}} {{s.family.parent2LastName}}  </td> 
-                <td> <a href='mailto:{{s.family.user.email}}'> {{s.family.user.email}}</a>   </td> 
+                <td> <a href='mailto:{{s.family.emails}}'> {{s.family.emails}}</a>   </td> 
             </tr>
             {% endfor %}
         </table> 
         <br/>
-        <a href='mailto:{% for s in students %}{{s.family.user.email}},{% endfor %}'> Email all students </a> 
+        <a href='mailto:{% for s in students %}{{s.family.emails}},{% endfor %}'> Email all students </a> 
         <div> 
-            All emails: {% for s in students %}{{s.family.user.email}},{% endfor %}
+            All emails: {% for s in students %}{{s.family.emails}},{% endfor %}
         </div> 
     </div>
     {% else %}
