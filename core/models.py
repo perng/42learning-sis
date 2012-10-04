@@ -297,6 +297,7 @@ class GradingItem(models.Model):
 
     def download_url(self):
         path=self.download_path()
+        path=path.replace('\\','')
         b='http://homework.nwcsny.org/index.php?folder=' 
         
         encoded_path=base64.b64encode(path)
