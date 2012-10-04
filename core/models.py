@@ -141,7 +141,8 @@ class Class(models.Model):
     class Meta:
         unique_together = (('name', 'semester'))
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
     def assignment_categories(self):
         return GradingCategory.objects.filter(classPtr=self, hasAssignment=True)
@@ -189,7 +190,8 @@ class EnrollDetail(models.Model):
     class Meta:
         unique_together = (('student', 'classPtr'))
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
     def __str__(self):
         return self.student.firstName+' '+self.student.lastName+'--'+self.classPtr.__str__()
 
@@ -200,7 +202,8 @@ class Award(models.Model):
     awardDescription = models.TextField(blank=False)
     deleted = models.BooleanField(default=False)
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
 class GradingCategory(models.Model):
     classPtr = models.ForeignKey(Class)
@@ -209,7 +212,8 @@ class GradingCategory(models.Model):
     weight = models.IntegerField()
     hasAssignment = models.BooleanField(default=False)
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
     def __str__(self):
         return self.classPtr.name+' '+self.name
     
@@ -247,7 +251,8 @@ class GradingItem(models.Model):
     def hasAssignment(self):
         return self.category.hasAssignment
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
     
     def download_path(self):
         try: 
@@ -295,14 +300,16 @@ class Score(models.Model):
     gradingItem = models.ForeignKey(GradingItem)
     score = models.FloatField(null=True)
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
 
 class ClassSession(models.Model):
     classPtr = models.ForeignKey(Class)
     date = models.DateField(null=True, verbose_name='Date', help_text='Format: YYYY-MM-DD')
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
 ATT_CHOICES = (('-', '-'), ('P', 'P'), ('A', 'A'), ('L', 'L'), ('E', 'E'))
 
@@ -311,7 +318,8 @@ class Attendance(models.Model):
     session = models.ForeignKey(ClassSession)
     attended = models.CharField(max_length=6, default='', choices=ATT_CHOICES)
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
 class Fee(models.Model):
     ''' Difference only in base fee'''
@@ -323,7 +331,8 @@ class Fee(models.Model):
     mdiscount = models.FloatField(default=0, help_text='Discount when taking with a language class')
     classPtr = models.OneToOneField(Class)
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
 
 class FeeConfig(models.Model):
@@ -349,7 +358,8 @@ class FeeConfig(models.Model):
         elif nStudent == 5:
             return self.discount5
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
 class Tuition(models.Model):
     family = models.ForeignKey(Family)
@@ -362,7 +372,8 @@ class Tuition(models.Model):
     pay_date = models.DateField(null=True, verbose_name='Payment confirmed date', help_text='Format: YYYY-MM-DD')
     pay_credit = models.BooleanField(help_text="Pay by Credit Card")
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
     def fully_paid(self):
         return self.paid == self.due

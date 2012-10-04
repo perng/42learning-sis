@@ -43,7 +43,7 @@
           		  <div class="row-fluid">
       			     <div class="span4">
 				<a class="accordion-toggle" data-toggle="collapse" data-parent="#assignment" 
-					href="#{{gditem.duedate.isoformat}}" style="text-decoration:underline;">
+					href="#{{gditem.eid}}" style="text-decoration:underline;">
   					{{gditem.name}}	
       			        </a>
 			     </div>
@@ -58,7 +58,7 @@
 			    </div>
     		    	 </div>
 			</div>
-    			<div id="{{gditem.duedate.isoformat}}" class="accordion-body collapse">
+    			<div id="{{gditem.cid}}" class="accordion-body collapse">
       			  <div class="accordion-inner well"><span class="label label-info">Homework Description:</span>
         			<p>{{gditem.assignmentDescr|safe}} </p>
       			  </div>
