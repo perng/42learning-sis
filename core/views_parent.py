@@ -182,7 +182,7 @@ def enroll(request):
             if  'class' not in k or v == '---':
                 continue
             cid = id_decode(v)
-            theclass = Class.objects.get(id=cid)
+            theClass = Class.objects.get(id=cid)
             sid = id_decode(k.split('-')[1])
             student = lookup(sid, students)
             if k.startswith('classm'):
@@ -190,23 +190,23 @@ def enroll(request):
                         oldm = Class.objects.get(id=s.mclass.id)
                         #oldm.student_set.remove(student)
                         EnrollDetail.objects.filter(classPtr=oldm, student=student).delete()
-                    #theclass.student_set.add(student)
-                    ed = EnrollDetail(student=student, classPtr=theclass)
+                    #theClass.student_set.add(student)
+                    ed = EnrollDetail(student=student, classPtr=theClass)
                     ed.save()
-                    student.mclass=theclass
-                    theclass.save()
+                    student.mclass=theClass
+                    theClass.save()
 
             elif k.startswith('classe'):
                     if s.eclass:
                         oldm = Class.objects.get(id=s.eclass.id)
                         #oldm.student_set.remove(student)
                         EnrollDetail.objects.filter(classPtr=oldm, student=student).delete()
-                    #theclass.student_set.add(student)
-                    ed = EnrollDetail(student=student, classPtr=theclass)
+                    #theClass.student_set.add(student)
+                    ed = EnrollDetail(student=student, classPtr=theClass)
                     ed.save()
-                    student.eclass=theclass
-                    #print 'add class', student, theclass
-                    theclass.save()
+                    student.eclass=theClass
+                    #print 'add class', student, theClass
+                    theClass.save()
     errors=[]
     for s in students:
         print s, s.mclass, s.eclass
