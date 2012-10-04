@@ -57,6 +57,7 @@ urlpatterns = patterns('',
      url(r'^assignments/(?P<cat_id>.+)$', assignments, name='assignments'),
      url(r'^assignment_edit/(?P<aid>.+)$', edit_assignment, name='assignment_edit'),
      url(r'^del_assignment/(?P<aid>.+)$', del_assignment, name='del_assignment'),
+     url(r'^del_all_homework_files/(?P<aid>.+)$', del_all_homework_files, name='del_all_homework_files'),
 
      url(r'^view_assignments/(?P<cat_id>.+$)', view_assignments, name='view_assignments'),
      url(r'^new_assignment/(?P<class_id>.+$)', new_assignment, name='new_assignment'),

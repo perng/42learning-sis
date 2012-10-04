@@ -322,6 +322,14 @@ def del_assignment(request, aid):
     return redirect('assignments', cat_id=category.eid())
 
 @login_required
+def del_all_homework_files(request, aid):
+    gi = GradingItem.objects.get(id=id_decode(aid))
+    category=gi.category    
+    gi.del_all_homework_files() 
+    return redirect('assignments', cat_id=category.eid())
+
+
+@login_required
 def edit_assignment(request, aid):
     gi = GradingItem.objects.get(id=id_decode(aid))
     if request.method=='POST':

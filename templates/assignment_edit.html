@@ -38,7 +38,8 @@
 
         {% csrf_token %}
         <input class="button" type="submit" name="Update" value="Update" />
-        <input class="button" type="submit" name="Delete" value="Delete" />
+        <input class="button" type="submit" name="Delete" value="Delete this Homework" />
     </form>
+    <a class="button" href='{% url 'del_all_homework_files' aid=gi.eid %}'> Delete all uploaded files (use carefully) </a> 
 </div>
 {% endblock %}
