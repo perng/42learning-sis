@@ -288,6 +288,14 @@ class GradingItem(models.Model):
         path=path.replace(' ',r'\ ')
         os.system('ssh staff@homework.nwcsny.org mkdir -p "/home/staff/homework/%s"' %( path,))
 
+    def del_all_homework_files(self):
+        path=self.download_path()
+        path=path.replace(' ',r'\ ')
+        print 'ssh staff@homework.nwcsny.org rm -f "/home/staff/homework/%s/*"' %( path,)
+
+        os.system('ssh staff@homework.nwcsny.org rm -f "/home/staff/homework/%s/*"' %( path,))
+
+
     def download_url(self):
         path=self.download_path()
         b='http://homework.nwcsny.org/index.php?folder=' 
