@@ -19,20 +19,20 @@
         {% for c in teaches %}
         <tr>
             {% if c.recordGrade %} 
-            <td><a href='{% url 'grading_policy' cid=c.eid%}'>{{c.name}}</a></td>  
+            <td><a href='{% url 'grading_policy' cid=c.eid%}' style="text-decoration:underline;">{{c.name}}</a></td>  
             {% else %}
             <td>{{c.name}}</td>
             {% endif %}
             <td> 
                 {% if c.recordAttendance %} 
-                <a href='{% url 'record_attendance' class_id=c.eid  %}'> Attendance </a> 
+                <a href='{% url 'record_attendance' class_id=c.eid  %}' style="text-decoration:underline;"> Attendance </a> 
                 {% else %}
                 -
                 {% endif %} 
             </td> 
             <td> 
                 {% for gc in c.assignment_categories %}
-                <a href='{% url 'assignments' cat_id=gc.eid %}'> {{ gc.name }} <br/></a> 
+                <a href='{% url 'assignments' cat_id=gc.eid %}' style="text-decoration:underline;"> {{ gc.name }} <br/></a> 
                 {% endfor %}
             </td> 
             <td>
@@ -46,10 +46,10 @@
                 {# <a class="btn btn-mini btn-info" href='{% url 'record' class_id=c.eid %}'>Home Work </a> #}
                 {% else %} - {% endif %}
             </td> 
-            <td><a href='{% url 'classroaster' cid=c.eid%}'>Contacts({{c.num_students}})</a></td>
+            <td><a href='{% url 'classroaster' cid=c.eid%}' style="text-decoration:underline;">Contacts({{c.num_students}})</a></td>
             <td>
                 {% if c.recordGrade %} 
-                <a href='{% url 'prepare_report' class_id=c.eid %}'>Report <br/> (not ready) </a>
+                <a href='{% url 'prepare_report' class_id=c.eid %}' style="text-decoration:underline;">Report <br/> (not ready) </a>
                 {% else %} - {% endif %}
             </td> 
 

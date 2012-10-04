@@ -69,18 +69,21 @@
     </div>
     {% endif %}
 
-    <h3> New Assignment </h3> 
+    <div class="well">
+    <h3 class="inCenter"> New Assignment </h3> 
     <form class="red" action='{% url 'assignments' cat_id=category.eid %}' method='post'>
         <label> Name: </label> <input type='text' name='Name'  value="{{category.name}} {{category.serial}}"/>  <br/>
         {# <label> Assign Date </label> {{assignment_date}}  <br/> #}
         <label> Due Date: </label> {{due_date}}  <br/>
 
         <label> Description: </label><br /><div style="margin-left: 30px;">
-        <textarea id="Description" name='Description' value="{{category.assignmentDescr}}" rows=0 cols=0></textarea><br/>
+        <textarea id="Description" name='Description' value="{{category.assignmentDescr}}"></textarea><br/>
          </div>
         {% csrf_token %}
         <div style="margin-left: 30px;"><input class="button" type="submit" name="Update" value="Update" /></div>
     </form>
+    </div>
+
   </div>       
 </div>
 {% endblock %}
