@@ -331,7 +331,7 @@ def edit_assignment(request, aid):
             giform=HomeWorkForm(request.POST, instance=gi)
             #name=request.POST['Name']
             gi.date=None #request.POST['assign_date']
-            gi.duedate=request.POST['due_date']
+            gi.duedate= datetime.datetime.strptime( request.POST['due_date'] ,'%m-%d-%y')
             gi.assignmentDescr=request.POST['Description']
 
             try:   
