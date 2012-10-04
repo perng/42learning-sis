@@ -50,11 +50,11 @@
       			     <div class="span4" style="padding-top: 5px;" >{{gditem.duedate.isoformat}}</div>
 			     <div class="span4" style="padding-top: 5px;">
 				<a href="{{gditem.download_url}}"  target="_blank" >
-					<button class="btn btn-small btn-info" type="button">Upload Files</i></button></a> 
-			        <a href="" target="_blank">
-					<button class="btn btn-small btn-warning" type="button">Edit</i></button></a>
-			        <a href="" target="_blank">
-					<button class="btn btn-small btn-danger" type="button">Delete</i></button></a>
+					<button class="btn btn-small btn-info" type="button">Upload Files</button></a> 
+			        <a href="{% url 'assignment_edit' aid=gditem.cid %}" > 
+					 <button class="btn btn-small btn-warning" type="button">Edit</button></a> 
+			        <a href="{% url 'del_assignment' aid=gditem.cid %}" >
+					<button class="btn btn-small btn-danger" type="button">Delete</button></a>
 			    </div>
     		    	 </div>
 			</div>

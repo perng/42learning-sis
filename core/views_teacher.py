@@ -314,6 +314,12 @@ def new_assignment(request, cid):
 
     return my_render_to_response(request, 'assignment.html', locals())
 
+@login_required
+def del_assignment(request, aid):
+    gi = GradingItem.objects.get(id=id_decode(aid))
+    category=gi.category
+    gi.delete()
+    return redirect('assignments', cat_id=category.eid())
 
 @login_required
 def edit_assignment(request, aid):
