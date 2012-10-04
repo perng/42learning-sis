@@ -53,8 +53,7 @@
 					<button class="btn btn-small btn-info" type="button">Upload Files</button></a> 
 			        <a href="{% url 'assignment_edit' aid=gditem.cid %}" > 
 					 <button class="btn btn-small btn-warning" type="button">Edit</button></a> 
-			        <a href="{% url 'del_assignment' aid=gditem.cid %}" >
-					<button class="btn btn-small btn-danger" type="button">Delete</button></a>
+				<button class="btn btn-small btn-danger" type="button" data-toggle="modal" data-target="#deleteModal">Delete</button>
 			    </div>
     		    	 </div>
 			</div>
@@ -64,6 +63,16 @@
       			  </div>
     			</div>
   		</div>
+		<!-- modal --!>
+		<div id="deleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-body">
+              			<h4>Are you sure?</h4>			
+			</div>
+			<div class="modal-footer">
+              			<button class="btn" data-dismiss="modal">Close</button>
+              			<a href="{% url 'del_assignment' aid=gditem.cid %}" ><button class="btn btn-primary">Continue to Delete</button></a>
+            		</div>
+          	</div>
 	  {% endfor %}
 	</div>
     </div>
@@ -83,7 +92,6 @@
         <div style="margin-left: 30px;"><input class="button" type="submit" name="Update" value="Update" /></div>
     </form>
     </div>
-
   </div>       
 </div>
 {% endblock %}
