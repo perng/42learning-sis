@@ -47,7 +47,7 @@
   					{{gditem.name}}	
       			        </a>
 			     </div>
-      			     <div class="span4" style="padding-top: 5px;" >{{gditem.duedate.isoformat}}</div>
+      			     <div class="span4" style="padding-top: 5px;" >{{gditem.duedate| date:'m-d-Y'}}</div>
 			     <div class="span4" style="padding-top: 5px;">
 				<a href="{{gditem.download_url}}"  target="_blank" >
 					<button class="btn btn-small btn-info" type="button">Upload Files</button></a> 
