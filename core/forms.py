@@ -24,7 +24,7 @@ class StudentForm(ModelForm):
 	class Meta:
 		model = Student
 		fields = ('firstName', 'lastName', 'chineseFullName', 'birthday', 'homeLanguage', 'gender')
-		widgets = {'birthday': SelectDateWidget(years=range( datetime.date.today().year-4, 1960, -1))}
+		widgets = {'birthday': SelectDateWidget(years=range( datetime.date.today().year-2, 1960, -1))}
 
 class UserForm(forms.ModelForm):
 	class Meta:
