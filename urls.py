@@ -35,7 +35,6 @@ urlpatterns = patterns('',
      url(r'^classroaster/(?P<cid>.+)$', classroaster, name='classroaster'),
      url(r'^record/(?P<class_id>.+)$', record, name='record'),
      url(r'^record_attendance/(?P<class_id>.+)$', record_attendance, name='record_attendance'),
-     url(r'^student_attendance/(?P<class_id>.+)/(?P<sid>.+)$', student_attendance, name='student_attendance'),
 
      url(r'^record_grade/(?P<cat_id>.+)$', record_grade, name='record_grade'),
      url(r'^add_new_grade/(?P<cat_id>.+)$', add_new_grade, name='add_new_grade'),

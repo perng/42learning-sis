@@ -30,7 +30,7 @@ def grading_policy(request, cid):
     permitted = classid in teaches_class_ids or request.user.is_superuser
     errors=[]
     if permitted:
-        theClass = Class.objects.get(id=classid)
+        theClass = get_object_or_404(Class,id=classid)
         if request.method == 'POST':
             keys = [tuple(k.split('-') + [request.POST[k]]) for k in request.POST if '-' in k]
             keys = [(l, id_decode(cid), v) for l, cid, v in keys]
@@ -64,29 +64,17 @@ def grading_policy(request, cid):
 @login_required
 def classroaster(request, cid):
     classid = id_decode(cid)
-    theClass = Class.objects.get(id=classid)
+    theClass = get_object_or_404(Class,id=classid)
     students = theClass.student_set.order_by('lastName')
     return my_render_to_response(request, 'classroaster.html', locals())
 
 @login_required
 def record(request, class_id):
     classid = id_decode(class_id)
-    theClass = Class.objects.get(id=classid)
+    theClass = get_object_or_404(Class,id=classid)
     categories = theClass.gradingcategory_set.order_by('order')
     return my_render_to_response(request, 'record.html', locals())
 
-
-@login_required
-def student_attendance(request, class_id, sid):
-    theClass = Class.objects.get(id=class_id)
-    student= Student.objects.get(id=id_decode(sid))
-    sessions = theClass.classsession_set.order_by('date')
-    for session in sessions:
-        try:
-            session.att=Attendance.objects.get(student=student, session=session)
-        except:
-            pass
-    return 
 
 @login_required
 def record_attendance(request, class_id):
@@ -245,7 +233,10 @@ def edit_attendance(request, cs_id):
     students = [en.student for en in ens]
     if request.method == 'GET':
         for s in students:
-            s.att=Attendance.objects.get(session=cs, student=s).attended
+            att, created=Attendance.objects.get_or_create(session=cs, student=s)
+            if created:
+                att.save()
+            s.att=att.attended
         date = cs.date
         print 'date', date
         return my_render_to_response(request, 'edit_attendance.html', locals())
