@@ -11,11 +11,11 @@
 
 {% else %}
 
-<h2> Class Setup: {{theclass.name}}  </h2> 
+<h2> Class Setup: {{theClass.name}}  </h2> 
 <hr> 
 <h3>  Grading Categories </h3> 
 
-<form action="{% url setup_class {{theclass.id} %}" method="POST"> 
+<form action="{% url setup_class {{theClass.id} %}" method="POST"> 
     <table> 
         <tr> <th> Category </th> <th> Weight </th> 
             {# <th> Order </th> #}

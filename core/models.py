@@ -1,4 +1,6 @@
 import datetime,base64,os
+from subprocess import Popen, PIPE
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -302,6 +304,12 @@ class GradingItem(models.Model):
         
         encoded_path=base64.b64encode(path)
         return b+encoded_path
+
+    def get_files(self):
+        stdout, stderr = Popen(['ssh', 'staff@nwcsny.org', 'ls /home/staff/homework/'+self.download_path()], stdout=PIPE).communicate()
+        return stdout.split()
+        
+
 
 class Score(models.Model):
     student = models.ForeignKey(Student)

@@ -135,17 +135,17 @@ def classlist(request, sem_id):
     feeconfigform = FeeConfigForm(instance=feeconfig)
     return my_render_to_response(request, 'classlist.html', locals())
 
-def create_default_grading_categories(theclass):
+def create_default_grading_categories(theClass):
     order = 1
     for name, weight, assignment in [('Quiz', 30, False), ('Exam', 40, False), ('Home Work', 30, True), ('Other', 0, False)]:
-        #gc,created = GradingCategory.objects.get_or_create(classPtr=theclass, name=name )
-        gcs = GradingCategory.objects.filter(classPtr=theclass, name=name )
+        #gc,created = GradingCategory.objects.get_or_create(classPtr=theClass, name=name )
+        gcs = GradingCategory.objects.filter(classPtr=theClass, name=name )
         if len(gcs)>0:
             gc=gcs[0]
             for g in gcs[1:]:
                 g.delete()
         else:
-            gc=GradingCategory(classPtr=theclass, name=name, order=order )        
+            gc=GradingCategory(classPtr=theClass, name=name, order=order )        
         gc.order=order
         gc.weight=weight
         gc.hasAssignment=assignment
@@ -191,11 +191,11 @@ def edit_class(request, class_id=0):
     print 'class_id', class_id
 
     if class_id:
-        theclass = Class.objects.get(id=id_decode(class_id))
+        theClass = Class.objects.get(id=id_decode(class_id))
     if request.method == 'POST':
         if class_id:
-            #theclass = Class.objects.get(id=int(class_id))
-            form = ClassForm(request.POST  , instance=theclass)
+            #theClass = Class.objects.get(id=int(class_id))
+            form = ClassForm(request.POST  , instance=theClass)
         else:
             form = ClassForm(request.POST)
         print 'post'
@@ -206,7 +206,7 @@ def edit_class(request, class_id=0):
             return HttpResponseRedirect('/classlist/%s' % (id_encode(new_class.semester.id),))
     else:
         if class_id:
-            form = ClassForm(instance=theclass)
+            form = ClassForm(instance=theClass)
         else:
             form = ClassForm()
 
@@ -353,9 +353,9 @@ def offered_classes(request):
     
 @superuser_required
 def delete_class(request, class_id):
-    theclass=Class.objects.get(id=id_decode(class_id))
-    sem_id=theclass.semester.id
-    theclass.delete()
+    theClass=Class.objects.get(id=id_decode(class_id))
+    sem_id=theClass.semester.id
+    theClass.delete()
     return classlist(request, sem_id)
 
 @superuser_required

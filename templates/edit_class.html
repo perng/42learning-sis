@@ -8,14 +8,14 @@
 
 <div class="admin2">
     <br/>
-    <form method='post' action='/edit_class{%if theclass %}/{{theclass.eid}}{% endif %}'> 
+    <form method='post' action='/edit_class{%if theClass %}/{{theClass.eid}}{% endif %}'> 
         {{ form.as_p }}
         {% csrf_token %}
         <input type="submit" name="Add/Edit Class" value="Update" />
     </form>
 
-    {% if theclass %}
-    <a href="{% url 'delete_class' theclass.eid %}"> delete this class </a>
+    {% if theClass %}
+    <a href="{% url 'delete_class' theClass.eid %}"> delete this class </a>
     {% endif %} 
     <br/>
     <b> Use <a href='http://en.wikipedia.org/wiki/Markdown' target="_blank"> Markdown </a> syntax for class description </b>
