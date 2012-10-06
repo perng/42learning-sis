@@ -1,85 +1,11 @@
-.t1 {
-    color: #333333;
-    margin: 0px 0 50px 0;
-    padding-top: 10px;
-    font-size: 1.9em;
-    line-height: 28px;
-    font-weight: bold;
-    text-align: center;
-}
-
-h2 {
-    font-size:1.3em;
-    font-weight: bold;
-    padding: 0 0 10px 0;
-    margin: 0 0 10px 0;
-}
-
-h3 {
-    font-size: 1.1em;
-    font-weight: bold;
-    padding-left:20px;
-    margin: 0 0 10px 0;
-}
-
-
-.basic {
-    font-size: 1.3em;
-}
- 
-.basic tr .title {
-    font-weight:bold;
-    padding:5px; 
-    text-align: left;
-}
- 
-.basic tr .text {
-    padding-left:10px;
-    padding-right:25px;
-    text-align: left;
-    
-}
-
-
-dt {
-    font-size: 1.3em;
-    font-weight: bold;
-    padding: 0 0 10px 0;
-    margin: 0 0 10px 0;
-}
-
-ol {
-  display:inline;
-  margin:0;
-  padding:0;
-  counter-reset:item;
-}
-/*
-li {
-  display:inline;
-  padding:0;
-  margin: 5px 40px 0px 10px;
-  counter-increment:item;
-}
-
-li:before {
-    content: "(week "counter(item, decimal-leading-zero)")";  
-   margin-right: 8px;
-   text-align:center;
-}
-*/
-.listitem {
-   display:inline-block;
-   width: 20px;
-}
-
 .report
 {
 font-family:Georgia, "Trebuchet MS", Arial, Helvetica, sans-serif;
-width: 80%;
+width: 96%;
 border-collapse:collapse;
 table-layout:fixed;
 text-align: center;
+padding-left: 20px;
 
 }
 

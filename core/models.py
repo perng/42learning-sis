@@ -1,4 +1,6 @@
 import datetime,base64,os
+from subprocess import Popen, PIPE
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -141,7 +143,8 @@ class Class(models.Model):
     class Meta:
         unique_together = (('name', 'semester'))
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
     def assignment_categories(self):
         return GradingCategory.objects.filter(classPtr=self, hasAssignment=True)
@@ -189,7 +192,8 @@ class EnrollDetail(models.Model):
     class Meta:
         unique_together = (('student', 'classPtr'))
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
     def __str__(self):
         return self.student.firstName+' '+self.student.lastName+'--'+self.classPtr.__str__()
 
@@ -200,7 +204,8 @@ class Award(models.Model):
     awardDescription = models.TextField(blank=False)
     deleted = models.BooleanField(default=False)
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
 class GradingCategory(models.Model):
     classPtr = models.ForeignKey(Class)
@@ -209,7 +214,8 @@ class GradingCategory(models.Model):
     weight = models.IntegerField()
     hasAssignment = models.BooleanField(default=False)
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
     def __str__(self):
         return self.classPtr.name+' '+self.name
     
@@ -247,7 +253,8 @@ class GradingItem(models.Model):
     def hasAssignment(self):
         return self.category.hasAssignment
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
     
     def download_path(self):
         try: 
@@ -275,34 +282,50 @@ class GradingItem(models.Model):
              
         path='/'.join([semester+ ' '+self.category.classPtr.semester.schoolYear,
                            theClass, category, name])       
-        for c in '\:*?"<>|':
+        for c in '\:*?"<>|()&':
             path = path.replace(c,'')
+        path=path.replace(' ','\ ')
         return  path
     def create_download_dir(self):
         path=self.download_path()
-        path=path.replace(' ',r'\ ')
         os.system('ssh staff@homework.nwcsny.org mkdir -p "/home/staff/homework/%s"' %( path,))
+
+    def del_all_homework_files(self):
+        path=self.download_path()
+        print 'ssh staff@homework.nwcsny.org rm -f "/home/staff/homework/%s/*"' %( path,)
+
+        os.system('ssh staff@homework.nwcsny.org rm -f "/home/staff/homework/%s/*"' %( path,))
+
 
     def download_url(self):
         path=self.download_path()
+        path=path.replace('\\','')
         b='http://homework.nwcsny.org/index.php?folder=' 
         
         encoded_path=base64.b64encode(path)
         return b+encoded_path
+
+    def get_files(self):
+        stdout, stderr = Popen(['ssh', 'staff@nwcsny.org', 'ls /home/staff/homework/'+self.download_path()], stdout=PIPE).communicate()
+        return stdout.split()
+        
+
 
 class Score(models.Model):
     student = models.ForeignKey(Student)
     gradingItem = models.ForeignKey(GradingItem)
     score = models.FloatField(null=True)
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
 
 class ClassSession(models.Model):
     classPtr = models.ForeignKey(Class)
     date = models.DateField(null=True, verbose_name='Date', help_text='Format: YYYY-MM-DD')
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
 ATT_CHOICES = (('-', '-'), ('P', 'P'), ('A', 'A'), ('L', 'L'), ('E', 'E'))
 
@@ -311,7 +334,8 @@ class Attendance(models.Model):
     session = models.ForeignKey(ClassSession)
     attended = models.CharField(max_length=6, default='', choices=ATT_CHOICES)
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
 class Fee(models.Model):
     ''' Difference only in base fee'''
@@ -323,7 +347,8 @@ class Fee(models.Model):
     mdiscount = models.FloatField(default=0, help_text='Discount when taking with a language class')
     classPtr = models.OneToOneField(Class)
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
 
 class FeeConfig(models.Model):
@@ -349,7 +374,8 @@ class FeeConfig(models.Model):
         elif nStudent == 5:
             return self.discount5
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
 class Tuition(models.Model):
     family = models.ForeignKey(Family)
@@ -362,7 +388,8 @@ class Tuition(models.Model):
     pay_date = models.DateField(null=True, verbose_name='Payment confirmed date', help_text='Format: YYYY-MM-DD')
     pay_credit = models.BooleanField(help_text="Pay by Credit Card")
     def eid(self):
-        return id_encode(self.id)
+        self.cid= id_encode(self.id)
+        return self.cid
 
     def fully_paid(self):
         return self.paid == self.due
