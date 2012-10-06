@@ -306,6 +306,12 @@ def new_assignment(request, cid):
     return my_render_to_response(request, 'assignment.html', locals())
 
 @login_required
+def manage_files(request, aid):
+    gi = get_object_or_404(GradingItem, id=id_decode(aid))
+    files= gi.get_files()
+    return my_render_to_response(request, 'manage_files.html', locals())
+
+@login_required
 def del_assignment(request, aid):
     gi = GradingItem.objects.get(id=id_decode(aid))
     category=gi.category

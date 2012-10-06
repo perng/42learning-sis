@@ -53,7 +53,9 @@
 					<button class="btn btn-small btn-info" type="button">Upload Files</button></a> 
 			        <a href="{% url 'assignment_edit' aid=gditem.cid %}" > 
 					 <button class="btn btn-small btn-warning" type="button">Edit</button></a> 
-				<button class="btn btn-small btn-danger" type="button" data-toggle="modal" data-target="#deleteModal">Delete</button>
+				<button class="btn btn-small btn-danger" type="button" data-toggle="modal" data-target="#deleteModal">Delete Homework</button>
+			        <a href="{% url 'manage_files' aid=gditem.cid %}" > <button class="btn btn-small btn-warning" type="button">Manage Files</button></a> 
+
 			    </div>
     		    	 </div>
 			</div>
@@ -69,7 +71,7 @@
               			<h4>Are you sure?</h4>			
 			</div>
 			<div class="modal-footer">
-              			<button class="btn" data-dismiss="modal">Close</button>
+              			<button class="btn" data-dismiss="modal">No</button>
               			<a href="{% url 'del_assignment' aid=gditem.cid %}" ><button class="btn btn-primary">Continue to Delete</button></a>
             		</div>
           	</div>
