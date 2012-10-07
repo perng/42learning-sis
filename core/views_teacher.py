@@ -290,7 +290,7 @@ def assignments(request, cat_id):
 
 @login_required
 def view_assignments(request, cat_id):
-    category = GradingCategory.objects.get(id=id_decode(cat_id))
+    category = get_object_or_404(GradingCategory, id=id_decode(cat_id))
     gditems = GradingItem.objects.filter(category=category).order_by('-duedate')  
     return my_render_to_response(request, 'view_assignments.html', locals())
 
