@@ -251,6 +251,9 @@ class GradingItem(models.Model):
     assignmentDescr = models.TextField(blank=True, default='')
     duedate = models.DateField(null=True, verbose_name='Due date', )
 
+    def the_date(self):
+        return  self.date if self.date else self.duedate
+
     def calculate_statistics(self):
         num_students= len(self.students)
         scores=Score.objects.filter(gradingItem=self)
@@ -318,8 +321,8 @@ class GradingItem(models.Model):
 
 
     def download_url(self):
-        path=self.download_path()
-        path=path.replace('\\','')
+        path=self.download_path().replace('\\','')
+
         b='http://homework.nwcsny.org/index.php?folder=' 
         
         encoded_path=base64.b64encode(path)
