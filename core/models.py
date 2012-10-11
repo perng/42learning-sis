@@ -1,4 +1,4 @@
-import datetime,base64,os
+import datetime,base64,os,copy
 from subprocess import Popen, PIPE
 
 from django.db import models
@@ -60,6 +60,26 @@ class Family(models.Model):
     parent2ChineseFullName = models.CharField(blank=True, max_length=20, help_text='Chinese Name')
     participation = models.CharField(blank=True, max_length=20, help_text='Participation')
     enroll = models.ManyToManyField('Semester', through='Tuition')
+
+    def cache(self):
+        self._cached_copy=copy.deepcopy(vars(self))
+    
+    def save(self):
+        attrs=[]
+        if self.id:
+            
+            for k,v in vars(self).iteritems():
+                if k in ['user_id','id'] or k.startswith('_'):
+                    continue
+                try:
+                    if v==self._cached_copy[k]:
+                        attrs.append((k,v,None))
+                    else:
+                        attrs.append((k,v, self._cached_copy[k]))
+                except:
+                    attrs.append((k,v, self._cached_copy[k]))
+        print 'attrs', attrs
+        models.Model.save(self)
 
     def eid(self):
         return id_encode(self.id)

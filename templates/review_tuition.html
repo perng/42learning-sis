@@ -2,8 +2,6 @@
 {% load core_tags %}
 {% load url from future %}
 
-{% load markup %}
-
 {% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
 
 
@@ -39,7 +37,7 @@ function Clickheretoprint(){
     {% else %} 
     <h3> Please review the tuition, read the code of conduct, then print and mail this form with your check to Registrar at <br/> 
         {% if school_mailing_addr %}
-        {{school_mailing_addr|markdown}}
+        {{school_mailing_addr}}
         {% else %}
         <b> ??? </b> 
         {% endif %}

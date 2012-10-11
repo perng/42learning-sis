@@ -67,6 +67,7 @@ def familyinfo(request):
 
     try:
         family = request.user.get_profile()
+        family.cache()
         family.user = request.user
         form = FamilyForm(request.POST, instance=family)
     except:
