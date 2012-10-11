@@ -133,7 +133,7 @@ def add_new_grade(request,  cat_id):
     ens = theClass.enrolldetail_set.all()
     students = [en.student for en in ens]
     date=datetime.datetime.today()
-    category.gradingitems = category.gradingitem_set.order_by('date')
+    category.gradingitems = category.gradingitem_set.order_by('-id')
     #serial = len(category.gradingitems) + 1
     name = '' # category.name+' '+str(serial)
     if request.method=='POST':
@@ -166,7 +166,7 @@ def record_grade(request,  cat_id):
     category = GradingCategory.objects.get(id=id_decode(cat_id))
     theClass = category.classPtr
     print 'category', category.name
-    gis = category.gradingitem_set.order_by('date')
+    gis = category.gradingitem_set.order_by('-id')
     return my_render_to_response(request, 'record_grade.html', locals())
     
     
@@ -284,21 +284,21 @@ def assignments(request, cat_id):
     due_date = DateField().widget.render('due_date', due, attrs={'id':'due_date'})
     
 
-    gditems = GradingItem.objects.filter(category=category).order_by('-duedate')
+    gditems = GradingItem.objects.filter(category=category).order_by('-id')
     category.serial = len(gditems) + 1
     return my_render_to_response(request, 'assignments.html', locals())
 
 @login_required
 def view_assignments(request, cat_id):
     category = GradingCategory.objects.get(id=id_decode(cat_id))
-    gditems = GradingItem.objects.filter(category=category).order_by('-duedate')  
+    gditems = GradingItem.objects.filter(category=category).order_by('-id')  
     return my_render_to_response(request, 'view_assignments.html', locals())
 
 
 @login_required
 def new_assignment(request, cid):
     category = GradingCategory.objects.get(id=id_decode(cid))
-    gditems = GradingItem.objects.filter(category=category).order_by('duedate')
+    gditems = GradingItem.objects.filter(category=category).order_by('-id')
     category.serial = len(gditems) + 1
     if request.method=='POST':
         print request.POST

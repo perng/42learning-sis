@@ -380,7 +380,7 @@ def system_config(request):
 
 @superuser_required 
 def class_enrollment(request):
-    sem = current_reg_semester()
+    sem = current_record_semester()
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
     for c in classes:
         c.count = len(EnrollDetail.objects.filter(classPtr=c))
