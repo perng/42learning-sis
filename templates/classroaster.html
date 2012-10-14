@@ -34,7 +34,8 @@
             {% endfor %}
         </table> 
         <br/>
-        <a href='mailto:{{emails}}'> Email all students </a> 
+        <a href='mailto:{{emails}}?Subject=[{{theClass}}]'> Email all students. </a> <br/> 
+        <a href='mailto:{{emails}}?cc={{theClass.teacher_emails}}?Subject=[{{theClass}}]'> Email all students and cc teachers. </a> 
         <div> 
             All emails: {{emails}}
         </div> 

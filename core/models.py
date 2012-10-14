@@ -231,6 +231,25 @@ class Class(models.Model):
         except:
             pass
         return t
+    def teacher_emails(self):
+        emails=[]
+        try:
+            emails.append( self.headTeacher.email)
+            emails.append(self.headTeacher.get_profile().altEmail)
+        except:
+            pass
+        try:
+            emails.append(self.assocTeacher1.email)
+            emails.append(self.assocTeacher1.get_profile().altEmail)
+        except:
+            pass
+        try:
+            emails.append( self.assocTeacher2.email)
+            emails.append(self.assocTeacher2.get_profile().altEmail)
+        except:
+            pass
+        return ','.join(emails)
+        
 
     def calculate_total(self):
         categories = self.gradingcategory_set.all()
