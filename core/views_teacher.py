@@ -66,6 +66,12 @@ def classroaster(request, cid):
     classid = id_decode(cid)
     theClass = get_object_or_404(Class,id=classid)
     students = theClass.student_set.order_by('lastName')
+    emails ={}
+    for s in students:
+        emails[s.family.user.email]=None
+        if s.family.altEmail:
+            emails[s.family.altEmail]=None
+    emails=','.join(emails.keys())
     return my_render_to_response(request, 'classroaster.html', locals())
 
 @login_required

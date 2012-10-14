@@ -34,9 +34,9 @@
             {% endfor %}
         </table> 
         <br/>
-        <a href='mailto:{% for s in students %}{{s.family.emails}},{% endfor %}'> Email all students </a> 
+        <a href='mailto:{{emails}}'> Email all students </a> 
         <div> 
-            All emails: {% for s in students %}{{s.family.emails}},{% endfor %}
+            All emails: {{emails}}
         </div> 
     </div>
     {% else %}
