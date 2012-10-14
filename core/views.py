@@ -45,11 +45,13 @@ def home(request):
         for student in students:
             semester=current_record_semester()
             Classes = student.enroll.filter(semester=semester)
+            print 'Classes', Classes
             student.assign_categories=[]
             student.reports=[]
             for cl in Classes:
                 student.assign_categories+=GradingCategory.objects.filter(classPtr=cl, hasAssignment=True)
-                student.reports+=[c for c in Classes if c.recordGrade]
+            student.reports+=[c for c in Classes if c.recordGrade]
+            print 'reports', student.reports
             for c in student.reports:
                 c.enroll_detail = get_object_or_404(EnrollDetail, student=student, classPtr = c)
         return render_to_response('parent_home.html', locals())
