@@ -71,6 +71,7 @@
 
 <div class="well"> 
 <label style="padding-left: 30px; font-size: 1.3em; font-weight: bold;">  Attendance </label>
+{% if attendances_rows %}
 <table class="report">
     {% for row in attendances_rows %}
 		<tr>
@@ -88,6 +89,9 @@
 		</tr>
 	{% endfor %} 
 </table> 
+{% else %}
+Attendance not recorded. 
+{% endif %}
 </div>
 
 {% for cat in categories %}

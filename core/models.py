@@ -216,12 +216,20 @@ class Class(models.Model):
         return ', '.join([s.firstName+' '+s.lastName for s in self.student_set.all()])
     def teachers(self):
         t=''
-        if self.headTeacher:
+        try:
             t+= self.headTeacher.get_profile().parent1_fullname()
-        if self.assocTeacher1:
+        except:
+            pass
+        try: 
+            assert not self.assocTeacher1.is_superuser
             t+= ', '+self.assocTeacher1.get_profile().parent1_fullname()
-        if self.assocTeacher2:
+        except:
+            pass 
+        try: 
+            assert not self.assocTeacher2.is_superuser
             t+= ', '+self.assocTeacher2.get_profile().parent1_fullname()
+        except:
+            pass
         return t
 
     def calculate_total(self):

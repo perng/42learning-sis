@@ -412,7 +412,7 @@ def report_card(request, enrolldetail_id):
     sessions=theClass.classsession_set.all()
     num_sessions=len(sessions)
     attendances=[(session.date, get_attendance(student, session)) for session in sessions]
-    attendances_rows=make_rows(attendances, 7)
+    attendances_rows=make_rows(attendances, 7) if attendances else []
     num_absent =len([a for a in attendances if a[1]=='A'])
     num_late =len([a for a in attendances if a[1]=='L'])
     num_present=num_sessions-num_absent

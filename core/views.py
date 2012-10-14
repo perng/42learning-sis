@@ -34,7 +34,7 @@ def home(request):
 
     students = get_children(request)
     teaches = request.user.get_profile().teaches()
-    
+
     messages.add_message(request, messages.ERROR, 'Hello world.')
     messages.success(request, 'VIEW:'+view, fail_silently=False)
     print dir(messages)
@@ -51,7 +51,6 @@ def home(request):
             for cl in Classes:
                 student.assign_categories+=GradingCategory.objects.filter(classPtr=cl, hasAssignment=True)
             student.reports+=[c for c in Classes if c.recordGrade]
-            print 'reports', student.reports
             for c in student.reports:
                 c.enroll_detail = get_object_or_404(EnrollDetail, student=student, classPtr = c)
         return render_to_response('parent_home.html', locals())

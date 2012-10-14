@@ -29,6 +29,7 @@
         <br/>
     </div>
 
+{% comment %}
   <br/> 
      <form action="{% url 'notify_report_card' class_id=theClass.eid%}"  method="post">
        <input class="button" type="submit" name="notify" value="Report cards are ready. Notify all parents"/> 
@@ -45,11 +46,11 @@
         <input type="checkbox" name="show_stats" value="show_stats" {% if request.session.show_stats %} checked="checked" {% endif %}> Show highest, lowest, average, and median for each item. </input><br/><br />
         <input class="button" type="submit" name="calculate_total" value="Update Setting"/>
     </form>
-	
         <a href='mailto:{% for s in students %}{{s.family.user.email}},{% endfor %}'> Email all students </a> 
         <div> 
             All emails: {% for s in students %}{{s.family.user.email}},{% endfor %}
         </div> 
+{% endcomment %}	
 
     {% else %}
 
