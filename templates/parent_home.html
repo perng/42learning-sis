@@ -30,7 +30,7 @@
                 </td>
                 <td> 
                     {% for report_class in student.reports %}
-                    <a href="{% url 'report_card' enrolldetail_id=report_class.eid %}" style="text-decoration:underline;"> {{report_class}} {% if report_class.total_ready %} Final  {% else %} Progress {% endif %} Report </a> <br/>
+                    <a target="_blank" href="{% url 'report_card' enrolldetail_id=report_class.enroll_detail.eid %}" style="text-decoration:underline;"> {{report_class}} {% if report_class.total_ready %} Final  {% else %} Progress {% endif %} Report </a> <br/>
                     {% endfor %}
 
                 </td>

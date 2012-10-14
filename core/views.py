@@ -49,7 +49,7 @@ def home(request):
             student.reports=[]
             for cl in Classes:
                 student.assign_categories+=GradingCategory.objects.filter(classPtr=cl, hasAssignment=True)
-                student.reports+=[c for c in Classes if c.recordGrade]
+            student.reports+=[c for c in Classes if c.recordGrade]
             for c in student.reports:
                 c.enroll_detail = get_object_or_404(EnrollDetail, student=student, classPtr = c)
         return render_to_response('parent_home.html', locals())
