@@ -15,6 +15,8 @@
                 <th class="btn-green"><i class="icon-user"></i> Students</th>
 		<th class="btn-green"><i class="icon-table"></i> Check</th> 
 		<th class="btn-green"><i class="icon-file"></i> Assignment </th>
+		<th class="btn-green"><i class="icon-file"></i> Report </th>
+
             </tr>
             {% for student in students %}
             <tr>
@@ -23,6 +25,12 @@
                 <td> 
                     {% for category in student.assign_categories %}
                     <a href='{% url 'view_assignments' cat_id=category.eid %}' style="text-decoration:underline;"> {{category.classPtr.name}} {{category.name}} </a> <br/>
+                    {% endfor %}
+
+                </td>
+                <td> 
+                    {% for report_class in student.reports %}
+                    <a href="{% url 'report_card' enrolldetail_id=report_class.eid %}" style="text-decoration:underline;"> {{report_class}} {% if report_class.total_ready %} Final  {% else %} Progress {% endif %} Report </a> <br/>
                     {% endfor %}
 
                 </td>

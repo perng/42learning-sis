@@ -2,9 +2,11 @@
 from django.http import  HttpResponseRedirect#, HttpResponse
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 from sis.core.forms import *
 from sis.core.util import *
 from sis.core.views_parent import get_children
+from sis.core.models import EnrollDetail
 
 #from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib import messages
@@ -44,8 +46,12 @@ def home(request):
             semester=current_record_semester()
             Classes = student.enroll.filter(semester=semester)
             student.assign_categories=[]
+            student.reports=[]
             for cl in Classes:
                 student.assign_categories+=GradingCategory.objects.filter(classPtr=cl, hasAssignment=True)
+                student.reports+=[c for c in Classes if c.recordGrade]
+            for c in student.reports:
+                c.enroll_detail = get_object_or_404(EnrollDetail, student=student, classPtr = c)
         return render_to_response('parent_home.html', locals())
     elif view == 'teacher':
         return render_to_response('teacher_home.html', locals())

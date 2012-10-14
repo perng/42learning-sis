@@ -405,7 +405,7 @@ def get_score(student,item):
         
 @login_required
 def report_card(request, enrolldetail_id):
-    en=EnrollDetail.objects.get(id=id_decode(enrolldetail_id))
+    en=get_object_or_404(EnrollDetail, id=id_decode(enrolldetail_id))
     theClass=en.classPtr
     student=en.student
     semester = en.classPtr.semester
@@ -422,14 +422,18 @@ def report_card(request, enrolldetail_id):
     for cat in categories:
         items= cat.gradingitem_set.all()        
         scores=[(item, get_score(student, item) ) for item in items]
-        print scores
-        cat.score_rows= make_rows(scores, 7)
+        if scores:
+            cat.score_rows= make_rows(scores, 7)
+        else:
+            cat.score_rows=None
         if not scores:
             cat.avg_score=0
         else:
             cat.avg_score = sum([(score[1] if score[1]!=None else 0) for score in scores])/len(scores)
-        cat.class_avg = sum([(item.average if item.average!=None else 0) for item in items])/len(scores)
-
+        try:
+            cat.class_avg = sum([(item.average if item.average!=None else 0) for item in items])/len(scores)
+        except:
+            cat.class_avg = 0
         cat.weighted_score = cat.avg_score * cat.weight /100.0
         student.final_score += cat.weighted_score
     

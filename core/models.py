@@ -7,7 +7,8 @@ from django.db.models import Q
 from operator import  attrgetter #, itemgetter
 
 from django.contrib.localflavor.us.models import  PhoneNumberField #, USPostalCodeField
-from sis.core.util import id_encode, median
+from sis.core.util import id_encode, median #, det_encode
+
 
 
 
@@ -20,7 +21,45 @@ MONTH_CHOICES = ((1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr'), (5, 'May'), (6,
 DAY_CHOICES = tuple([(n, n) for n in range(1, 32)])
 SEMESTER_CHOICES = (('Fall', 'Fall'), ('Spring', 'Spring'), ('Summer', 'Summer'))
 
+
+class School(models.Model):
+    name = models.CharField(max_length=30, verbose_name='School Name')
+    domain = models.CharField( max_length=100, primary_key=True)
+
+    chineseName = models.CharField(max_length=30, verbose_name='Chinese Name', blank=True, default='')
+    location = models.TextField(null=True, blank=True)
+    mailStop = models.TextField(null=True, blank=True)
+    phone = PhoneNumberField(help_text='Home Phone',null=True, blank=True)
+
+    #adminEmail = models.EmailField(blank=True, help_text='Principal email')
+    #deanEmail = models.EmailField(blank=True, help_text='Dean email')
+    #registrarEmail = models.EmailField(blank=True, help_text='Registrar email')
+    #treasurerEmail = models.EmailField(blank=True, help_text='Treasurer email')
+    policy = models.TextField(null=True, blank=True)
+    createDate = models.DateField(auto_now_add=True)
+    banner=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
+    logo=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
+    admin=models.ForeignKey(User, null=True)
+
+    def eid(self):
+        return id_encode(self.id)
+
+    #def det_id(self):
+    #    return det_encode(self.id)
+    def __repr__(self):
+        return self.name
+
+class Role(models.Model):
+    user= models.OneToOneField(User)
+    school = models.ForeignKey(School)
+    is_admin = models.BooleanField(default=False)
+    is_dean = models.BooleanField(default=False)
+    is_registrar = models.BooleanField(default=False)
+    is_staff1 = models.BooleanField(default=False)
+    is_staff2 = models.BooleanField(default=False)
+
 class Semester(models.Model):
+    #school = models.ForeignKey(School)
     schoolYear = models.CharField(max_length=20, choices=SEMESTER_YEAR_CHOICES)
     semester = models.CharField(max_length=20, choices=SEMESTER_CHOICES)
     need_enroll = models.BooleanField()   # If enrollment is needed. set false to 2nd semester which has not change
@@ -43,6 +82,7 @@ class Semester(models.Model):
 
 STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
 class Family(models.Model):
+    #schools = models.ManyToManyField(School)    
     user = models.OneToOneField(User)
     staff_role = models.CharField(max_length=50)
     streetNumber = models.CharField(max_length=50, help_text='Street')

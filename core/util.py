@@ -60,6 +60,8 @@ def id_decode(did):
     de = lambda x: math.floor(math.sqrt(x))
     #did1,m=tuple(did.split('_'))
     r = len(did) % 3
+    if not r:
+        return -1
     m = int(did[-r:])
     
     m = int(m)
