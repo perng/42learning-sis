@@ -158,11 +158,13 @@ Attendance not recorded.
 </div>
 {% endif %}
 
-
+{% if en.note %}
 <div class="well">
 <label style="padding-left: 30px; font-size: 1.3em; font-weight: bold;">Teacher's Feedback <i class="icon-edit" style="padding-top: 8px;"></i></label>
 	<div style="padding: 8px 8px 8px 8px; margin: 10px 20px 10px 20px; border:1px dotted grey; background-color: white;">{{en.note|safe}}</div>
 </div>
+
+{% endif %}
 </div>
 
 </body>
