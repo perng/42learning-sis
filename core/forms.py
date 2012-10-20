@@ -14,6 +14,12 @@ from sis.core.models import *
 STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
 PARTICIPATION_CHOICES = (('Breakfast', 'Breakfast Club'), ('IT', 'IT Support'), ('Event', 'Event Planning'))
 
+class SchoolForm(ModelForm):
+	class Meta:
+		model = School
+		exclude = ('admin',)
+
+
 class FamilyForm(ModelForm):
 	class Meta:
 		model = Family
@@ -44,7 +50,7 @@ class SemesterForm(forms.ModelForm):
 class ClassForm(forms.ModelForm):
 	class Meta:
 		model = Class
-		fields = ('name', 'semester', 'elective', 'mandate', 'elective_required', 'headTeacher', 'assocTeacher1', 'assocTeacher2', 'recordAttendance', 'recordGrade', 'description')
+		fields = ('name',  'elective', 'mandate', 'elective_required', 'headTeacher', 'assocTeacher1', 'assocTeacher2', 'recordAttendance', 'recordGrade', 'description')
 
 class ClassFeeForm(forms.ModelForm):
 	class Meta:
