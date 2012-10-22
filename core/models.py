@@ -36,7 +36,7 @@ class School(models.Model):
     #deanEmail = models.EmailField(blank=True, help_text='Dean email')
     #registrarEmail = models.EmailField(blank=True, help_text='Registrar email')
     #treasurerEmail = models.EmailField(blank=True, help_text='Treasurer email')
-    policy = models.TextField(null=True, blank=True)
+    policy = models.TextField(null=True, blank=True, verbose_name='School Policy')
     createDate = models.DateField(auto_now_add=True)
     banner=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
     logo=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
@@ -51,41 +51,17 @@ class School(models.Model):
         return self.name
 
 
-class School(models.Model):
-    name = models.CharField(max_length=30, verbose_name='School Name')
-    domain = models.CharField( max_length=100, primary_key=True)
-
-    chineseName = models.CharField(max_length=30, verbose_name='Chinese Name', blank=True, default='')
-    location = models.TextField(null=True, blank=True)
-    mailStop = models.TextField(null=True, blank=True)
-    phone = PhoneNumberField(help_text='Home Phone',null=True, blank=True)
-
-    #adminEmail = models.EmailField(blank=True, help_text='Principal email')
-    #deanEmail = models.EmailField(blank=True, help_text='Dean email')
-    #registrarEmail = models.EmailField(blank=True, help_text='Registrar email')
-    #treasurerEmail = models.EmailField(blank=True, help_text='Treasurer email')
-    policy = models.TextField(null=True, blank=True)
-    createDate = models.DateField(auto_now_add=True)
-    banner=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
-    logo=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
-    admin=models.ForeignKey(User, null=True)
-
-    def eid(self):
-        return id_encode(self.id)
-
-    #def det_id(self):
-    #    return det_encode(self.id)
-    def __repr__(self):
-        return self.name
-
-class Role(models.Model):
-    user= models.OneToOneField(User)
+class Staff(models.Model):
+    title = models.CharField(max_length=40, verbose_name='Role Name')
+    user= models.ForeignKey(User)
     school = models.ForeignKey(School)
-    is_admin = models.BooleanField(default=False)
-    is_dean = models.BooleanField(default=False)
-    is_registrar = models.BooleanField(default=False)
-    is_staff1 = models.BooleanField(default=False)
-    is_staff2 = models.BooleanField(default=False)
+    view_all = models.BooleanField(default=False)
+    write_all = models.BooleanField(default=False)
+    view_family = models.BooleanField(default=False)
+    write_family = models.BooleanField(default=False)
+    view_registration = models.BooleanField(default=False)
+    write_registration = models.BooleanField(default=False)
+
 
 class Semester(models.Model):
     school = models.ForeignKey(School)
@@ -183,24 +159,6 @@ class Family(models.Model):
 
 ROLE_CHOICES =(('School Admin', 'School Admin'), ('Dean', 'Dean'), ('Registrar', 'Registrar'))
 
-class Staff(models.Model):
-    family = models.ForeignKey(Family)
-    title = models.CharField(max_length=30, verbose_name='Title')
-
-    firstName = models.CharField(max_length=30, verbose_name='First Name')
-    lastName = models.CharField(max_length=30, verbose_name='Last Name')
-    chineseFullName = models.CharField(max_length=30, verbose_name='Chinese Full Name', blank=True, default='')
-    bio = models.TextField()
-    roles = models.ManyToManyField('Role')
-
-class Role(models.Model):
-    user= models.OneToOneField(User)
-    school = models.ForeignKey(School)
-    is_admin = models.BooleanField(default=False)
-    is_dean = models.BooleanField(default=False)
-    is_registrar = models.BooleanField(default=False)
-    is_staff1 = models.BooleanField(default=False)
-    is_staff2 = models.BooleanField(default=False)
 
 LANG_CHOICES = (('English', 'English'), ('Mandarin', 'Mandarin'), ('Cantonese', 'Cantonese'), ('Other', 'Other'))
 GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'))
@@ -261,7 +219,6 @@ class Class(models.Model):
             return self.fee.basechk - self.fee.mdiscount
     def student_names(self):
         return ', '.join([s.firstName+' '+s.lastName for s in self.student_set.all()])
-	return ', '.join([s.firstName+' '+s.lastName for s in self.student_set.all()])
     def teachers(self):
         t=''
         try:

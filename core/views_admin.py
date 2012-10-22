@@ -7,9 +7,10 @@ from django.template import Template
 from django.template.defaultfilters import floatformat
 from django.views.generic import TemplateView
 
+
 from sis.registration.forms import RegistrationForm
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.models import User
 from django.core.context_processors import csrf
 from django.contrib import messages
@@ -408,74 +409,33 @@ def system_config(request):
     return my_render_to_response(request, 'sys_config.html', locals())
 
 
-def school_info(request):
+def edit_school_info(request, schid=False):
+    if schid:
+        school=get_object_or_404(School, id=id_decode(schid))
+        form = SchoolForm(request.POST, instance=school)
+    else:
+        school=School(admin=request.user)
+        form = SchoolForm()
+        
     if request.method == 'POST':
-        #adminForm.clean()
-
-        try:
-            form = SchoolForm(request.POST, instance=request.session['school'])
+        try:            
+            form = SchoolForm(request.POST, instance=school)
         except:
             new=True
-            request.session['school']=School()
-            form = SchoolForm(request.POST, instance=request.session['school'])
-
-
-        #sem.school=request.session['school']
-        if 'password1' in request.POST:
-            adminForm=RegistrationForm(request.POST)
-        else:
-            adminForm=None
-
-        if adminForm and adminForm.is_valid():
-            admin=User.objects.create_user(username=adminForm.cleaned_data['email'],
-                                               email=adminForm.cleaned_data['email'],
-                                               password=adminForm.cleaned_data['password1'])
-            role= Role(user=admin, is_admin=True)
-            role.save()
-
+            school=request.session['school']=School()
+            form = SchoolForm(request.POST, instance=school)
         if form.is_valid():
-            request.session['school'].admin=admin
-            form.instance
             form.save()
-
             return HttpResponseRedirect('/')
         else:
             print  'form not valid', dir(form)
     else: # GET
         try:
-            form= SchoolForm(instance=request.session['school'])
+            form= SchoolForm(instance=school)
         except:
             new=True
             request.session['school']=School()
-            form = SchoolForm(instance=request.session['school'])
-        if  not request.session['school'].admin: # admin is in
-            adminForm =RegistrationForm()
-
-
-    return my_render_to_response(request, 'school_info.html', locals())
-
-def new_school_info(request):
-    if request.method == 'POST':
-        print 'new_school_infopost'
-        request.session['school']=School()
-        form = SchoolForm(request.POST)
-        adminForm=RegistrationForm(request.POST)
-        if form.is_valid() and adminForm.is_valid():
-            admin=User.objects.create_user(adminForm.cleaned_data['email'],
-                                               adminForm.cleaned_data['email'],
-                                               adminForm.cleaned_data['password1'])
-            school=form.instance
-            school.save()
-            role= Role(user=admin, is_admin=True, school=school)
-            role.save()
-            request.session['school']=form.instance
-
-            return home(request)
-        else:
-            print  'form not valid', dir(form)
-    else: # GET
-        form= SchoolForm(initial={'domain': request.META['HTTP_HOST']})
-        adminForm =RegistrationForm()
+            form = SchoolForm(instance=school)
 
     return my_render_to_response(request, 'school_info.html', locals())
 

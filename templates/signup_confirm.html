@@ -1,0 +1,21 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Confirm Sign Up  {% endblock %}
+{% block content %} 
+<div class="parent">
+    <h2 class="title">Sign Up Learning42 </h2>
+    <div>
+{% if own %}
+  You choose to use your own domain. Please point {{domain}} to {{host_ip}}, the click 
+  <a href="http://{{domain}}"> here </a> to finish sign-up. 
+
+{% else %} 
+  You choose to use {{domain}} as your site, the click 
+  <a href="http://{{domain}}/new_school_info"> here </a> to finish sign-up. 
+
+{% endif %}
+    </div>
+</div>
+{% endblock %} 

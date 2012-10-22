@@ -5,6 +5,7 @@ from sis.core.views_admin import signup, new_school_info
 class GetSchool(object):
     def process_view(self, request, view_func, view_args, view_kwargs):
         print 'precess_view', view_func
+        return
         #print request
         
         # signup.learning42 or  */signup

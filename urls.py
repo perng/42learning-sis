@@ -87,14 +87,17 @@ urlpatterns = patterns('',
      url(r'^teacher_directory', teacher_directory, name='teacher_directory'),
      url(r'^family_directory/$', ListView.as_view(model=Family ), name='family_directory'),
      # url(r'^sys_config/', system_config, name='sys_config'),
-     url(r'^school_info/', school_info, name='school_info'),
-     url(r'^new_school_info/', new_school_info, name='new_school_info'),
+
+     ### School Management
+     url(r'^new_school/', edit_school_info, name='new_school'),     
+     url(r'^edit_school_info/(?P<schid>[0-9]+)$', edit_school_info, name='edit_school_info'),
 
      url(r'^signup/', signup, name='signup'),
 
+
+     # 
      url(r'^help/', help, name='help'),
-    # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(aadmin.site.urls)),
+     url(r'^admin/', include(aadmin.site.urls)),
 
 
 )
