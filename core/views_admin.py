@@ -26,6 +26,14 @@ from sis.core.views import  home
 from sis.settings import BASE_SITE
 
 from django.contrib.auth import REDIRECT_FIELD_NAME
+
+def is_admin(user, school):
+    try:
+        return Role.objects.get(user=user, school=school).see_admin()
+    except:
+        pass
+    return False
+
 def superuser_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
     """
     Decorator for views that checks that the user is logged in and is superuser, redirecting
@@ -47,7 +55,7 @@ def admin_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login
     to the log-in page if necessary.
     """
     actual_decorator = user_passes_test(
-        lambda u: u.is_authenticated() and u.role.is_admin,
+        lambda u: u.is_authenticated() and u.role.see_admin(),
         login_url=login_url,
         redirect_field_name=redirect_field_name
     )
@@ -57,8 +65,11 @@ def admin_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login
 
 
 
-@admin_required
+#@admin_required
 def edit_semester(request, sem_id=0):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
+
     sem = Semester.objects.get(id=id_decode(sem_id)) if sem_id else None
     if not sem:
         sem=Semester(school=request.session['school'])
@@ -77,13 +88,18 @@ def edit_semester(request, sem_id=0):
         sform = SemesterForm(instance=sem)
     return my_render_to_response(request, 'editsemester.html', locals())
 
-@admin_required
+#@admin_required
 def semesterlist(request):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
+    
     semesters = list(Semester.objects.filter(school=request.session['school']).order_by('-id')[:])
 
     return my_render_to_response(request, 'semesterlist.html', locals())
 
 def semesters(request):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
     semesters = list(Semester.objects.all()[:])
     semesters.sort(key=id)
     if request.method == 'GET':
@@ -104,8 +120,10 @@ def semesters(request):
     return my_render_to_response(request, 'semesters.html', locals())
 
 
-@admin_required
+#@admin_required
 def classlist(request, sem_id):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
     sem = Semester.objects.get(id=id_decode(sem_id), school=request.session['school'])
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
     feeconfig, created = FeeConfig.objects.get_or_create(semester=sem)
@@ -177,9 +195,11 @@ def create_default_grading_categories(theClass):
 
 
 
-@admin_required
+#@admin_required
 def semester(request, sid):
     # 3 possible invokes --- simple get, add class, edit class
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
 
     try:
         sem = Semester.objects.get(id=id_decode(sid))
@@ -208,8 +228,10 @@ def semester(request, sid):
     return my_render_to_response(request, 'semester.html', locals())
 
 
-@admin_required
+#@admin_required
 def edit_class(request, sem_id, class_id=0):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
     print 'class_id', class_id,
 
     create_class =  class_id
@@ -258,8 +280,10 @@ def sisadmin(request):
     return my_render_to_response(request, 'sisadmin.html', locals())
 
 
-@admin_required
+#@admin_required
 def family_tuition(request, fid):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
     family = Family.objects.get(id=id_decode(fid))
     semester = current_record_semester(request) # the semester open for registration
     tuition, created = Tuition.objects.get_or_create(family=family, semester=semester)
@@ -274,12 +298,14 @@ def family_tuition(request, fid):
 
     return my_render_to_response(request, 'family_tuition.html', c)
 
-@admin_required
+#@admin_required
 def unpaid_payment(request):
     return payment(request, filter='unpaid')
 
-@admin_required
+#@admin_required
 def payment(request, filter=None):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
 
     semester = current_record_semester(request.session['school']) # the semester open for registration
     #if not semester:
@@ -319,8 +345,10 @@ def payment(request, filter=None):
 
     return my_render_to_response(request, 'registrar.html', locals())
 
-@admin_required
+#admin_required
 def active_directory(request, active_only=True):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
     semester = current_reg_semester(request.session['school'])
     if semester:
         classes = semester.class_set.all()
@@ -364,8 +392,10 @@ def active_directory(request, active_only=True):
             s.classes = ','.join(s.classes.values())
     return my_render_to_response(request, 'directory.html', locals())
 
-@admin_required
+#admin_required
 def teacher_directory(request):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
     teachers = Family.objects.filter(school=request.session['school'])
     teachers = [t for t in teachers if t.is_teacher()]
     for t in teachers:
@@ -426,6 +456,13 @@ def edit_school_info(request, schid=False):
             form = SchoolForm(request.POST, instance=school)
         if form.is_valid():
             form.save()
+            role,created=Role.objects.get_or_create(user=request.user, school=school)
+            if created:
+                role.title='Administrator'
+                role.view_all=role.write_all=True
+                role.save()
+                family=request.user.get_profile()
+                family.schools.add(school)
             return HttpResponseRedirect('/')
         else:
             print  'form not valid', dir(form)

@@ -18,6 +18,13 @@ def home(request):
     #    return HttpResponseRedirect('/accounts/login/?next=/')
 
     request.session.set_expiry(0)
+    school=request.session['school']
+    semester=current_record_semester(school)
+    try:
+        is_admin=Role.objects.get(user=request.user,school=school).see_admin()
+    except:
+        is_admin=False
+        
     try:
         family = request.user.get_profile()
     except:
@@ -25,15 +32,14 @@ def home(request):
     if 'view' in request.session:
         view = request.session['view']
     else:
-        if request.user.role.is_admin:
-            view = request.session['view'] = 'admin'
-        elif family.is_teacher():
+        if family.is_teacher(request.session['school']):
             view = request.session['view'] = 'teacher'
+#        elif request.user.staff.see_admin():
+#            view = request.session['view'] = 'admin'
         else:
             view = request.session['view'] = 'parent'
-
     students = get_children(request)
-    teaches = request.user.get_profile().teaches()
+    teaches = request.user.get_profile().teaches(school )
 
     messages.add_message(request, messages.ERROR, 'Hello world.')
     messages.success(request, 'VIEW:'+view, fail_silently=False)
@@ -43,7 +49,6 @@ def home(request):
 
     if view == 'parent':
         for student in students:
-            semester=current_record_semester(request)
             Classes = student.enroll.filter(semester=semester)
             print 'Classes', Classes
             student.assign_categories=[]

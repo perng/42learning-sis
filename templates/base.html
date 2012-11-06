@@ -64,12 +64,20 @@
                                 > Teacher's View </a></li>
                             {% endif %}
 
-                            {% if request.user.role.is_admin %}
+                            {% if request.user.role.see_admin %}
                             <li class="menu-item menu-item-type-post_type">
                             <a href="{% url 'change_view' view='admin'%}"
                                 {% ifequal  request.session.view 'admin' %} class="selected" {% endifequal %}
                                 > Admin's View </a> </li>
                             {% endif %}
+
+                            {% if request.user.is_superuser %}
+                            <li class="menu-item menu-item-type-post_type">
+                            <a href="{% url 'change_view' view='super'%}"
+                                {% ifequal  request.session.view 'super' %} class="selected" {% endifequal %}
+                                > Super's View </a> </li>
+                            {% endif %}
+
 
                         </ul>
                     </div> <!-- #menu-secondary-container -->

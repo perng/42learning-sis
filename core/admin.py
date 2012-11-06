@@ -6,5 +6,7 @@ from sis.core.models import *
 #    pass
 #admin.site.register(Site, SiteAdmin)
 
-for model in [Family, Semester, Class, Student, EnrollDetail,Award, GradingCategory,GradingItem,Score,ClassSession,Attendance,Fee, FeeConfig,Tuition,Config ]:
+for model in [School, Role,Family, Semester, Class, Student, EnrollDetail,Award, 
+              GradingCategory,GradingItem,Score,ClassSession,Attendance,Fee, FeeConfig,
+              Tuition,Config ]:
     admin.site.register(model)

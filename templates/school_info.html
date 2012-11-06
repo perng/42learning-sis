@@ -17,12 +17,11 @@ Sign Up School for Learning42
 School Information
 {% endif %}
 </h2>
-{% if adminForm %}
-    <form method="POST" action='{% url 'new_school_info' %}'> 
-{% else %}
-    <form method="POST" action='{% url 'school_info' %}'> 
-{% endif %}
-
+    {% if school.id %}
+        <form method="POST" action='{% url 'edit_school_info' schid=school.eid %}'>
+    {% else %} 
+        <form method="POST" action='{% url 'new_school' %}'> 
+    {% endif %}
 		{{form.as_p}}
         <input type='submit' name="Update" value="Update"/> 
         {% csrf_token %}

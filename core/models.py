@@ -22,10 +22,14 @@ DAY_CHOICES = tuple([(n, n) for n in range(1, 32)])
 SEMESTER_CHOICES = (('Fall', 'Fall'), ('Spring', 'Spring'), ('Summer', 'Summer'))
 STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
 
+class SISModel:
+    def eid(self):
+        self.cid= id_encode(self.id)
+        return self.cid
 
-class School(models.Model):
+class School(models.Model, SISModel):
     name = models.CharField(max_length=30, verbose_name='School Name')
-    domain = models.CharField( max_length=100, primary_key=True)
+    domain = models.CharField( max_length=100)
 
     chineseName = models.CharField(max_length=30, verbose_name='Chinese Name', blank=True, default='')
     location = models.TextField(null=True, blank=True)
@@ -42,28 +46,16 @@ class School(models.Model):
     logo=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
     admin=models.ForeignKey(User, null=True)
 
-    def eid(self):
-        return id_encode(self.id)
 
-    def det_id(self):
-        return det_encode(self.id)
+#    def det_id(self):
+#        return det_encode(self.id)
     def __repr__(self):
         return self.name
+    def __str__(self):
+        return self.name 
 
 
-class Staff(models.Model):
-    title = models.CharField(max_length=40, verbose_name='Role Name')
-    user= models.ForeignKey(User)
-    school = models.ForeignKey(School)
-    view_all = models.BooleanField(default=False)
-    write_all = models.BooleanField(default=False)
-    view_family = models.BooleanField(default=False)
-    write_family = models.BooleanField(default=False)
-    view_registration = models.BooleanField(default=False)
-    write_registration = models.BooleanField(default=False)
-
-
-class Semester(models.Model):
+class Semester(models.Model, SISModel):
     school = models.ForeignKey(School)
     schoolYear = models.CharField(max_length=20, choices=SEMESTER_YEAR_CHOICES)
     semester = models.CharField(max_length=20, choices=SEMESTER_CHOICES)
@@ -74,9 +66,6 @@ class Semester(models.Model):
     recordEnd = models.DateField(null=True, verbose_name='Score recording end data', help_text='Format: YYYY-MM-DD')
     copyFrom = models.ForeignKey('Semester', null=True, blank=True, related_name="previous", help_text="Copy semester setting from") # The previous semester with same classes
 
-    def eid(self):
-        return id_encode(self.id)
-
     def __repr__(self):
         return self.schoolYear + ' ' + self.semester
     def __str__(self):
@@ -84,8 +73,26 @@ class Semester(models.Model):
     class Meta:
         unique_together = (('schoolYear', 'semester'))
 
+class Role(models.Model, SISModel):
+    title = models.CharField(max_length=40, verbose_name='Role Name')
+    user= models.ForeignKey(User)
+    school = models.ForeignKey(School)
+    #semester= models.ForeignKey(Semester)
+    view_all = models.BooleanField(default=False)
+    write_all = models.BooleanField(default=False)
+    view_family = models.BooleanField(default=False)
+    write_family = models.BooleanField(default=False)
+    view_registration = models.BooleanField(default=False)
+    write_registration = models.BooleanField(default=False)
+    def see_admin(self):
+        return self.view_all or self.write_all or self.view_registration or self.write_registration
+    class Meta:
+        unique_together = (('user', 'school',))
+    def __str__(self):
+        return ' '.join([self.title, self.user.username])
 
-class Family(models.Model):
+
+class Family(models.Model, SISModel):
     schools = models.ManyToManyField(School)
     user = models.OneToOneField(User)
     staff_role = models.CharField(max_length=50)
@@ -125,19 +132,17 @@ class Family(models.Model):
         print 'attrs', attrs
         models.Model.save(self)
 
-    def eid(self):
-        return id_encode(self.id)
-
-    def teaches(self):
-        semester = current_reg_semester(self.school)
+ 
+    def teaches(self, school):
+        semester = current_reg_semester(school)
         classes = list(Class.objects.filter(Q(semester=semester) &(Q(headTeacher=self) | Q(assocTeacher1=self) | Q(assocTeacher2=self))))
         classes.sort(key=attrgetter('name'))
         print 'teaches', semester, classes
         return classes
     def is_parent(self):
         return self.student_set.all()
-    def is_teacher(self):
-        return self.teaches()
+    def is_teacher(self, school):
+        return self.teaches(school)
     def is_admin(self):
         return self.user.is_superuser
     def parent1(self):
@@ -162,7 +167,7 @@ ROLE_CHOICES =(('School Admin', 'School Admin'), ('Dean', 'Dean'), ('Registrar',
 
 LANG_CHOICES = (('English', 'English'), ('Mandarin', 'Mandarin'), ('Cantonese', 'Cantonese'), ('Other', 'Other'))
 GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'))
-class Student(models.Model):
+class Student(models.Model, SISModel):
     studentID = models.CharField(max_length=20)
     firstName = models.CharField(max_length=30, verbose_name='First Name')
     lastName = models.CharField(max_length=30, verbose_name='Last Name')
@@ -172,15 +177,13 @@ class Student(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     family = models.ForeignKey(Family)
     enroll = models.ManyToManyField('Class'  , through='EnrollDetail')
-    def eid(self):
-        self.cid= id_encode(self.id)
-        return self.cid
+ 
     def __str__(self):
         return self.firstName + ' ' + self.lastName
     class Meta:
         unique_together = (('firstName', 'birthday', 'family'))
 
-class Class(models.Model):
+class Class(models.Model, SISModel):
     name = models.CharField(max_length=200)
     description = models.TextField(default='', null=True,blank=True)
     semester = models.ForeignKey(Semester)
@@ -207,10 +210,7 @@ class Class(models.Model):
         return len(self.student_set.all())
     class Meta:
         unique_together = (('name', 'semester'))
-    def eid(self):
-        self.cid= id_encode(self.id)
-        return self.cid
-
+ 
     def assignment_categories(self):
         return GradingCategory.objects.filter(classPtr=self, hasAssignment=True)
     def discounted_base_cc(self):
@@ -276,7 +276,7 @@ class Class(models.Model):
             s.ed.save()
 
 
-class EnrollDetail(models.Model):
+class EnrollDetail(models.Model, SISModel):
     student = models.ForeignKey(Student)
     classPtr = models.ForeignKey(Class)
     final_score = models.FloatField(null=True)
@@ -284,35 +284,26 @@ class EnrollDetail(models.Model):
     note = models.TextField()
     class Meta:
         unique_together = (('student', 'classPtr'))
-    def eid(self):
-        self.cid= id_encode(self.id)
-        return self.cid
     def __str__(self):
         return self.student.firstName+' '+self.student.lastName+'--'+self.classPtr.__str__()
 
-class Award(models.Model):
+class Award(models.Model, SISModel):
     student = models.ForeignKey(Student)
     semester = models.ForeignKey(Semester)
     classPtr = models.ForeignKey(Class, null=True)
     awardDescription = models.TextField(blank=False)
     deleted = models.BooleanField(default=False)
-    def eid(self):
-        self.cid= id_encode(self.id)
-        return self.cid
 
-class GradingCategory(models.Model):
+class GradingCategory(models.Model, SISModel):
     classPtr = models.ForeignKey(Class)
     name = models.CharField(max_length=64)
     order = models.IntegerField(null=True)
     weight = models.IntegerField()
     hasAssignment = models.BooleanField(default=False)
-    def eid(self):
-        self.cid= id_encode(self.id)
-        return self.cid
     def __str__(self):
         return self.classPtr.name+' '+self.name
 
-class GradingItem(models.Model):
+class GradingItem(models.Model, SISModel):
     name = models.CharField(max_length=64)
     students = models.ManyToManyField(Student, through='Score')
     date = models.DateField(null=True, verbose_name='Test/Grading date', help_text='Format: YYYY-MM-DD')
@@ -348,9 +339,6 @@ class GradingItem(models.Model):
 
     def hasAssignment(self):
         return self.category.hasAssignment
-    def eid(self):
-        self.cid= id_encode(self.id)
-        return self.cid
 
     def download_path(self):
         try:
@@ -407,33 +395,24 @@ class GradingItem(models.Model):
 
 
 
-class Score(models.Model):
+class Score(models.Model, SISModel):
     student = models.ForeignKey(Student)
     gradingItem = models.ForeignKey(GradingItem)
     score = models.FloatField(null=True)
-    def eid(self):
-        self.cid= id_encode(self.id)
-        return self.cid
+ 
 
-
-class ClassSession(models.Model):
+class ClassSession(models.Model, SISModel):
     classPtr = models.ForeignKey(Class)
     date = models.DateField(null=True, verbose_name='Date', help_text='Format: YYYY-MM-DD')
-    def eid(self):
-        self.cid= id_encode(self.id)
-        return self.cid
-
+ 
 ATT_CHOICES = (('-', '-'), ('P', 'P'), ('A', 'A'), ('L', 'L'), ('E', 'E'))
 
-class Attendance(models.Model):
+class Attendance(models.Model, SISModel):
     student = models.ForeignKey(Student)
     session = models.ForeignKey(ClassSession)
     attended = models.CharField(max_length=6, default='', choices=ATT_CHOICES)
-    def eid(self):
-        self.cid= id_encode(self.id)
-        return self.cid
-
-class Fee(models.Model):
+ 
+class Fee(models.Model, SISModel):
     ''' Difference only in base fee'''
     basecc = models.FloatField(default=0)
     basechk = models.FloatField(default=0)
@@ -442,12 +421,9 @@ class Fee(models.Model):
     misc = models.FloatField(default=0)
     mdiscount = models.FloatField(default=0, help_text='Discount when taking with a language class')
     classPtr = models.OneToOneField(Class)
-    def eid(self):
-        self.cid= id_encode(self.id)
-        return self.cid
+ 
 
-
-class FeeConfig(models.Model):
+class FeeConfig(models.Model, SISModel):
     semester = models.OneToOneField(Semester)
     discount1 = models.FloatField(default=0, help_text='Discount for 1 student')
     discount2 = models.FloatField(default=0, help_text='Discount for 2 students')
@@ -469,11 +445,8 @@ class FeeConfig(models.Model):
             return self.discount4
         elif nStudent == 5:
             return self.discount5
-    def eid(self):
-        self.cid= id_encode(self.id)
-        return self.cid
 
-class Tuition(models.Model):
+class Tuition(models.Model, SISModel):
     family = models.ForeignKey(Family)
     semester = models.ForeignKey(Semester)
     due = models.FloatField(null=True)
@@ -483,9 +456,6 @@ class Tuition(models.Model):
     checkno = models.CharField(max_length=40, null=True, verbose_name='PayPal/check number')
     pay_date = models.DateField(null=True, verbose_name='Payment confirmed date', help_text='Format: YYYY-MM-DD')
     pay_credit = models.BooleanField(help_text="Pay by Credit Card")
-    def eid(self):
-        self.cid= id_encode(self.id)
-        return self.cid
 
     def fully_paid(self):
         return self.paid == self.due
@@ -510,7 +480,7 @@ types= ['string','float','int','dollar','text','boolean','date','url','email','t
 
 TYPE_CHOICES = tuple(zip(types,types) )
 
-class Config(models.Model):
+class Config(models.Model, SISModel):
     school = models.ForeignKey(School)
     name = models.CharField(max_length=100)
     verbose_name = models.CharField(max_length=100)
@@ -529,9 +499,7 @@ class Config(models.Model):
     timeValue=models.TimeField(null=True)
 
     description = models.CharField(max_length=400, null=True)
-    def eid(self):
-        return id_encode(self.id)
-
+ 
     def is_text(self):
         return self.valueType == 'text'
 

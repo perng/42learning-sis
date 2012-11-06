@@ -115,7 +115,7 @@ def edit_student(request, sid=0):
 @login_required
 def student_score(request, sid):
     student = Student.objects.get(id=id_decode(sid))
-    semester=current_record_semester(request)
+    semester=current_record_semester(request.session['school'])
     student.enrolledClasses = student.enroll.filter(semester=semester)
     
     for aclass in student.enrolledClasses:
@@ -136,7 +136,7 @@ def student_score(request, sid):
 
 @login_required
 def enroll_form(request, errors=[]):
-    semester = current_reg_semester(request)
+    semester = current_reg_semester(request.session['school'])
     error = None
     if not semester:
         enrollment_not_open = True
@@ -165,7 +165,7 @@ def enroll_form(request, errors=[]):
 
 @login_required
 def enroll(request):
-    semester = current_reg_semester(request)
+    semester = current_reg_semester(request.session['school'])
     students = get_children(request)
     print request.POST
     mclasses = Class.objects.filter(semester=semester, elective=False)
@@ -287,7 +287,7 @@ def review_tuition(request, howtopay):
     today = datetime.date.today()
     paypal = howtopay == 'paypal'
     family = request.user.get_profile()
-    semester = current_reg_semester(request) # the semester open for registration
+    semester = current_reg_semester(request.session['school']) # the semester open for registration
     c = cal_tuition(family, semester, paypal)
     tuition, _created = Tuition.objects.get_or_create(family=family, semester=semester)
     tuition.due = c['total']
@@ -309,7 +309,7 @@ def review_tuition(request, howtopay):
     return my_render_to_response(request, 'review_tuition.html', c)
 
 def help(request):
-    semester = current_reg_semester(request) # the semester open for registration
+    semester = current_reg_semester(request.session['school']) # the semester open for registration
     try:
         sis_contact= Config.objects.get(name='sis_contact').emailValue
     except:
