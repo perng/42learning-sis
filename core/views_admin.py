@@ -7,9 +7,10 @@ from django.template import Template
 from django.template.defaultfilters import floatformat
 from django.views.generic import TemplateView
 
+
 from sis.registration.forms import RegistrationForm
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.models import User
 from django.core.context_processors import csrf
 from django.contrib import messages
@@ -25,6 +26,14 @@ from sis.core.views import  home
 from sis.settings import BASE_SITE
 
 from django.contrib.auth import REDIRECT_FIELD_NAME
+
+def is_admin(user, school):
+    try:
+        return Role.objects.get(user=user, school=school).see_admin()
+    except:
+        pass
+    return False
+
 def superuser_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
     """
     Decorator for views that checks that the user is logged in and is superuser, redirecting
@@ -46,7 +55,7 @@ def admin_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login
     to the log-in page if necessary.
     """
     actual_decorator = user_passes_test(
-        lambda u: u.is_authenticated() and u.role.is_admin,
+        lambda u: u.is_authenticated() and u.role.see_admin(),
         login_url=login_url,
         redirect_field_name=redirect_field_name
     )
@@ -56,8 +65,11 @@ def admin_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login
 
 
 
-@admin_required
+#@admin_required
 def edit_semester(request, sem_id=0):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
+
     sem = Semester.objects.get(id=id_decode(sem_id)) if sem_id else None
     if not sem:
         sem=Semester(school=request.session['school'])
@@ -76,13 +88,18 @@ def edit_semester(request, sem_id=0):
         sform = SemesterForm(instance=sem)
     return my_render_to_response(request, 'editsemester.html', locals())
 
-@admin_required
+#@admin_required
 def semesterlist(request):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
+    
     semesters = list(Semester.objects.filter(school=request.session['school']).order_by('-id')[:])
 
     return my_render_to_response(request, 'semesterlist.html', locals())
 
 def semesters(request):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
     semesters = list(Semester.objects.all()[:])
     semesters.sort(key=id)
     if request.method == 'GET':
@@ -103,8 +120,10 @@ def semesters(request):
     return my_render_to_response(request, 'semesters.html', locals())
 
 
-@admin_required
+#@admin_required
 def classlist(request, sem_id):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
     sem = Semester.objects.get(id=id_decode(sem_id), school=request.session['school'])
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
     feeconfig, created = FeeConfig.objects.get_or_create(semester=sem)
@@ -176,9 +195,11 @@ def create_default_grading_categories(theClass):
 
 
 
-@admin_required
+#@admin_required
 def semester(request, sid):
     # 3 possible invokes --- simple get, add class, edit class
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
 
     try:
         sem = Semester.objects.get(id=id_decode(sid))
@@ -207,8 +228,10 @@ def semester(request, sid):
     return my_render_to_response(request, 'semester.html', locals())
 
 
-@admin_required
+#@admin_required
 def edit_class(request, sem_id, class_id=0):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
     print 'class_id', class_id,
 
     create_class =  class_id
@@ -257,8 +280,10 @@ def sisadmin(request):
     return my_render_to_response(request, 'sisadmin.html', locals())
 
 
-@admin_required
+#@admin_required
 def family_tuition(request, fid):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
     family = Family.objects.get(id=id_decode(fid))
     semester = current_record_semester(request) # the semester open for registration
     tuition, created = Tuition.objects.get_or_create(family=family, semester=semester)
@@ -273,12 +298,14 @@ def family_tuition(request, fid):
 
     return my_render_to_response(request, 'family_tuition.html', c)
 
-@admin_required
+#@admin_required
 def unpaid_payment(request):
     return payment(request, filter='unpaid')
 
-@admin_required
+#@admin_required
 def payment(request, filter=None):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
 
     semester = current_record_semester(request.session['school']) # the semester open for registration
     #if not semester:
@@ -318,8 +345,10 @@ def payment(request, filter=None):
 
     return my_render_to_response(request, 'registrar.html', locals())
 
-@admin_required
+#admin_required
 def active_directory(request, active_only=True):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
     semester = current_reg_semester(request.session['school'])
     if semester:
         classes = semester.class_set.all()
@@ -363,8 +392,10 @@ def active_directory(request, active_only=True):
             s.classes = ','.join(s.classes.values())
     return my_render_to_response(request, 'directory.html', locals())
 
-@admin_required
+#admin_required
 def teacher_directory(request):
+    if not request.user.role.see_admin():
+        return render_to_response('admin_home.html', locals())
     teachers = Family.objects.filter(school=request.session['school'])
     teachers = [t for t in teachers if t.is_teacher()]
     for t in teachers:
@@ -408,74 +439,40 @@ def system_config(request):
     return my_render_to_response(request, 'sys_config.html', locals())
 
 
-def school_info(request):
+def edit_school_info(request, schid=False):
+    if schid:
+        school=get_object_or_404(School, id=id_decode(schid))
+        form = SchoolForm(request.POST, instance=school)
+    else:
+        school=School(admin=request.user)
+        form = SchoolForm()
+        
     if request.method == 'POST':
-        #adminForm.clean()
-
-        try:
-            form = SchoolForm(request.POST, instance=request.session['school'])
+        try:            
+            form = SchoolForm(request.POST, instance=school)
         except:
             new=True
-            request.session['school']=School()
-            form = SchoolForm(request.POST, instance=request.session['school'])
-
-
-        #sem.school=request.session['school']
-        if 'password1' in request.POST:
-            adminForm=RegistrationForm(request.POST)
-        else:
-            adminForm=None
-
-        if adminForm and adminForm.is_valid():
-            admin=User.objects.create_user(username=adminForm.cleaned_data['email'],
-                                               email=adminForm.cleaned_data['email'],
-                                               password=adminForm.cleaned_data['password1'])
-            role= Role(user=admin, is_admin=True)
-            role.save()
-
+            school=request.session['school']=School()
+            form = SchoolForm(request.POST, instance=school)
         if form.is_valid():
-            request.session['school'].admin=admin
-            form.instance
             form.save()
-
+            role,created=Role.objects.get_or_create(user=request.user, school=school)
+            if created:
+                role.title='Administrator'
+                role.view_all=role.write_all=True
+                role.save()
+                family=request.user.get_profile()
+                family.schools.add(school)
             return HttpResponseRedirect('/')
         else:
             print  'form not valid', dir(form)
     else: # GET
         try:
-            form= SchoolForm(instance=request.session['school'])
+            form= SchoolForm(instance=school)
         except:
             new=True
             request.session['school']=School()
-            form = SchoolForm(instance=request.session['school'])
-        if  not request.session['school'].admin: # admin is in
-            adminForm =RegistrationForm()
-
-
-    return my_render_to_response(request, 'school_info.html', locals())
-
-def new_school_info(request):
-    if request.method == 'POST':
-        print 'new_school_infopost'
-        request.session['school']=School()
-        form = SchoolForm(request.POST)
-        adminForm=RegistrationForm(request.POST)
-        if form.is_valid() and adminForm.is_valid():
-            admin=User.objects.create_user(adminForm.cleaned_data['email'],
-                                               adminForm.cleaned_data['email'],
-                                               adminForm.cleaned_data['password1'])
-            school=form.instance
-            school.save()
-            role= Role(user=admin, is_admin=True, school=school)
-            role.save()
-            request.session['school']=form.instance
-
-            return home(request)
-        else:
-            print  'form not valid', dir(form)
-    else: # GET
-        form= SchoolForm(initial={'domain': request.META['HTTP_HOST']})
-        adminForm =RegistrationForm()
+            form = SchoolForm(instance=school)
 
     return my_render_to_response(request, 'school_info.html', locals())
 
