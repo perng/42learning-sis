@@ -344,7 +344,7 @@ def edit_assignment(request, aid):
             giform=HomeWorkForm(request.POST, instance=gi)
             #name=request.POST['Name']
             gi.date=None #request.POST['assign_date']
-            gi.duedate= datetime.datetime.strptime( request.POST['due_date'] ,'%m-%d-%y')
+            gi.duedate= datetime.datetime.strptime( request.POST['due_date'] ,'%m-%d-%Y')
             gi.assignmentDescr=request.POST['Description']
 
             try:   
@@ -420,7 +420,7 @@ def report_card(request, enrolldetail_id):
     categories = theClass.gradingcategory_set.filter(weight__gt= 0)
     student.final_score=0
     for cat in categories:
-        items= cat.gradingitem_set.all()        
+        items= cat.gradingitem_set.order_by('id')        
         scores=[(item, get_score(student, item) ) for item in items]
         if scores:
             cat.score_rows= make_rows(scores, 7)
