@@ -3,7 +3,7 @@
  {% load url from future %} 
 
 {% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
-{% block title %}  Dashboard {% endblock %}
+{% block title %} Admin  Dashboard {% endblock %}
 {% block content %} 
 <div class="admin2">
     <h2 class="title">Manage School</h2><br />
@@ -17,6 +17,8 @@
         <a class="adminbutton" href="{% url 'teacher_directory' %}"> Teacher Directory  </a> <br/> <br/>
         {# <a class="adminbutton" href="{% url 'family_directory' %}"> Family Directory  </a> <br/> #} 
         <a class="adminbutton" href="{% url 'sys_config' %}"> System Configuration  </a> <br/> <br/>
+        <a class="adminbutton" href='{% url 'school_info' %}'> School Information  </a> <br/> <br/>
+
 
     </div>
 </div>

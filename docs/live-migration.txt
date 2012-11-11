@@ -1,0 +1,2 @@
+to multi-school 
+* model -- added "School" model, added foreign key to Semester, Family, Config.  

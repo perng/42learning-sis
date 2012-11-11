@@ -8,7 +8,13 @@
 
 <div class="admin2">
     <br/>
-    <form method='post' action='/edit_class{%if theClass %}/{{theClass.eid}}{% endif %}'> 
+
+ {% if theclass %}
+    <form method='post' action='/edit_class/{{semester.eid}}/{{theclass.eid}}'>
+ {% else %}
+    <form method='post' action='/edit_class/{{semester.eid}}'> 
+ 
+ {% endif %} 
         {{ form.as_p }}
         {% csrf_token %}
         <input type="submit" name="Add/Edit Class" value="Update" />

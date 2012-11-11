@@ -20,6 +20,35 @@ MONTH_CHOICES = ((1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr'), (5, 'May'), (6,
         (9, 'Sep'), (10, 'Oct'), (11, 'Nov'), (12, 'Dec'))
 DAY_CHOICES = tuple([(n, n) for n in range(1, 32)])
 SEMESTER_CHOICES = (('Fall', 'Fall'), ('Spring', 'Spring'), ('Summer', 'Summer'))
+STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
+
+
+class School(models.Model):
+    name = models.CharField(max_length=30, verbose_name='School Name')
+    domain = models.CharField( max_length=100, primary_key=True)
+
+    chineseName = models.CharField(max_length=30, verbose_name='Chinese Name', blank=True, default='')
+    location = models.TextField(null=True, blank=True)
+    mailStop = models.TextField(null=True, blank=True)
+    phone = PhoneNumberField(help_text='Home Phone',null=True, blank=True)
+
+    #adminEmail = models.EmailField(blank=True, help_text='Principal email')
+    #deanEmail = models.EmailField(blank=True, help_text='Dean email')
+    #registrarEmail = models.EmailField(blank=True, help_text='Registrar email')
+    #treasurerEmail = models.EmailField(blank=True, help_text='Treasurer email')
+    policy = models.TextField(null=True, blank=True)
+    createDate = models.DateField(auto_now_add=True)
+    banner=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
+    logo=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
+    admin=models.ForeignKey(User, null=True)
+
+    def eid(self):
+        return id_encode(self.id)
+
+    def det_id(self):
+        return det_encode(self.id)
+    def __repr__(self):
+        return self.name
 
 
 class School(models.Model):
@@ -59,7 +88,7 @@ class Role(models.Model):
     is_staff2 = models.BooleanField(default=False)
 
 class Semester(models.Model):
-    #school = models.ForeignKey(School)
+    school = models.ForeignKey(School)
     schoolYear = models.CharField(max_length=20, choices=SEMESTER_YEAR_CHOICES)
     semester = models.CharField(max_length=20, choices=SEMESTER_CHOICES)
     need_enroll = models.BooleanField()   # If enrollment is needed. set false to 2nd semester which has not change
@@ -80,9 +109,8 @@ class Semester(models.Model):
         unique_together = (('schoolYear', 'semester'))
 
 
-STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
 class Family(models.Model):
-    #schools = models.ManyToManyField(School)    
+    schools = models.ManyToManyField(School)
     user = models.OneToOneField(User)
     staff_role = models.CharField(max_length=50)
     streetNumber = models.CharField(max_length=50, help_text='Street')
@@ -103,11 +131,11 @@ class Family(models.Model):
 
     def cache(self):
         self._cached_copy=copy.deepcopy(vars(self))
-    
+
     def save(self):
         attrs=[]
         if self.id:
-            
+
             for k,v in vars(self).iteritems():
                 if k in ['user_id','id'] or k.startswith('_'):
                     continue
@@ -125,12 +153,10 @@ class Family(models.Model):
         return id_encode(self.id)
 
     def teaches(self):
-        semester = current_record_semester()
-        try:
-            classes = list(Class.objects.filter(Q(semester=semester) &(Q(headTeacher=self.user) | Q(assocTeacher1=self.user) | Q(assocTeacher2=self.user))))
-            classes.sort(key=attrgetter('name'))
-        except:
-            return []
+        semester = current_reg_semester(self.school)
+        classes = list(Class.objects.filter(Q(semester=semester) &(Q(headTeacher=self) | Q(assocTeacher1=self) | Q(assocTeacher2=self))))
+        classes.sort(key=attrgetter('name'))
+        print 'teaches', semester, classes
         return classes
     def is_parent(self):
         return self.student_set.all()
@@ -142,9 +168,9 @@ class Family(models.Model):
         return self.parent1FirstName + ' ' + self.parent1LastName
     def parent1_fullname(self):
         return self.parent1FirstName + ' ' + self.parent1LastName + ("("+self.parent1ChineseFullName+")"  if self.parent1ChineseFullName else '')
-        
+
     def __str__(self):
-        return self.parent1FirstName + ' ' + self.parent1LastName 
+        return self.parent1FirstName + ' ' + self.parent1LastName
 
     def parent2(self):
         return self.parent2FirstName + ' ' + self.parent2LastName+ ("("+self.parent2ChineseFullName+")"  if self.parent2ChineseFullName else '')
@@ -154,6 +180,27 @@ class Family(models.Model):
         if self.altEmail:
             return self.user.email +','+ self.altEmail
         return self.user.email
+
+ROLE_CHOICES =(('School Admin', 'School Admin'), ('Dean', 'Dean'), ('Registrar', 'Registrar'))
+
+class Staff(models.Model):
+    family = models.ForeignKey(Family)
+    title = models.CharField(max_length=30, verbose_name='Title')
+
+    firstName = models.CharField(max_length=30, verbose_name='First Name')
+    lastName = models.CharField(max_length=30, verbose_name='Last Name')
+    chineseFullName = models.CharField(max_length=30, verbose_name='Chinese Full Name', blank=True, default='')
+    bio = models.TextField()
+    roles = models.ManyToManyField('Role')
+
+class Role(models.Model):
+    user= models.OneToOneField(User)
+    school = models.ForeignKey(School)
+    is_admin = models.BooleanField(default=False)
+    is_dean = models.BooleanField(default=False)
+    is_registrar = models.BooleanField(default=False)
+    is_staff1 = models.BooleanField(default=False)
+    is_staff2 = models.BooleanField(default=False)
 
 LANG_CHOICES = (('English', 'English'), ('Mandarin', 'Mandarin'), ('Cantonese', 'Cantonese'), ('Other', 'Other'))
 GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'))
@@ -185,8 +232,8 @@ class Class(models.Model):
     assocTeacher2 = models.ForeignKey(User, related_name='AssocTeacher2', null=True, blank=True)
     recordAttendance = models.BooleanField(default=True)
     recordGrade = models.BooleanField(default=True)
-    
-    mandate=models.ForeignKey('Class', related_name='mandate_class', null=True, blank=True, 
+
+    mandate=models.ForeignKey('Class', related_name='mandate_class', null=True, blank=True,
                                 help_text='The class needs to be taken with this one')
 
     elective_required=models.BooleanField(verbose_name="Elective req'd", default=False, help_text='Required to take an elective class')
@@ -214,18 +261,19 @@ class Class(models.Model):
             return self.fee.basechk - self.fee.mdiscount
     def student_names(self):
         return ', '.join([s.firstName+' '+s.lastName for s in self.student_set.all()])
+	return ', '.join([s.firstName+' '+s.lastName for s in self.student_set.all()])
     def teachers(self):
         t=''
         try:
             t+= self.headTeacher.get_profile().parent1_fullname()
         except:
             pass
-        try: 
+        try:
             assert not self.assocTeacher1.is_superuser
             t+= ', '+self.assocTeacher1.get_profile().parent1_fullname()
         except:
-            pass 
-        try: 
+            pass
+        try:
             assert not self.assocTeacher2.is_superuser
             t+= ', '+self.assocTeacher2.get_profile().parent1_fullname()
         except:
@@ -249,7 +297,8 @@ class Class(models.Model):
         except:
             pass
         return ','.join(emails)
-        
+
+
 
     def calculate_total(self):
         categories = self.gradingcategory_set.all()
@@ -305,7 +354,7 @@ class GradingCategory(models.Model):
         return self.cid
     def __str__(self):
         return self.classPtr.name+' '+self.name
-    
+
 class GradingItem(models.Model):
     name = models.CharField(max_length=64)
     students = models.ManyToManyField(Student, through='Score')
@@ -345,9 +394,9 @@ class GradingItem(models.Model):
     def eid(self):
         self.cid= id_encode(self.id)
         return self.cid
-    
+
     def download_path(self):
-        try: 
+        try:
             base64.b64encode(self.category.classPtr.semester.semester)
             semester=self.category.classPtr.semester.semester
         except:
@@ -368,10 +417,10 @@ class GradingItem(models.Model):
             name = self.name
         except:
             name = str(self.id)
-            
-             
+
+
         path='/'.join([semester+ ' '+self.category.classPtr.semester.schoolYear,
-                           theClass, category, name])       
+                           theClass, category, name])
         for c in '\:*?"<>|()&':
             path = path.replace(c,'')
         path=path.replace(' ','\ ')
@@ -390,15 +439,15 @@ class GradingItem(models.Model):
     def download_url(self):
         path=self.download_path().replace('\\','')
 
-        b='http://homework.nwcsny.org/index.php?folder=' 
-        
+        b='http://homework.nwcsny.org/index.php?folder='
+
         encoded_path=base64.b64encode(path)
         return b+encoded_path
 
     def get_files(self):
         stdout, stderr = Popen(['ssh', 'staff@nwcsny.org', 'ls /home/staff/homework/'+self.download_path()], stdout=PIPE).communicate()
         return stdout.split()
-        
+
 
 
 class Score(models.Model):
@@ -451,7 +500,7 @@ class FeeConfig(models.Model):
     familyFee = models.FloatField(default=0, help_text='Registration Fee')
     lateFee = models.FloatField(default=0, help_text='Late Fee')
     lateDate = models.DateField(null=True, verbose_name='Late registration start date', help_text='Format: YYYY-MM-DD')
-    
+
     def get_discount(self, nStudent):
         if nStudent == 1:
             return self.discount1
@@ -486,15 +535,15 @@ class Tuition(models.Model):
     class Meta:
         unique_together = (('family', 'semester'))
 
-def current_reg_semester():
+def current_reg_semester(school):
     today = datetime.datetime.today()
-    sems = Semester.objects.filter(regStart__lte=today, regEnd__gte=today)
+    sems = Semester.objects.filter(school=school, regStart__lte=today, regEnd__gte=today)
     if sems:  # find the one ended last
         return reduce((lambda x, y:x if x.regEnd > y.regEnd else y), sems)
     return None
-def current_record_semester():
+def current_record_semester(school):
     today = datetime.datetime.today()
-    sems = Semester.objects.filter(recordStart__lte=today, recordEnd__gte=today)
+    sems = Semester.objects.filter(school= school, recordStart__lte=today, recordEnd__gte=today)
     if sems:  # find the one ended last
         return reduce((lambda x, y:x if x.recordEnd > y.recordEnd else y), sems)
     return None
@@ -505,11 +554,12 @@ types= ['string','float','int','dollar','text','boolean','date','url','email','t
 TYPE_CHOICES = tuple(zip(types,types) )
 
 class Config(models.Model):
+    school = models.ForeignKey(School)
     name = models.CharField(max_length=100)
     verbose_name = models.CharField(max_length=100)
-    
+
     valueType = models.CharField(max_length=10)
-    
+
     stringValue = models.CharField(max_length=400, default='')
     floatValue = models.FloatField(null=True, default=0)
     intValue = models.IntegerField(null=True, default=0)
@@ -553,5 +603,5 @@ class Config(models.Model):
             self.textValue = str(value)
         elif t == 'email':
             self.emailValue = str(value)
-        
+
 
