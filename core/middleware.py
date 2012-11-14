@@ -1,6 +1,8 @@
-from sis.core.models import School, Role
+from sis.core.models import School, Role, Family
 from sis.core.views_admin import signup, edit_school_info
 
+def is_teacher(request):
+    return request.user.get_profile().is_teacher(request.session['school'])
 
 class GetSchool(object):
     def process_view(self, request, view_func, view_args, view_kwargs):
@@ -15,6 +17,8 @@ class GetSchool(object):
                 request.user.role=request.session['role']=Role.objects.get(user=request.user,school=school)
         else:
             request.user.role=request.session['role']        
+        request.session['is_teacher']= is_teacher(request)
+
         return
         #print request
         

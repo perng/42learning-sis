@@ -51,12 +51,13 @@
 
                 <div class="clearfix">
                     <div class="menu-secondary-container">
+
                         <ul class="menus menu-secondary" id="menu_secondary"> 
                             <li class="menu-item menu-item-type-post_type"> 
                             <a href="{% url 'change_view' 'parent'%}" 
                                 {% ifequal  request.session.view 'parent' %} class="selected" {% endifequal %}
                                 > Parents' View</a></li>
-                            {% if request.user.get_profile.is_teacher %}
+                            {% if request.session.is_teacher %}
                             <li class="menu-item menu-item-type-post_type">
                             <a href="{% url 'change_view' view='teacher'%}"
                                 {% ifequal  request.session.view 'teacher' %} class="selected" {% endifequal %}
@@ -128,6 +129,7 @@
                     <div id="copyrights">
                         &copy; 2012  <a href="http://{{request.session.school.domain}}">{{request.session.school.name}} </a><a href='http://www.rapidssl.com'> <img src="{% static_path %}/images/RapidSSL_SEAL.gif"/> </a> 
                     </div>
+                    
                 </div><!-- #footer -->
 
             </div> 
