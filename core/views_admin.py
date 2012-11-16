@@ -396,10 +396,12 @@ def active_directory(request, active_only=True):
 def teacher_directory(request):
     if not request.user.role.see_admin():
         return render_to_response('admin_home.html', locals())
-    teachers = Family.objects.filter(school=request.session['school'])
-    teachers = [t for t in teachers if t.is_teacher()]
+    #teachers = Family.objects.filter(school=request.session['school'])
+    school=request.session['school']
+    teachers = school.family_set.all()
+    teachers = [t for t in teachers if t.is_teacher(school)]
     for t in teachers:
-        t.teachclass = ','.join([c.name for c in t.teaches()])
+        t.teachclass = ','.join([c.name for c in t.teaches(school)])
     return my_render_to_response(request, 'teacher_directory.html', locals())
 
 
@@ -516,7 +518,7 @@ def signup(request):
 
 @superuser_required
 def class_enrollment(request):
-    sem = current_record_semester()
+    sem = current_record_semester(request.session['school'])
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
     for c in classes:
         c.count = len(EnrollDetail.objects.filter(classPtr=c))
