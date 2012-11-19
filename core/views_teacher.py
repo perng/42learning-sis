@@ -25,7 +25,8 @@ def grading_policy(request, cid):
     k='HTTP_HOST'
     print k, request.META[k]
     classid = id_decode(cid)
-    teaches = request.user.get_profile().teaches()
+    school=request.session['school']
+    teaches = request.user.get_profile().teaches(school)
     teaches_class_ids = [c.id for c in teaches]
     permitted = classid in teaches_class_ids or request.user.is_superuser
     errors=[]

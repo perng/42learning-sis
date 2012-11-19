@@ -15,7 +15,16 @@
     <form method='post' action='/edit_class/{{semester.eid}}'> 
  
  {% endif %} 
-        {{ form.as_p }}
+     Class Name: {{form.name}} <br/>
+     Elective:   {{form.elective}} <br/> 
+     Mandate: {{form.mandate}} <br/>
+     Require Elective: {{form.elective_required}} <br/> 
+     Head Teacher: {{form.headTeacher}} <br/> 
+	 Associate Teacher 1: {{form.assocTeacher1}} <br/> 
+	 Associate Teacher 1: {{form.assocTeacher2}} <br/> 
+	 Record Attendance : {{form.recordAttendance}} <br/> 
+	 Record Grade: {{form.recordGrade}} <br/> 
+	 Description: {{form.description}} <br/> 
         {% csrf_token %}
         <input type="submit" name="Add/Edit Class" value="Update" />
     </form>

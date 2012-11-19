@@ -406,7 +406,7 @@ def teacher_directory(request):
 
 
 def offered_classes(request):
-    sem = current_reg_semester()
+    sem = current_reg_semester(request.session['school'])
     if not sem:
         sem= current_record_semester()
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")

@@ -30,6 +30,9 @@
         {% csrf_token %}
         <input class="button" type="submit"  value="Update" />
     </form>
+
+<a href="{% url 'edit_class' sem_id=theClass.semester.eid class_id=theClass.eid %}"> 
+Configure Class </a> 
 </div>
 
 {% endblock %}
