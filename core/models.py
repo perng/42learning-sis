@@ -260,7 +260,7 @@ class Class(models.Model):
             for c in categories:
                 gis = c.gradingitem_set.all()
                 for gi in gis:
-                    gi.calculate_total()
+                    #gi.calculate_total()
                     s.ed.final_score += c.weight * sum([sc.score for sc in Score.objects.filter(student=s, gradingItem=gi)]) / len(gis) / 100
             s.save()
         scores = [s.ed.final_score for s in students]
@@ -305,6 +305,10 @@ class GradingCategory(models.Model):
         return self.cid
     def __str__(self):
         return self.classPtr.name+' '+self.name
+    #def subtotal(self, student):
+    #    gis=GradingItem.objects.filter(category=self)
+    #    scores=[Score.objects.get(gradingItem=gi, student=student).score for gi in gis]
+    #    return sum(scores)/float(len(scores))
     
 class GradingItem(models.Model):
     name = models.CharField(max_length=64)

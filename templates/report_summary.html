@@ -1,0 +1,41 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+{% load url from future %}
+
+{% block theme %}
+<link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" />
+<link href="{% static_path %}/css/no-sidebar.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block title %}  Grade Summary of {{theClass}}, {{theClass.semester}} {% endblock %}
+{% block content %} 
+<div class="teacher">
+    <h2 class="title">Grade Summary of {{theClass}}, {{theClass.semester}} </h2><br />
+    Teacher: {{theClass.headTeacher.get_profile.parent1_fullname}} 
+    <table class="red_table">
+        <tr>
+            <th><i class="icon-book"></i> Student </th>
+	    <th><i class="icon-table"></i> Attendance</th>
+	    {% for cat in categories %}
+	    {% if cat.weight %}
+	    <th><i class="icon-table"></i> {{cat.name}} ({{cat.weight}}%)</th>
+	    {% endif %}
+	    {%endfor %}
+	    <th><i class="icon-table"></i> Total </th>
+	    <th><i class="icon-table"></i> Rank </th>
+        </tr>
+        {% for student in students %}
+        <tr>
+	  <td> <a href="/report_card/{{student.enrollment.eid}}"> {{student}} </a>  </td> 
+	  <td> {{student.attendance_rate|floatformat:0}}%  </td> 
+	    {% for grade in student.grades%}
+	    <td> {{grade|floatformat:1}} </td>
+	    {%endfor %}
+	    <td> {{student.total|floatformat:1}}  </td>
+	    <td> {{student.rank}}  </td>
+        </tr> 
+        {% endfor %}
+    </table> 
+</div>
+{% endblock %} 
+
+

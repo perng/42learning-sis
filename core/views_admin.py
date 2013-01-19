@@ -137,7 +137,7 @@ def classlist(request, sem_id):
 
 def create_default_grading_categories(theClass):
     order = 1
-    for name, weight, assignment in [('Quiz', 30, False), ('Exam', 40, False), ('Home Work', 30, True), ('Other', 0, False)]:
+    for name, weight, assignment in [('Quiz', 30, False), ('Exam', 40, False), ('Home Work', 30, True), ('Other1', 0, False), ('Other2', 0, False)]:
         #gc,created = GradingCategory.objects.get_or_create(classPtr=theClass, name=name )
         gcs = GradingCategory.objects.filter(classPtr=theClass, name=name )
         if len(gcs)>0:

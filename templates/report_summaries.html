@@ -1,0 +1,25 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+{% load url from future %}
+
+{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Classes of {{semester}} {% endblock %}
+{% block content %} 
+<div class="teacher">
+    <h2 class="title">Classes of {{semester}} </h2><br />
+    <table class="red_table">
+        <tr>
+            <th><i class="icon-book"></i> Class </th>
+	    <th><i class="icon-table"></i> Report</th>
+        </tr>
+        {% for c in classes %}
+        <tr>
+	  <td> {{c}} -- {{c.headTeacher.get_profile.parent1_fullname}}  </td> 
+	  <td> <a href="/report_summary/{{c.eid}}"> {% if c.total_ready %} Final {% else %} Progress {% endif %} Report  </a> </td> 
+        </tr> 
+        {% endfor %}
+    </table> 
+</div>
+{% endblock %} 
+
+
