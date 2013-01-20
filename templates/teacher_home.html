@@ -49,7 +49,7 @@
             <td><a href='{% url 'classroaster' cid=c.eid%}' style="text-decoration:underline;">Contacts({{c.num_students}})</a></td>
             <td>
                 {% if c.recordGrade %} 
-                <a href='{% url 'prepare_report' class_id=c.eid %}' style="text-decoration:underline;">Report <br/>  </a>
+                <a href='{% url 'report_summary' class_id=c.eid %}' style="text-decoration:underline;">Report <br/>  </a>
                 {% else %} - {% endif %}
             </td> 
 

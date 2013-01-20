@@ -371,7 +371,7 @@ def edit_assignment(request, aid):
     request.method='GET'
     return my_render_to_response(request, 'assignment_edit.html', locals())
 
-
+'''
 @login_required
 def prepare_report(request, class_id):
     classid = id_decode(class_id)
@@ -380,6 +380,7 @@ def prepare_report(request, class_id):
     for s in students:
         s.enrollment=s.enrolldetail_set.get( classPtr=theClass)
     return my_render_to_response(request, 'prepare_report.html', locals())
+'''
 
 @login_required
 def evaluation_comment(request, enrolldetail_id):
@@ -455,7 +456,7 @@ def toggle_final_grade_ready(request, class_id):
     theClass.save()
     if theClass.total_ready :
         theClass.calculate_total()
-    return prepare_report(request, class_id)
+    return report_summary(request, class_id)
 
 
 @login_required
@@ -485,9 +486,18 @@ def report_summaries(request,sem_id):
 def category_average(student, category):
     scores=[get_score(student, gi) for gi in category.gis]
     return 0 if not scores else float(sum(scores))/len(scores)
+
+def uid(user):
+    try:
+        return user.id
+    except:
+        pass
+    return -1
+
 @login_required
 def report_summary(request, class_id):
     theClass = Class.objects.get(id=id_decode(class_id))
+    is_teacher = request.user.id in [uid(theClass.headTeacher), uid(theClass.assocTeacher1), uid(theClass.assocTeacher2)]
     categories= [c for c in theClass.gradingcategory_set.all() if c.weight]
     weights= [c.weight for c in categories]
     for cat in categories:

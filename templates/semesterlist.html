@@ -16,7 +16,7 @@
             <td> {{sem.schoolYear }} {{sem.semester}} </td> 
             <td><a href='/edit_semester/{{sem.eid }}'> Edit Semester </a> </td> 
             <td><a href='{% url 'classlist' sem_id=sem.eid %}'> Manage Classes </a> </td> 
-            <td><a href='/report_summaries/{{sem.eid}}'> Dean's Report </a> </td> 
+            <td><a href='/grade_summaries/{{sem.eid}}'> Dean's Report </a> </td> 
         </tr>{% endfor %}
     </table>
     <a class="adminbutton" href='{% url 'edit_semester' %}'> Add new semester </a>

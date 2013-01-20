@@ -42,7 +42,7 @@ urlpatterns = patterns('',
      url(r'^edit_grade/(?P<gi_id>.+)$', edit_grade, name='edit_grade'),
      url(r'^del_grade/(?P<gi_id>.+)$', del_grade, name='del_grade'),
 
-     url(r'^prepare_report/(?P<class_id>.+)$', prepare_report, name='prepare_report'),
+     #url(r'^prepare_report/(?P<class_id>.+)$', prepare_report, name='prepare_report'),
      url(r'^evaluation_comment/(?P<enrolldetail_id>.+)$', evaluation_comment, name='evaluation_comment'),
 
      url(r'^accounts/profile', profile, name='profile'),
@@ -68,8 +68,8 @@ urlpatterns = patterns('',
      url(r'^notify_report_card/(?P<class_id>.+$)', notify_report_card, name='notify_report_card'),
      url(r'^toggle_final_grade_ready/(?P<class_id>.+$)', toggle_final_grade_ready, name='toggle_final_grade_ready'),
 
-     url(r'^report_summaries/(?P<sem_id>[0-9]+)$', report_summaries, name='report_summaries'),
-     url(r'^report_summary/(?P<class_id>[0-9]+)$', report_summary, name='report_summary'),
+     url(r'^grade_summaries/(?P<sem_id>[0-9]+)$', report_summaries, name='report_summaries'),
+     url(r'^grade_summary/(?P<class_id>[0-9]+)$', report_summary, name='report_summary'),
      # Admin
      url(r'^semester$', semesters, name='semesters'),
      url(r'^edit_semester$', edit_semester, name='edit_semester'),

@@ -13,15 +13,19 @@
     Teacher: {{theClass.headTeacher.get_profile.parent1_fullname}} 
     <table class="red_table">
         <tr>
-            <th><i class="icon-book"></i> Student </th>
-	    <th><i class="icon-table"></i> Attendance</th>
+            <th><i class="icon-user"></i> Student </th>
+	    <th><i class="icon-check"></i> Attendance</th>
 	    {% for cat in categories %}
 	    {% if cat.weight %}
 	    <th><i class="icon-table"></i> {{cat.name}} ({{cat.weight}}%)</th>
 	    {% endif %}
 	    {%endfor %}
 	    <th><i class="icon-table"></i> Total </th>
-	    <th><i class="icon-table"></i> Rank </th>
+	    <th><i class="icon-reorder"></i> Rank </th>
+            {% if is_teacher %}
+	    <th><i class="icon-edit"></i> Comment </th>
+            {% endif %}
+	    <th><i class="icon-eye-open"></i> View </th>
         </tr>
         {% for student in students %}
         <tr>
@@ -32,9 +36,37 @@
 	    {%endfor %}
 	    <td> {{student.total|floatformat:1}}  </td>
 	    <td> {{student.rank}}  </td>
+            {% if is_teacher %}
+            <td> <a href="{% url 'evaluation_comment' enrolldetail_id=s.enrollment.eid %}"> Comment </a> </td>
+           {% endif %}
+            <td> <a href="{% url 'report_card' enrolldetail_id=s.enrollment.eid %}" target="_blank"> View </a> </td>
+
         </tr> 
         {% endfor %}
     </table> 
+<br/><br/>
+
+Final scores of this class are currently set as
+{% if theClass.total_ready %}
+'ready'. <br/>
+<button class="btn btn-warning" type="button">
+<a href='/toggle_final_grade_ready/{{theClass.eid}}'> Set it to NOT READY  </a>
+</button>
+
+{% else %}
+'not ready'. <br/>
+<button class="btn btn-success" type="button">
+<a href='/toggle_final_grade_ready/{{theClass.eid}}'> Set it to READY </a>
+</button>
+{% endif %}
+
+<br/><br/>
+
+        <a href='mailto:{% for s in students %}{{s.family.user.email}}, {% endfor %}'> Email all students </a>
+        <div>
+            All emails: {% for s in students %}{{s.family.user.email}}, {% endfor %}
+        </div>
+
 </div>
 {% endblock %} 
 

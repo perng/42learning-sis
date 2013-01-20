@@ -259,9 +259,14 @@ class Class(models.Model):
             s.ed.final_score = 0
             for c in categories:
                 gis = c.gradingitem_set.all()
+                if not gis:
+                   continue
                 for gi in gis:
                     #gi.calculate_total()
-                    s.ed.final_score += c.weight * sum([sc.score for sc in Score.objects.filter(student=s, gradingItem=gi)]) / len(gis) / 100
+                    try:
+                        s.ed.final_score += c.weight * sum([sc.score for sc in Score.objects.filter(student=s, gradingItem=gi)]) / len(gis) / 100
+                    except:
+                        pass
             s.save()
         scores = [s.ed.final_score for s in students]
         scores.sort(reverse=True)
