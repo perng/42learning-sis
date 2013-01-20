@@ -64,7 +64,8 @@
                                 > Teacher's View </a></li>
                             {% endif %}
 
-                            {% if request.user.role.is_admin %}
+                            {% if request.user.get_profile.is_admin %}
+                            {# {% if request.user.role.is_admin %} #}
                             <li class="menu-item menu-item-type-post_type">
                             <a href="{% url 'change_view' view='admin'%}"
                                 {% ifequal  request.session.view 'admin' %} class="selected" {% endifequal %}
@@ -118,11 +119,10 @@
 
                 <div id="footer">
                     <div id="copyrights">
-<<<<<<< HEAD
                         &copy; 2013  <a href="http://nwcsny.org/">北威中文學校 Northern Westchester Chinese School</a><a href='http://www.rapidssl.com'> <img src="{% static_path %}/images/RapidSSL_SEAL.gif"/> </a> 
-=======
+{% comment %}
                         &copy; 2012  <a href="http://{{request.session.school.domain}}">{{request.session.school.name}} </a><a href='http://www.rapidssl.com'> <img src="{% static_path %}/images/RapidSSL_SEAL.gif"/> </a> 
->>>>>>> 6ebd1bc8c99a5ea78a72fc3a03114d5fee3ff1ac
+{% endcomment %}
                     </div>
                 </div><!-- #footer -->
 

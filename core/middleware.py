@@ -1,9 +1,10 @@
-from sis.core.models import School
-from sis.core.views_admin import signup, new_school_info
+#from sis.core.models import School
+#from sis.core.views_admin import signup, new_school_info
 
 
 class GetSchool(object):
     def process_view(self, request, view_func, view_args, view_kwargs):
+        return
         print 'precess_view', view_func
         #print request
         
