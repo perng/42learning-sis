@@ -21,6 +21,15 @@ from django.contrib.sites.models import Site
 
 
 @login_required
+def add_grading_category(request, cid):
+    classid = id_decode(cid)
+    theClass = get_object_or_404(Class,id=classid)
+    cat=GradingCategory(classPtr=theClass, name='', weight=0)
+    cat.save()
+    return grading_policy(request, cid)
+
+	
+@login_required
 def grading_policy(request, cid):
     k='HTTP_HOST'
     print k, request.META[k]
@@ -363,7 +372,7 @@ def edit_assignment(request, aid):
     request.method='GET'
     return my_render_to_response(request, 'assignment_edit.html', locals())
 
-
+'''
 @login_required
 def prepare_report(request, class_id):
     classid = id_decode(class_id)
@@ -372,6 +381,7 @@ def prepare_report(request, class_id):
     for s in students:
         s.enrollment=s.enrolldetail_set.get( classPtr=theClass)
     return my_render_to_response(request, 'prepare_report.html', locals())
+'''
 
 @login_required
 def evaluation_comment(request, enrolldetail_id):
@@ -413,9 +423,9 @@ def report_card(request, enrolldetail_id):
     sessions=theClass.classsession_set.all()
     num_sessions=len(sessions)
     attendances=[(session.date, get_attendance(student, session)) for session in sessions]
+    num_absent =len([a for a in attendances if a[1]==att_dict['A']])
+    num_late =len([a for a in attendances if a[1]==att_dict['L']])
     attendances_rows=make_rows(attendances, 7) if attendances else []
-    num_absent =len([a for a in attendances if a[1]=='A'])
-    num_late =len([a for a in attendances if a[1]=='L'])
     num_present=num_sessions-num_absent
 
     categories = theClass.gradingcategory_set.filter(weight__gt= 0)
@@ -440,6 +450,15 @@ def report_card(request, enrolldetail_id):
     
     return my_render_to_response(request, 'reportcard.html', locals())
 
+@login_required
+def toggle_final_grade_ready(request, class_id):
+    theClass = Class.objects.get(id=id_decode(class_id))
+    theClass.total_ready = not theClass.total_ready
+    theClass.save()
+    if theClass.total_ready :
+        theClass.calculate_total()
+    return report_summary(request, class_id)
+
 
 @login_required
 def notify_report_card(request, class_id):
@@ -457,3 +476,62 @@ def notify_report_card(request, class_id):
     
         en.student.family.user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
     return generic_message(request, 'Parents Notified', 'teacher', 'Parents have been notified that report cards are ready.' )
+
+
+@login_required
+def report_summaries(request,sem_id):
+    semester = get_object_or_404(Semester, id=id_decode(sem_id))
+    classes = Class.objects.filter(semester=semester, elective=False, )
+    return my_render_to_response(request, 'report_summaries.html', locals())
+
+def category_average(student, category):
+    scores=[get_score(student, gi) for gi in category.gis]
+    return 0 if not scores else float(sum(scores))/len(scores)
+
+def uid(user):
+    try:
+        return user.id
+    except:
+        pass
+    return -1
+
+@login_required
+def report_summary(request, class_id):
+    theClass = Class.objects.get(id=id_decode(class_id))
+    is_teacher = request.user.id in [uid(theClass.headTeacher), uid(theClass.assocTeacher1), uid(theClass.assocTeacher2)]
+    categories= [c for c in theClass.gradingcategory_set.all() if c.weight]
+    weights= [c.weight for c in categories]
+    for cat in categories:
+       cat.gis=GradingItem.objects.filter(category=cat)
+    ens= EnrollDetail.objects.filter(classPtr=theClass)
+    students=[en.student for en in ens]
+    for en in ens:
+        en.student.enrollment=en
+    for student in students:
+        student.grades=[category_average(student, cat) for cat in categories]
+        student.total=sum([a*b for a,b in zip(student.grades, weights)])/100.0
+    grades=[(s.total, s) for s in students]
+    grades.sort(reverse=True)
+    prev_grade=1000 
+    rank=1
+    for i in range(len(grades)):
+        grade, student = grades[i]
+        if grade < prev_grade:
+            rank=student.rank=i+1
+        else:
+            student.rank=rank
+        prev_grade=grade
+    students.sort(key=lambda s: s.rank)
+
+    # Attendance
+    sessions=theClass.classsession_set.all()
+    num_sessions=float(len(sessions))
+    for student in students:
+        attendances=[(session.date, get_attendance(student, session)) for session in sessions]
+        num_absent =float(len([a for a in attendances if a[1]==att_dict['A']]))
+        num_late =len([a for a in attendances if a[1]==att_dict['L']])
+        #num_present=num_sessions-num_absent
+        student.attendance_rate = 0.0 if not num_sessions else (num_sessions- num_absent - 0.5*num_late)/num_sessions * 100.0
+
+
+    return my_render_to_response(request, 'report_summary.html', locals())

@@ -62,6 +62,20 @@ class School(models.Model, SISModel):
 
 class Semester(models.Model, SISModel):
     school = models.ForeignKey(School)
+
+class Role(models.Model):
+    user= models.OneToOneField(User)
+    school = models.ForeignKey(School)
+    is_admin = models.BooleanField(default=False)
+    is_dean = models.BooleanField(default=False)
+    is_registrar = models.BooleanField(default=False)
+    is_staff1 = models.BooleanField(default=False)
+    is_staff2 = models.BooleanField(default=False)
+
+
+class Semester(models.Model):
+    #school = models.ForeignKey(School)
+>>>>>>> 103878b268c4eb176d1352ecb7727c86589656dd
     schoolYear = models.CharField(max_length=20, choices=SEMESTER_YEAR_CHOICES)
     semester = models.CharField(max_length=20, choices=SEMESTER_CHOICES)
     need_enroll = models.BooleanField()   # If enrollment is needed. set false to 2nd semester which has not change
@@ -101,7 +115,9 @@ class Role(models.Model, SISModel):
 
 
 class Family(models.Model, SISModel):
-    schools = models.ManyToManyField(School)
+STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
+class Family(models.Model):
+    schools = models.ManyToManyField(School)    
     user = models.OneToOneField(User)
     staff_role = models.CharField(max_length=50)
     streetNumber = models.CharField(max_length=50, help_text='Street')
@@ -123,11 +139,11 @@ class Family(models.Model, SISModel):
 
     def cache(self):
         self._cached_copy=copy.deepcopy(vars(self))
-
+    
     def save(self):
         attrs=[]
         if self.id:
-
+            
             for k,v in vars(self).iteritems():
                 if k in ['user_id','id'] or k.startswith('_'):
                     continue
@@ -141,12 +157,16 @@ class Family(models.Model, SISModel):
         print 'attrs', attrs
         models.Model.save(self)
 
- 
-    def teaches(self, school):
-        semester = current_reg_semester(school)
-        classes = list(Class.objects.filter(Q(semester=semester) &(Q(headTeacher=self) | Q(assocTeacher1=self) | Q(assocTeacher2=self))))
-        classes.sort(key=attrgetter('name'))
-        print 'teaches', semester, classes
+    def eid(self):
+        return id_encode(self.id)
+
+    def teaches(self):
+        semester = current_record_semester()
+        try:
+            classes = list(Class.objects.filter(Q(semester=semester) &(Q(headTeacher=self.user) | Q(assocTeacher1=self.user) | Q(assocTeacher2=self.user))))
+            classes.sort(key=attrgetter('name'))
+        except:
+            return []
         return classes
     def is_parent(self):
         return self.student_set.all()
@@ -158,9 +178,9 @@ class Family(models.Model, SISModel):
         return self.parent1FirstName + ' ' + self.parent1LastName
     def parent1_fullname(self):
         return self.parent1FirstName + ' ' + self.parent1LastName + ("("+self.parent1ChineseFullName+")"  if self.parent1ChineseFullName else '')
-
+        
     def __str__(self):
-        return self.parent1FirstName + ' ' + self.parent1LastName
+        return self.parent1FirstName + ' ' + self.parent1LastName 
 
     def parent2(self):
         return self.parent2FirstName + ' ' + self.parent2LastName+ ("("+self.parent2ChineseFullName+")"  if self.parent2ChineseFullName else '')
@@ -203,8 +223,8 @@ class Class(models.Model, SISModel):
     assocTeacher2 = models.ForeignKey(User, related_name='AssocTeacher2', null=True, blank=True)
     recordAttendance = models.BooleanField(default=True)
     recordGrade = models.BooleanField(default=True)
-
-    mandate=models.ForeignKey('Class', related_name='mandate_class', null=True, blank=True,
+    
+    mandate=models.ForeignKey('Class', related_name='mandate_class', null=True, blank=True, 
                                 help_text='The class needs to be taken with this one')
 
     elective_required=models.BooleanField(verbose_name="Elective req'd", default=False, help_text='Required to take an elective class')
@@ -255,12 +275,12 @@ class Class(models.Model, SISModel):
             t+= self.headTeacher.get_profile().parent1_fullname()
         except:
             pass
-        try:
+        try: 
             assert not self.assocTeacher1.is_superuser
             t+= ', '+self.assocTeacher1.get_profile().parent1_fullname()
         except:
-            pass
-        try:
+            pass 
+        try: 
             assert not self.assocTeacher2.is_superuser
             t+= ', '+self.assocTeacher2.get_profile().parent1_fullname()
         except:
@@ -284,8 +304,7 @@ class Class(models.Model, SISModel):
         except:
             pass
         return ','.join(emails)
-
-
+        
 
     def calculate_total(self):
         categories = self.gradingcategory_set.all()
@@ -295,9 +314,14 @@ class Class(models.Model, SISModel):
             s.ed.final_score = 0
             for c in categories:
                 gis = c.gradingitem_set.all()
+                if not gis:
+                   continue
                 for gi in gis:
-                    gi.calculate_total()
-                    s.ed.final_score += c.weight * sum([sc.score for sc in Score.objects.filter(student=s, gradingItem=gi)]) / len(gis) / 100
+                    #gi.calculate_total()
+                    try:
+                        s.ed.final_score += c.weight * sum([sc.score for sc in Score.objects.filter(student=s, gradingItem=gi)]) / len(gis) / 100
+                    except:
+                        pass
             s.save()
         scores = [s.ed.final_score for s in students]
         scores.sort(reverse=True)
@@ -335,8 +359,12 @@ class GradingCategory(models.Model, SISModel):
 
     def __str__(self):
         return self.classPtr.name+' '+self.name
-
-class GradingItem(models.Model, SISModel):
+    #def subtotal(self, student):
+    #    gis=GradingItem.objects.filter(category=self)
+    #    scores=[Score.objects.get(gradingItem=gi, student=student).score for gi in gis]
+    #    return sum(scores)/float(len(scores))
+    
+class GradingItem(models.Model):
     name = models.CharField(max_length=64)
     students = models.ManyToManyField(Student, through='Score')
     date = models.DateField(null=True, verbose_name='Test/Grading date', help_text='Format: YYYY-MM-DD')
@@ -372,9 +400,12 @@ class GradingItem(models.Model, SISModel):
 
     def hasAssignment(self):
         return self.category.hasAssignment
-
+    def eid(self):
+        self.cid= id_encode(self.id)
+        return self.cid
+    
     def download_path(self):
-        try:
+        try: 
             base64.b64encode(self.category.classPtr.semester.semester)
             semester=self.category.classPtr.semester.semester
         except:
@@ -395,10 +426,10 @@ class GradingItem(models.Model, SISModel):
             name = self.name
         except:
             name = str(self.id)
-
-
+            
+             
         path='/'.join([semester+ ' '+self.category.classPtr.semester.schoolYear,
-                           theClass, category, name])
+                           theClass, category, name])       
         for c in '\:*?"<>|()&':
             path = path.replace(c,'')
         path=path.replace(' ','\ ')
@@ -417,15 +448,15 @@ class GradingItem(models.Model, SISModel):
     def download_url(self):
         path=self.download_path().replace('\\','')
 
-        b='http://homework.nwcsny.org/index.php?folder='
-
+        b='http://homework.nwcsny.org/index.php?folder=' 
+        
         encoded_path=base64.b64encode(path)
         return b+encoded_path
 
     def get_files(self):
         stdout, stderr = Popen(['ssh', 'staff@nwcsny.org', 'ls /home/staff/homework/'+self.download_path()], stdout=PIPE).communicate()
         return stdout.split()
-
+        
 
 
 class Score(models.Model, SISModel):
@@ -501,15 +532,15 @@ class Tuition(models.Model, SISModel):
     class Meta:
         unique_together = (('family', 'semester'))
 
-def current_reg_semester(school):
+def current_reg_semester():
     today = datetime.datetime.today()
-    sems = Semester.objects.filter(school=school, regStart__lte=today, regEnd__gte=today)
+    sems = Semester.objects.filter(regStart__lte=today, regEnd__gte=today)
     if sems:  # find the one ended last
         return reduce((lambda x, y:x if x.regEnd > y.regEnd else y), sems)
     return None
-def current_record_semester(school):
+def current_record_semester():
     today = datetime.datetime.today()
-    sems = Semester.objects.filter(school= school, recordStart__lte=today, recordEnd__gte=today)
+    sems = Semester.objects.filter(recordStart__lte=today, recordEnd__gte=today)
     if sems:  # find the one ended last
         return reduce((lambda x, y:x if x.recordEnd > y.recordEnd else y), sems)
     return None
@@ -523,9 +554,9 @@ class Config(models.Model, SISModel):
     school = models.ForeignKey(School)
     name = models.CharField(max_length=100)
     verbose_name = models.CharField(max_length=100)
-
+    
     valueType = models.CharField(max_length=10)
-
+    
     stringValue = models.CharField(max_length=400, default='')
     floatValue = models.FloatField(null=True, default=0)
     intValue = models.IntegerField(null=True, default=0)
@@ -567,7 +598,7 @@ class Config(models.Model, SISModel):
             self.textValue = str(value)
         elif t == 'email':
             self.emailValue = str(value)
-
+        
 
 class RegistrationHistory(models.Model, SISModel):
     student=models.ForeignKey(Student)

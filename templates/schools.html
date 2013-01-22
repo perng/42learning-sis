@@ -1,0 +1,32 @@
+{% extends 'base.html' %} 
+{% load core_tags %}
+
+{% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Schools {% endblock %}
+{% block content %} 
+<div class="admin2">
+    <h2 class="title">Schools</h2>
+
+{% if schools %}
+
+<table> 
+<tr> 
+<th> School Name </th>
+</tr>
+{% for school in schools %}
+<tr> 
+<td> <a href="{{school.url}}> {{school.name}} </a> </td>
+</tr>
+{% endfor %}
+
+</table> 
+
+{% else %}
+No school yet
+  
+{% endif %} 
+ 
+  
+</div>
+{% endblock %} 
+

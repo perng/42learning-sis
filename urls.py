@@ -33,6 +33,7 @@ urlpatterns = patterns('',
      # Teacher
 
      url(r'^grading_policy/(?P<cid>.+)$', grading_policy, name='grading_policy'),
+     url(r'^add_grading_category/(?P<cid>.+)$', add_grading_category, name='add_grading_category'),
      url(r'^classroaster/(?P<cid>.+)$', classroaster, name='classroaster'),
      url(r'^record/(?P<class_id>.+)$', record, name='record'),
      url(r'^record_attendance/(?P<class_id>.+)$', record_attendance, name='record_attendance'),
@@ -42,7 +43,7 @@ urlpatterns = patterns('',
      url(r'^edit_grade/(?P<gi_id>.+)$', edit_grade, name='edit_grade'),
      url(r'^del_grade/(?P<gi_id>.+)$', del_grade, name='del_grade'),
 
-     url(r'^prepare_report/(?P<class_id>.+)$', prepare_report, name='prepare_report'),
+     #url(r'^prepare_report/(?P<class_id>.+)$', prepare_report, name='prepare_report'),
      url(r'^evaluation_comment/(?P<enrolldetail_id>.+)$', evaluation_comment, name='evaluation_comment'),
 
      url(r'^accounts/profile', profile, name='profile'),
@@ -66,7 +67,10 @@ urlpatterns = patterns('',
      url(r'^evaluation_comment/(?P<enrolldetail_id>.+$)', evaluation_comment, name='evaluation_comment'),
      url(r'^report_card/(?P<enrolldetail_id>.+$)', report_card, name='report_card'),
      url(r'^notify_report_card/(?P<class_id>.+$)', notify_report_card, name='notify_report_card'),
+     url(r'^toggle_final_grade_ready/(?P<class_id>.+$)', toggle_final_grade_ready, name='toggle_final_grade_ready'),
 
+     url(r'^grade_summaries/(?P<sem_id>[0-9]+)$', report_summaries, name='report_summaries'),
+     url(r'^grade_summary/(?P<class_id>[0-9]+)$', report_summary, name='report_summary'),
      # Admin
      url(r'^semester$', semesters, name='semesters'),
      url(r'^edit_semester$', edit_semester, name='edit_semester'),
@@ -88,13 +92,10 @@ urlpatterns = patterns('',
      url(r'^active_directory', active_directory, name='active_directory'),
      url(r'^teacher_directory', teacher_directory, name='teacher_directory'),
      url(r'^family_directory/$', ListView.as_view(model=Family ), name='family_directory'),
-     # url(r'^sys_config/', system_config, name='sys_config'),
-
-     ### School Management
      url(r'^new_school/', edit_school_info, name='new_school'),     
      url(r'^edit_school_info/(?P<schid>[0-9]+)$', edit_school_info, name='edit_school_info'),
 
-     url(r'^signup/', signup, name='signup'),
+     #url(r'^signup/', signup, name='signup'),
 
 
      # 

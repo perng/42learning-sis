@@ -36,7 +36,10 @@ def home(request):
     if 'view' in request.session:
         view = request.session['view']
     else:
-        if family.is_teacher(request.session['school']):
+        #if family.is_teacher(request.session['school']):
+        if family.is_admin():
+            view = request.session['view'] = 'admin'
+        elif family.is_teacher():
             view = request.session['view'] = 'teacher'
 #        elif request.user.staff.see_admin():
 #            view = request.session['view'] = 'admin'
@@ -53,6 +56,7 @@ def home(request):
 
     if view == 'parent':
         for student in students:
+            semester=current_record_semester()
             Classes = student.enroll.filter(semester=semester)
             print 'Classes', Classes
             student.assign_categories=[]

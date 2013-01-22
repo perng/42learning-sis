@@ -37,7 +37,7 @@
 	{# <div class="span4">Homework Turn in Rate:  <b style="text-decoration:underline;"> 14/14</b> </div> #}
 	 
 	<div class="span4">Score: <b style="text-decoration:underline;">
-	{% if theClass.total_ready %} {{student.final_score}} {% else %} (not final) {% endif %}  
+	{% if theClass.total_ready %} {{student.final_score|floatformat:1}} {% else %} (not final) {% endif %}  
 	</b> </div>
 	
 </div>
@@ -53,22 +53,22 @@
 			<th> Raw Score </th>
 			<th> Percentage % </th>
 			<th> Weighted Score </th>
-			<th> Class Average </th>
+			{# <th> Class Average </th> #}
 		<tr>
 		{% for cat in categories %}
 		<tr> 
 			<td> {{cat.name}} </td>
-			<td> {{cat.avg_score}}</td>
+			<td> {{cat.avg_score|floatformat:1}}</td>
 			<td> {{cat.weight}}% </td>
-			<td> {{cat.weighted_score}}</td>
-			<td> {{cat.class_avg}} </td>
+			<td> {{cat.weighted_score|floatformat:1}}</td>
+			{# <td> {{cat.class_avg|floatformat:1}} </td> #}
 			
 		</tr>
 		{% endfor %}
 		<tr>
 			<td colspan="3"><b>Total of Weighted Scores</b></td>
-			<td> <b>{{student.final_score}}</b></td>
-			<td> {{theClass.average}} </td>
+			<td> <b>{{student.final_score|floatformat:1}}</b></td>
+			{# <td> {{theClass.average|floatformat:1}} </td> #}
 		</tr>
 	</table>
 </div>
@@ -126,6 +126,8 @@ Attendance not recorded.
  
 {% endfor %}
 
+{% comment %}
+
 {% if theClass.total_ready %}
 <div class="well">
 <label style="padding-left: 30px; font-size: 1.3em; font-weight: bold;">Levels of Chinese </label> 
@@ -157,6 +159,8 @@ Attendance not recorded.
 	</table>
 </div>
 {% endif %}
+
+{% endcomment %}
 
 {% if en.note %}
 <div class="well">

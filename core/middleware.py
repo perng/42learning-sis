@@ -1,5 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from sis.core.models import School
+from sis.core.views_admin import signup, new_school_info
 
 from sis.core.models import School, Role, Family
 from sis.core.views_admin import signup, edit_school_info
@@ -22,6 +24,9 @@ class GetSchool(object):
         if path.startswith(u'/admin/'):# admin interface, skip for all cases, auth handled by admin
             print 'admin'
             return None
+        return
+        print 'precess_view', view_func
+        #print request
         
         if  SIGNUP_SITE  in host: # school admin
             #if request.user.is_anonymous and request.method=='GET':

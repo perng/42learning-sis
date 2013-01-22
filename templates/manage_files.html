@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load core_tags %}
+
+
+{% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> 
+<link rel="stylesheet" type="text/css" href="{% static_path %}/css/jquery.cleditor.css" />
+
+<script type="text/javascript" src="{% static_path %}/js/jquery.cleditor.min.js"></script>
+
+{% endblock %}
+{% block title %} Assignment  {% endblock %}
+
+{% block content %}
+						
+<div class="teacher">
+    <h3 class="title"> Homework Files for Class: {{gi.category.classPtr.name}} </h3>
+
+    <form class="red" action='' method='post'>
+	 {% for file in files %}
+	 {{file}}
+	 {% endfor %}
+        {% csrf_token %}
+        <input class="button" type="submit" name="Update" value="Update" />
+    </form>
+</div>
+{% endblock %}

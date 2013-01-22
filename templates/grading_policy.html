@@ -33,6 +33,9 @@
 
 <a href="{% url 'edit_class' sem_id=theClass.semester.eid class_id=theClass.eid %}"> 
 Configure Class </a> 
+<button class="btn btn-warning" type="button">
+	<a href="/add_grading_category/{{theClass.eid}}"> Add category </a> <br/>
+</button> 
 </div>
 
 {% endblock %}

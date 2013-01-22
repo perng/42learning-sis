@@ -21,8 +21,6 @@ from sis.core.models import *
 from sis.core.forms import *
 from sis.core.util import *
 from sis.core.views_parent import cal_tuition
-from sis.core.views import  home
-from sis.settings import BASE_SITE
 
 from django.contrib.auth import REDIRECT_FIELD_NAME
 
@@ -65,17 +63,14 @@ def admin_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login
 
 
 #@admin_required
+@superuser_required
 def edit_semester(request, sem_id=0):
     if not request.user.role.see_admin():
         return render_to_response('admin_home.html', locals())
 
     sem = Semester.objects.get(id=id_decode(sem_id)) if sem_id else None
-    if not sem:
-        sem=Semester(school=request.session['school'])
-        sem.save()
     if request.method == 'POST':
         sform = SemesterForm(request.POST, instance=sem)
-        #sem.school=request.session['school']
         if sform.is_valid():
             sform.save()
             messages.info(request, 'Semester updated')
@@ -177,7 +172,7 @@ def classlist(request, sem_id):
 
 def create_default_grading_categories(theClass):
     order = 1
-    for name, weight, assignment in [('Quiz', 30, False), ('Exam', 40, False), ('Home Work', 30, True), ('Other', 0, False)]:
+    for name, weight, assignment in [('Quiz', 30, False), ('Exam', 40, False), ('Home Work', 30, True), ('Other1', 0, False), ('Other2', 0, False)]:
         #gc,created = GradingCategory.objects.get_or_create(classPtr=theClass, name=name )
         gcs = GradingCategory.objects.filter(classPtr=theClass, name=name )
         if len(gcs)>0:
@@ -185,7 +180,7 @@ def create_default_grading_categories(theClass):
             for g in gcs[1:]:
                 g.delete()
         else:
-            gc=GradingCategory(classPtr=theClass, name=name, order=order )
+            gc=GradingCategory(classPtr=theClass, name=name, order=order )        
         gc.order=order
         gc.weight=weight
         gc.hasAssignment=assignment
@@ -195,6 +190,7 @@ def create_default_grading_categories(theClass):
 
 
 #@admin_required
+@superuser_required
 def semester(request, sid):
     # 3 possible invokes --- simple get, add class, edit class
     if not request.user.role.see_admin():
@@ -218,6 +214,7 @@ def semester(request, sid):
             new_class = form.save()
             create_default_grading_categories(new_class)
         else:
+            print request.POST
             print 'form not valid'
             print 'non-field', form.non_field_errors()
             for f in form:
@@ -231,10 +228,7 @@ def semester(request, sid):
 def edit_class(request, sem_id, class_id=0):
     if not request.user.role.see_admin():
         return render_to_response('admin_home.html', locals())
-    print 'class_id', class_id,
 
-    create_class =  class_id
-    semester=Semester.objects.get(id=id_decode(sem_id))
     if class_id:
         theClass = Class.objects.get(id=id_decode(class_id))
     if request.method == 'POST':
@@ -246,10 +240,9 @@ def edit_class(request, sem_id, class_id=0):
         print 'post'
         if form.is_valid():
             print 'is_valid'
-            form.instance.semester=semester
             new_class = form.save()
             create_default_grading_categories(new_class)
-            return HttpResponseRedirect('/classlist/%s' % (new_class.semester.eid(),))
+            return HttpResponseRedirect('/classlist/%s' % (id_encode(new_class.semester.id),))
     else:
         if class_id:
             form = ClassForm(instance=theClass)
@@ -273,18 +266,19 @@ def sisadmin(request):
             admins = []
         print '--', staffs, admins
         for u in users:
-            is_staff, is_superuser = u.id in staffs, u.id in admins
+            is_staff, is_superuser = u.id in staffs, u.id in admins          
             u.is_staff, u.is_superuser = is_staff , is_superuser
             u.save()
     return my_render_to_response(request, 'sisadmin.html', locals())
 
 
 #@admin_required
+@superuser_required
 def family_tuition(request, fid):
     if not request.user.role.see_admin():
         return render_to_response('admin_home.html', locals())
     family = Family.objects.get(id=id_decode(fid))
-    semester = current_record_semester(request) # the semester open for registration
+    semester = current_record_semester() # the semester open for registration
     tuition, created = Tuition.objects.get_or_create(family=family, semester=semester)
 
     c = cal_tuition(family, semester, tuition.pay_credit)
@@ -297,15 +291,16 @@ def family_tuition(request, fid):
 
     return my_render_to_response(request, 'family_tuition.html', c)
 
-#@admin_required
+@superuser_required
 def unpaid_payment(request):
     return payment(request, filter='unpaid')
 
-#@admin_required
+@superuser_required
 def payment(request, filter=None):
-    if not request.user.role.see_admin():
-        return render_to_response('admin_home.html', locals())
-    semester = current_record_semester(request.session['school']) # the semester open for registration
+    semester = current_record_semester() # the semester open for registration
+    if not semester:
+        print 'no record semester, use the last one'
+        semester = Semester.objects.order_by('-id')[0]
     families = {}
     tuitions = Tuition.objects.filter(semester=semester)[:]
     if filter=='unpaid':
@@ -349,7 +344,6 @@ def active_directory(request, active_only=True):
         classes = semester.class_set.all()
     else:
         classes =[]
-    print 'classes', classes
     families = {}
     for c in classes:
         eds = EnrollDetail.objects.filter(classPtr=c)
@@ -405,10 +399,8 @@ def offered_classes(request):
     if not sem:
         sem= current_record_semester()
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
-    if not sem or not classes:
-        error=['No Class Information Yet. ']
     return my_render_to_response(request, 'offered_classes.html', locals())
-
+    
 @superuser_required
 def delete_class(request, class_id):
     theClass=Class.objects.get(id=id_decode(class_id))
@@ -418,8 +410,9 @@ def delete_class(request, class_id):
 
 @superuser_required
 def system_config(request):
-
+    
     if request.method== 'POST':
+        print request.POST
         for key in request.POST:
             x=key.split('-')
             if len(x)!=2:
@@ -432,7 +425,7 @@ def system_config(request):
                 c.set_value(request.POST[key])
             c.save()
     configs=Config.objects.all()
-
+            
     return my_render_to_response(request, 'sys_config.html', locals())
 
 
@@ -518,4 +511,4 @@ def class_enrollment(request):
     for c in classes:
         c.count = len(EnrollDetail.objects.filter(classPtr=c))
     return my_render_to_response(request, 'class_enrollment.html', locals())
-
+    
