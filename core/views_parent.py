@@ -1,5 +1,5 @@
 
-#import datetime, copy
+import datetime, copy
 #from django.template.loader import get_template
 #from django.template import *
 #from django.core import serializers
@@ -167,56 +167,68 @@ def enroll_form(request, errors=[]):
 def enroll(request):
     semester = current_reg_semester(request.session['school'])
     students = get_children(request)
-    print request.POST
     mclasses = Class.objects.filter(semester=semester, elective=False)
     eclasses = Class.objects.filter(semester=semester, elective=True)
-    for s in students:
-        s.eclass = s.mclass = None
-        for c in list(mclasses) + list(eclasses):
-            # c.student_set.remove(s)
-            EnrollDetail.objects.filter(student=s, classPtr=c).delete()
-
-
+#    for s in students:
+#        s.eclass = s.mclass = None
+#        for c in list(mclasses) + list(eclasses):
+#            # c.student_set.remove(s)
+#            EnrollDetail.objects.filter(student=s, classPtr=c).delete()
+    today=str(datetime.datetime.today())
     for k in request.POST:
             v = request.POST[k]
-            print k, v
+            #print k, v
             k = str(k)
-            if  'class' not in k or v == '---':
+            #if  'class' not in k or v == '---':
+            if  'class' not in k: 
                 continue
-            cid = id_decode(v)
-            theClass = Class.objects.get(id=cid)
-            sid = id_decode(k.split('-')[1])
-            student = lookup(sid, students)
+            if v == '---':
+                theClass = None
+            else:
+                cid = id_decode(v)
+                theClass = Class.objects.get(id=cid)
+            #sid = id_decode(k.split('-')[1])
+            student = lookup(id_decode(k.split('-')[1]), students)
+            history, created=RegistrationHistory.objects.get_or_create(student=student, semester=semester)
+            enrolles=EnrollDetail.objects.filter(student=student)
+            enrolles=[en for en in enrolles if en.classPtr.semester==semester]
             if k.startswith('classm'):
-                    if s.mclass:
-                        oldm = Class.objects.get(id=s.mclass.id)
-                        #oldm.student_set.remove(student)
-                        EnrollDetail.objects.filter(classPtr=oldm, student=student).delete()
-                    #theClass.student_set.add(student)
-                    ed = EnrollDetail(student=student, classPtr=theClass)
-                    ed.save()
-                    student.mclass=theClass
-                    theClass.save()
-
-            elif k.startswith('classe'):
-                    if s.eclass:
-                        oldm = Class.objects.get(id=s.eclass.id)
-                        #oldm.student_set.remove(student)
-                        EnrollDetail.objects.filter(classPtr=oldm, student=student).delete()
-                    #theClass.student_set.add(student)
-                    ed = EnrollDetail(student=student, classPtr=theClass)
-                    ed.save()
-                    student.eclass=theClass
-                    #print 'add class', student, theClass
-                    theClass.save()
+                elective=False
+            else:
+                elective=True
+                
+            ens=[e for e in enrolles if e.classPtr.elective==elective]
+            if len(ens)==0:
+                if theClass:
+                    history.history+='%s: Enrolled class %s.\n' %(today, str(theClass))
+                    en=EnrollDetail(student=student,  classPtr=theClass)
+                    en.save()
+                else:
+                    pass
+            else:
+                oldm=ens[0].classPtr
+                if theClass:                        
+                    if oldm.id==theClass.id:
+                        pass
+                    else:
+                        history.history+= '%s: Dropped %s, Enrolled %s.\n' % (today, str(oldm), str(theClass))
+                        ens[0].delete()
+                        en=EnrollDetail(student=student,  classPtr=theClass)
+                        en.save()
+                else:
+                    history.history+= '%s: Dropped %s.\n' % (today, str(oldm),)
+                    ens[0].delete()
+            history.save()
     errors=[]
     for s in students:
-        print s, s.mclass, s.eclass
-        if s.mclass:
-            if s.mclass.mandate and ( ('eclass' not in s.__dict__) or s.mclass.mandate!= s.eclass):
-                errors.append("%s is required to take %s when taking %s" % (s, s.mclass.mandate, s.mclass))
-            elif s.mclass and s.mclass.elective_required and not s.eclass:
-                errors.append("%s is required to take an elective class when taking %s." % (s, s.mclass ))
+        enrolles=EnrollDetail.objects.filter(student=student, )
+        enrolledClasses=[e.classPtr for e in enrolles if e.classPtr.semester==semester]
+        for c in enrolledClasses:
+            if c.elective==False:
+                if c.mandate and  c.mandate not in  enrolledClasses:
+                    errors.append("%s is required to take %s when taking %s" % (s, c.mandate, c))
+                if c.elective_required and not [cc for cc in enrolledClasses if cc.elective]:
+                    errors.append("%s is required to take an elective class when taking %s." % (s, c ))
 
     if errors:    
         return enroll_form(request,errors)

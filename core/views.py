@@ -18,6 +18,10 @@ def home(request):
     #    return HttpResponseRedirect('/accounts/login/?next=/')
 
     request.session.set_expiry(0)
+    if request.user.is_anonymous and request.method=='GET':
+        print 'anonymous'
+        return HttpResponseRedirect('/accounts/login')
+
     school=request.session['school']
     semester=current_record_semester(school)
     try:
@@ -74,6 +78,8 @@ def change_view(request, view):
 
 
 
-
+def schools(request):
+    schools= School.objects.all()
+    return render_to_response('schools.html', locals())
 
 

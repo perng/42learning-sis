@@ -8,5 +8,5 @@ from sis.core.models import *
 
 for model in [School, Role,Family, Semester, Class, Student, EnrollDetail,Award, 
               GradingCategory,GradingItem,Score,ClassSession,Attendance,Fee, FeeConfig,
-              Tuition,Config ]:
+              Tuition,Config, RegistrationHistory ]:
     admin.site.register(model)

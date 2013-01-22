@@ -17,7 +17,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.admin import widgets
 import pprint
-
 from sis.core.models import *
 from sis.core.forms import *
 from sis.core.util import *
@@ -306,11 +305,7 @@ def unpaid_payment(request):
 def payment(request, filter=None):
     if not request.user.role.see_admin():
         return render_to_response('admin_home.html', locals())
-
     semester = current_record_semester(request.session['school']) # the semester open for registration
-    #if not semester:
-    #    print 'no record semester, use the last one'
-    #    semester = Semester.objects.order_by('-id')[0]
     families = {}
     tuitions = Tuition.objects.filter(semester=semester)[:]
     if filter=='unpaid':
@@ -456,7 +451,7 @@ def edit_school_info(request, schid=False):
             new=True
             school=request.session['school']=School()
             form = SchoolForm(request.POST, instance=school)
-        if form.is_valid():
+        if form.is_valid():            
             form.save()
             role,created=Role.objects.get_or_create(user=request.user, school=school)
             if created:
@@ -467,7 +462,7 @@ def edit_school_info(request, schid=False):
                 family.schools.add(school)
             return HttpResponseRedirect('/')
         else:
-            print  'form not valid', dir(form)
+            print  'form not valid', form.errors
     else: # GET
         try:
             form= SchoolForm(instance=school)

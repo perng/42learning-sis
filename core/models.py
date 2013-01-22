@@ -23,13 +23,17 @@ SEMESTER_CHOICES = (('Fall', 'Fall'), ('Spring', 'Spring'), ('Summer', 'Summer')
 STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
 
 class SISModel:
+
     def eid(self):
         self.cid= id_encode(self.id)
         return self.cid
 
 class School(models.Model, SISModel):
     name = models.CharField(max_length=30, verbose_name='School Name')
+    
+    use_own_domain = models.BooleanField()
     domain = models.CharField( max_length=100)
+    short_name = models.CharField(max_length=40, verbose_name="Short identifier for the school. e.g. 'nwcs'", blank=True, default='')
 
     chineseName = models.CharField(max_length=30, verbose_name='Chinese Name', blank=True, default='')
     location = models.TextField(null=True, blank=True)
@@ -45,6 +49,7 @@ class School(models.Model, SISModel):
     banner=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
     logo=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
     admin=models.ForeignKey(User, null=True)
+    note = models.TextField(null=True, blank=True)
 
 
 #    def det_id(self):
@@ -65,6 +70,7 @@ class Semester(models.Model, SISModel):
     recordStart = models.DateField(null=True, verbose_name='Score recording start data', help_text='Format: YYYY-MM-DD')
     recordEnd = models.DateField(null=True, verbose_name='Score recording end data', help_text='Format: YYYY-MM-DD')
     copyFrom = models.ForeignKey('Semester', null=True, blank=True, related_name="previous", help_text="Copy semester setting from") # The previous semester with same classes
+    note = models.TextField(null=True, blank=True)
 
     def __repr__(self):
         return self.schoolYear + ' ' + self.semester
@@ -84,6 +90,8 @@ class Role(models.Model, SISModel):
     write_family = models.BooleanField(default=False)
     view_registration = models.BooleanField(default=False)
     write_registration = models.BooleanField(default=False)
+    note = models.TextField(null=True, blank=True)
+    
     def see_admin(self):
         return self.view_all or self.write_all or self.view_registration or self.write_registration
     class Meta:
@@ -111,6 +119,7 @@ class Family(models.Model, SISModel):
     parent2ChineseFullName = models.CharField(blank=True, max_length=20, help_text='Chinese Name')
     participation = models.CharField(blank=True, max_length=20, help_text='Participation')
     enroll = models.ManyToManyField('Semester', through='Tuition')
+    note = models.TextField(null=True, blank=True)
 
     def cache(self):
         self._cached_copy=copy.deepcopy(vars(self))
@@ -177,6 +186,7 @@ class Student(models.Model, SISModel):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     family = models.ForeignKey(Family)
     enroll = models.ManyToManyField('Class'  , through='EnrollDetail')
+    note = models.TextField(null=True, blank=True)
  
     def __str__(self):
         return self.firstName + ' ' + self.lastName
@@ -200,10 +210,30 @@ class Class(models.Model, SISModel):
     elective_required=models.BooleanField(verbose_name="Elective req'd", default=False, help_text='Required to take an elective class')
     #gradingCategories = models.ManyToManyField('GradingCategory')
     total_ready = models.BooleanField(default=False)
-    highest = models.FloatField(null=True)
-    lowest = models.FloatField(null=True)
-    average = models.FloatField(null=True)
-    median = models.FloatField(null=True)
+    highest = models.FloatField(null=True, blank=True)
+    lowest = models.FloatField(null=True, blank=True)
+    average = models.FloatField(null=True, blank=True)
+    median = models.FloatField(null=True, blank=True)
+    
+    dob_earliest = models.DateField(null=True)
+    dob_latest = models.DateField(null=True)
+    classroom = models.TextField(null=True, blank=True)
+
+    sessionPerWeek = models.IntegerField(null=True, default=1)
+    classtime1FromHour = models.IntegerField(null=True)
+    classtime1FromMinute = models.IntegerField(null=True)
+    classtime1ToHour = models.IntegerField(null=True)
+    classtime1ToMinute = models.IntegerField(null=True)
+    classtime2FromHour = models.IntegerField(null=True)
+    classtime2FromMinute = models.IntegerField(null=True)
+    classtime2ToHour = models.IntegerField(null=True)
+    classtime2ToMinute = models.IntegerField(null=True)
+    classtime3FromHour = models.IntegerField(null=True)
+    classtime3FromMinute = models.IntegerField(null=True)
+    classtime3ToHour = models.IntegerField(null=True)
+    classtime3ToMinute = models.IntegerField(null=True)
+    note = models.TextField(null=True, blank=True)
+    
     def __str__(self):
         return self.name
     def num_students(self):
@@ -293,6 +323,7 @@ class Award(models.Model, SISModel):
     classPtr = models.ForeignKey(Class, null=True)
     awardDescription = models.TextField(blank=False)
     deleted = models.BooleanField(default=False)
+    note = models.TextField(null=True, blank=True)
 
 class GradingCategory(models.Model, SISModel):
     classPtr = models.ForeignKey(Class)
@@ -300,6 +331,8 @@ class GradingCategory(models.Model, SISModel):
     order = models.IntegerField(null=True)
     weight = models.IntegerField()
     hasAssignment = models.BooleanField(default=False)
+    description= models.TextField(null=True)
+
     def __str__(self):
         return self.classPtr.name+' '+self.name
 
@@ -399,11 +432,13 @@ class Score(models.Model, SISModel):
     student = models.ForeignKey(Student)
     gradingItem = models.ForeignKey(GradingItem)
     score = models.FloatField(null=True)
+    note= models.TextField(null=True)
  
 
 class ClassSession(models.Model, SISModel):
     classPtr = models.ForeignKey(Class)
     date = models.DateField(null=True, verbose_name='Date', help_text='Format: YYYY-MM-DD')
+    note= models.TextField(null=True)
  
 ATT_CHOICES = (('-', '-'), ('P', 'P'), ('A', 'A'), ('L', 'L'), ('E', 'E'))
 
@@ -411,6 +446,7 @@ class Attendance(models.Model, SISModel):
     student = models.ForeignKey(Student)
     session = models.ForeignKey(ClassSession)
     attended = models.CharField(max_length=6, default='', choices=ATT_CHOICES)
+    note= models.TextField(null=True)
  
 class Fee(models.Model, SISModel):
     ''' Difference only in base fee'''
@@ -421,7 +457,8 @@ class Fee(models.Model, SISModel):
     misc = models.FloatField(default=0)
     mdiscount = models.FloatField(default=0, help_text='Discount when taking with a language class')
     classPtr = models.OneToOneField(Class)
- 
+    note= models.TextField(null=True)
+
 
 class FeeConfig(models.Model, SISModel):
     semester = models.OneToOneField(Semester)
@@ -433,6 +470,7 @@ class FeeConfig(models.Model, SISModel):
     familyFee = models.FloatField(default=0, help_text='Registration Fee')
     lateFee = models.FloatField(default=0, help_text='Late Fee')
     lateDate = models.DateField(null=True, verbose_name='Late registration start date', help_text='Format: YYYY-MM-DD')
+    note= models.TextField(null=True)
 
     def get_discount(self, nStudent):
         if nStudent == 1:
@@ -456,6 +494,7 @@ class Tuition(models.Model, SISModel):
     checkno = models.CharField(max_length=40, null=True, verbose_name='PayPal/check number')
     pay_date = models.DateField(null=True, verbose_name='Payment confirmed date', help_text='Format: YYYY-MM-DD')
     pay_credit = models.BooleanField(help_text="Pay by Credit Card")
+    note=models.TextField(blank=True, null=True)
 
     def fully_paid(self):
         return self.paid == self.due
@@ -530,3 +569,11 @@ class Config(models.Model, SISModel):
             self.emailValue = str(value)
 
 
+class RegistrationHistory(models.Model, SISModel):
+    student=models.ForeignKey(Student)
+    semester=models.ForeignKey(Semester)
+    history=models.TextField(blank=True)
+    
+    def __str__(self):
+        return self.student.firstName+' '+self.student.lastName+'--'+self.semester.__str__()
+    

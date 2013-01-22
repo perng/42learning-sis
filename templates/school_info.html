@@ -22,14 +22,14 @@ School Information
     {% else %} 
         <form method="POST" action='{% url 'new_school' %}'> 
     {% endif %}
-      School Name: {{form.name}} <br/> 
-      Domain Name: {{form.domain}} <br/> 
-      Alternative Name: {{form.chineseName}} <br/> 
-      Mail Stop: {{form.mailStop}} <br/> 
-      Phone: {{form.phone}} <br/> 
-      Policy: {{form.policy}} <br/> 
-      Banner: {{form.banner}} <br/> 
-      Logo: {{form.log}} <br/> 
+      School Name: {{form.name}} {{form.name.errors}} <br/> 
+      Domain Name: {{form.domain}} {{form.domain.errors}} <br/> 
+      Alternative Name: {{form.chineseName}}{{form.chineseName.errors}} <br/> 
+      Mail Stop: {{form.mailStop}} {{form.mailStop.errors}}<br/> 
+      Phone: {{form.phone}} {{form.phone.errors}}<br/> 
+      Policy: {{form.policy}}{{form.policy.errors}} <br/> 
+      Banner: {{form.banner}}{{form.banner.errors}} <br/> 
+      Logo: {{form.log}}{{form.log.errors}} <br/> 
         <input type='submit' name="Update" value="Update"/> 
         {% csrf_token %}
 
