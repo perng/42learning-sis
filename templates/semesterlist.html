@@ -2,25 +2,22 @@
 {% load core_tags %}
 {% load url from future %}
 
-
-{% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
-
-{% block title %}  Semesters {% endblock %}
+{% block theme %} <link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block title %}  Semester Setup {% endblock %}
 {% block content %} 
-<div class="parent">
-    <h2 class="title">Manage Students</h2>
-    <div>
-        <table class="green_table table-striped">
-            <tr>
-		<th class="btn-green"><i class="icon-file"></i> Semester </th>
-
-            </tr>
-            {% for semester in semesters %}
-            <tr> <td> <a href="/semesterswitch/{{semester.eid}}"> {{semester}} </a> 
-            </td> </tr>
-            {% endfor %}
-        </table>
-    </div>
+<div class="admin2">
+    <h2 class="title">Managed Semesters and Classes</h2>
+    <table class="blue_table">
+        <tr>
+            <th> Semester</th><th></th><th></th>
+        </tr>
+        {% for sem in semesters %}
+        <tr>
+            <td><a href='/edit_semester/{{sem.eid }}'> {{sem.schoolYear }} {{sem.semester}} </a> </td> 
+            <td><a href='{% url 'classlist' sem_id=sem.eid %}'> Manage Classes </a> </td> 
+            <td><a href='/grade_summaries/{{sem.eid}}'> Dean's Report </a> </td> 
+        </tr>{% endfor %}
+    </table>
+    <a class="adminbutton" href='{% url 'edit_semester' %}'> Add new semester </a>
 </div>
 {% endblock %} 
-
