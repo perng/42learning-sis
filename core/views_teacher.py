@@ -389,7 +389,7 @@ def evaluation_comment(request, enrolldetail_id):
         return my_render_to_response(request, 'evaluation_comment.html', locals())
     en.note = request.POST['comment']
     en.save()
-    return prepare_report(request, en.classPtr.eid())
+    return report_summary(request, en.classPtr.eid())
 
 att_dict={'P':'Present', 'A':'Absent', 'L':'Late'}
 
@@ -534,3 +534,10 @@ def report_summary(request, class_id):
 
 
     return my_render_to_response(request, 'report_summary.html', locals())
+
+@login_required
+def editpastrecords(request):
+    teached = request.user.get_profile().teached()
+    
+    return my_render_to_response(request, 'editpastrecords.html', locals())
+

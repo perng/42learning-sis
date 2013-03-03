@@ -80,6 +80,13 @@ class Semester(models.Model):
     class Meta:
         unique_together = (('schoolYear', 'semester'))
 
+    def copy_semester(self):
+        if not self.copyFrom:
+            assert False
+            return
+        for theClass in  self.copyFrom.class_set.all():
+            theClass.copy_class(self)
+
 
 STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
 class Family(models.Model):
@@ -133,6 +140,15 @@ class Family(models.Model):
         except:
             return []
         return classes
+    def teached(self):
+        current_semester = current_record_semester()
+        try:
+            classes = list(Class.objects.filter( Q(headTeacher=self.user) | Q(assocTeacher1=self.user) | Q(assocTeacher2=self.user)).exclude(semester=current_semester))
+            classes.sort(key=attrgetter('id'))
+        except:
+            return []
+        return classes
+
     def is_parent(self):
         return self.student_set.all()
     def is_teacher(self):
@@ -197,6 +213,26 @@ class Class(models.Model):
     lowest = models.FloatField(null=True)
     average = models.FloatField(null=True)
     median = models.FloatField(null=True)
+
+    def copy_class(self, semester):
+        theClass = self
+        enrolls = self.enrolldetail_set.all()
+        categories = self.gradingcategory_set.all()
+        theClass.pk = None
+        theClass.semester=semester
+        theClass.total_ready = False
+        theClass.highest=theClass.lowest=theClass.average=theClass.median=0.0 
+        theClass.save() # get a new pk 
+        for en in enrolls:
+            en.pk=None
+            en.classPtr=theClass
+            en.save()
+        for gc in categories:
+            gc.pk=None
+            gc.classPtr=theClass
+            gc.save()
+    
+
     def __str__(self):
         return self.name
     def num_students(self):

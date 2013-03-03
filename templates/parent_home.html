@@ -16,6 +16,7 @@
 		<th class="btn-green"><i class="icon-table"></i> Check</th> 
 		<th class="btn-green"><i class="icon-file"></i> Assignment </th>
 		<th class="btn-green"><i class="icon-file"></i> Report </th>
+		<th class="btn-green"><i class="icon-file"></i> Past Report </th>
 
             </tr>
             {% for student in students %}
@@ -34,6 +35,8 @@
                     {% endfor %}
 
                 </td>
+		<td> <a href="/pastreports/{{student.eid}}"> Past Report </a> 
+		</td>
             </tr>
             {% endfor %}
         </table>

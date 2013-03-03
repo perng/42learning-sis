@@ -28,6 +28,7 @@ urlpatterns = patterns('',
      url(r'^student_score/(?P<sid>.+)$', student_score, name='student_score'),
      url(r'^review_tuition_paypal$', review_tuition_paypal, name='review_tuition_paypal'),
      url(r'^review_tuition_check$', review_tuition_check, name='review_tuition_check'),
+     url(r'^pastreports/(?P<sid>.+)$', pastreports, name='student_score'),
 
      # Teacher
 
@@ -70,6 +71,9 @@ urlpatterns = patterns('',
 
      url(r'^grade_summaries/(?P<sem_id>[0-9]+)$', report_summaries, name='report_summaries'),
      url(r'^grade_summary/(?P<class_id>[0-9]+)$', report_summary, name='report_summary'),
+     #url(r'^semesterswitch/(?P<sem_id>[0-9]+)$', semesterswitch, name='semesterswitch'),
+     #url(r'^semesterlist', semesterlist, name='semesterlist'),
+     url(r'^editpastrecords', editpastrecords, name='editpastrecords'),
      # Admin
      url(r'^semester$', semesters, name='semesters'),
      url(r'^edit_semester$', edit_semester, name='edit_semester'),

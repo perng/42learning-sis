@@ -5,18 +5,21 @@
 
 {% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
 
-{% block title %}  Semesters {% endblock %}
+{% block title %} {{student}} {% endblock %}
 {% block content %} 
 <div class="parent">
-    <h2 class="title">Manage Students</h2>
+    <h2 class="title">Report for {{student}} </h2>
     <div>
         <table class="green_table table-striped">
             <tr>
 		<th class="btn-green"><i class="icon-file"></i> Semester </th>
+		<th class="btn-green"><i class="icon-file"></i> Class </th>
 
             </tr>
-            {% for semester in semesters %}
-            <tr> <td> <a href="/semesterswitch/{{semester.eid}}"> {{semester}} </a> 
+            {% for en in ens %}
+            <tr> 
+		<td> {{en.classPtr.semester}} </td> 
+           <td> <a href="/report_card/{{en.eid}}"> {{en.classPtr}}   {% ifnotequal True en.classPtr.total_ready %} (Progress Report) {% endifnotequal %} </a> 
             </td> </tr>
             {% endfor %}
         </table>

@@ -37,9 +37,8 @@ def home(request):
 
     messages.add_message(request, messages.ERROR, 'Hello world.')
     messages.success(request, 'VIEW:'+view, fail_silently=False)
-    print dir(messages)
-    print 'get_messages', [m for m in messages.get_messages(request)]
-    print 'messages',messages
+    #print 'get_messages', [m for m in messages.get_messages(request)]
+    #print 'messages',messages
 
     if view == 'parent':
         for student in students:
