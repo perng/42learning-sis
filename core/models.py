@@ -226,6 +226,8 @@ class Class(models.Model):
         for en in enrolls:
             en.pk=None
             en.classPtr=theClass
+            en.final_score=en.rank=None
+            en.note=''
             en.save()
         for gc in categories:
             gc.pk=None
