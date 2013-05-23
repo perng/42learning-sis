@@ -16,7 +16,7 @@
     $(function() {
         $( "#assign_date" ).datepicker();
         $( "#due_date" ).datepicker();
-        $( "#due_date" ).datepicker( "option", "dateFormat", "mm-dd-yy" ).val("{{gi.duedate|date:"m-d-y"}}");
+        $( "#due_date" ).datepicker( "option", "dateFormat", "mm-dd-yy" ).val("{{gi.duedate|date:"m-d-Y"}}");
 	 $("#Description").cleditor();	
     });
 </script>

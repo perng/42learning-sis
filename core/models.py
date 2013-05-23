@@ -1,4 +1,4 @@
-import datetime,base64,os
+import datetime,base64,os,copy
 from subprocess import Popen, PIPE
 
 from django.db import models
@@ -7,7 +7,8 @@ from django.db.models import Q
 from operator import  attrgetter #, itemgetter
 
 from django.contrib.localflavor.us.models import  PhoneNumberField #, USPostalCodeField
-from sis.core.util import id_encode, median
+from sis.core.util import id_encode, median #, det_encode
+
 
 
 
@@ -20,7 +21,46 @@ MONTH_CHOICES = ((1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr'), (5, 'May'), (6,
 DAY_CHOICES = tuple([(n, n) for n in range(1, 32)])
 SEMESTER_CHOICES = (('Fall', 'Fall'), ('Spring', 'Spring'), ('Summer', 'Summer'))
 
+
+class School(models.Model):
+    name = models.CharField(max_length=30, verbose_name='School Name')
+    domain = models.CharField( max_length=100, primary_key=True)
+
+    chineseName = models.CharField(max_length=30, verbose_name='Chinese Name', blank=True, default='')
+    location = models.TextField(null=True, blank=True)
+    mailStop = models.TextField(null=True, blank=True)
+    phone = PhoneNumberField(help_text='Home Phone',null=True, blank=True)
+
+    #adminEmail = models.EmailField(blank=True, help_text='Principal email')
+    #deanEmail = models.EmailField(blank=True, help_text='Dean email')
+    #registrarEmail = models.EmailField(blank=True, help_text='Registrar email')
+    #treasurerEmail = models.EmailField(blank=True, help_text='Treasurer email')
+    policy = models.TextField(null=True, blank=True)
+    createDate = models.DateField(auto_now_add=True)
+    banner=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
+    logo=models.FileField(upload_to = 'school%y%m%d%H%M%S/', null=True, blank=True)
+    admin=models.ForeignKey(User, null=True)
+
+    def eid(self):
+        return id_encode(self.id)
+
+    #def det_id(self):
+    #    return det_encode(self.id)
+    def __repr__(self):
+        return self.name
+'''
+class Role(models.Model):
+    user= models.OneToOneField(User)
+    school = models.ForeignKey(School)
+    is_admin = models.BooleanField(default=False)
+    is_dean = models.BooleanField(default=False)
+    is_registrar = models.BooleanField(default=False)
+    is_staff1 = models.BooleanField(default=False)
+    is_staff2 = models.BooleanField(default=False)
+'''
+
 class Semester(models.Model):
+    #school = models.ForeignKey(School)
     schoolYear = models.CharField(max_length=20, choices=SEMESTER_YEAR_CHOICES)
     semester = models.CharField(max_length=20, choices=SEMESTER_CHOICES)
     need_enroll = models.BooleanField()   # If enrollment is needed. set false to 2nd semester which has not change
@@ -40,9 +80,17 @@ class Semester(models.Model):
     class Meta:
         unique_together = (('schoolYear', 'semester'))
 
+    def copy_semester(self):
+        if not self.copyFrom:
+            assert False
+            return
+        for theClass in  self.copyFrom.class_set.all():
+            theClass.copy_class(self)
+
 
 STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
 class Family(models.Model):
+    #schools = models.ManyToManyField(School)    
     user = models.OneToOneField(User)
     staff_role = models.CharField(max_length=50)
     streetNumber = models.CharField(max_length=50, help_text='Street')
@@ -61,6 +109,26 @@ class Family(models.Model):
     participation = models.CharField(blank=True, max_length=20, help_text='Participation')
     enroll = models.ManyToManyField('Semester', through='Tuition')
 
+    def cache(self):
+        self._cached_copy=copy.deepcopy(vars(self))
+    
+    def save(self):
+        attrs=[]
+        if self.id:
+            
+            for k,v in vars(self).iteritems():
+                if k in ['user_id','id'] or k.startswith('_'):
+                    continue
+                try:
+                    if v==self._cached_copy[k]:
+                        attrs.append((k,v,None))
+                    else:
+                        attrs.append((k,v, self._cached_copy[k]))
+                except:
+                    attrs.append((k,v, self._cached_copy[k]))
+        print 'attrs', attrs
+        models.Model.save(self)
+
     def eid(self):
         return id_encode(self.id)
 
@@ -72,6 +140,15 @@ class Family(models.Model):
         except:
             return []
         return classes
+    def teached(self):
+        current_semester = current_record_semester()
+        try:
+            classes = list(Class.objects.filter( Q(headTeacher=self.user) | Q(assocTeacher1=self.user) | Q(assocTeacher2=self.user)).exclude(semester=current_semester))
+            classes.sort(key=attrgetter('id'))
+        except:
+            return []
+        return classes
+
     def is_parent(self):
         return self.student_set.all()
     def is_teacher(self):
@@ -136,6 +213,28 @@ class Class(models.Model):
     lowest = models.FloatField(null=True)
     average = models.FloatField(null=True)
     median = models.FloatField(null=True)
+
+    def copy_class(self, semester):
+        theClass = self
+        enrolls = self.enrolldetail_set.all()
+        categories = self.gradingcategory_set.all()
+        theClass.pk = None
+        theClass.semester=semester
+        theClass.total_ready = False
+        theClass.highest=theClass.lowest=theClass.average=theClass.median=0.0 
+        theClass.save() # get a new pk 
+        for en in enrolls:
+            en.pk=None
+            en.classPtr=theClass
+            en.final_score=en.rank=None
+            en.note=''
+            en.save()
+        for gc in categories:
+            gc.pk=None
+            gc.classPtr=theClass
+            gc.save()
+    
+
     def __str__(self):
         return self.name
     def num_students(self):
@@ -156,13 +255,40 @@ class Class(models.Model):
         return ', '.join([s.firstName+' '+s.lastName for s in self.student_set.all()])
     def teachers(self):
         t=''
-        if self.headTeacher:
+        try:
             t+= self.headTeacher.get_profile().parent1_fullname()
-        if self.assocTeacher1:
+        except:
+            pass
+        try: 
+            assert not self.assocTeacher1.is_superuser
             t+= ', '+self.assocTeacher1.get_profile().parent1_fullname()
-        if self.assocTeacher2:
+        except:
+            pass 
+        try: 
+            assert not self.assocTeacher2.is_superuser
             t+= ', '+self.assocTeacher2.get_profile().parent1_fullname()
+        except:
+            pass
         return t
+    def teacher_emails(self):
+        emails=[]
+        try:
+            emails.append( self.headTeacher.email)
+            emails.append(self.headTeacher.get_profile().altEmail)
+        except:
+            pass
+        try:
+            emails.append(self.assocTeacher1.email)
+            emails.append(self.assocTeacher1.get_profile().altEmail)
+        except:
+            pass
+        try:
+            emails.append( self.assocTeacher2.email)
+            emails.append(self.assocTeacher2.get_profile().altEmail)
+        except:
+            pass
+        return ','.join(emails)
+        
 
     def calculate_total(self):
         categories = self.gradingcategory_set.all()
@@ -172,9 +298,14 @@ class Class(models.Model):
             s.ed.final_score = 0
             for c in categories:
                 gis = c.gradingitem_set.all()
+                if not gis:
+                   continue
                 for gi in gis:
-                    gi.calculate_total()
-                    s.ed.final_score += c.weight * sum([sc.score for sc in Score.objects.filter(student=s, gradingItem=gi)]) / len(gis) / 100
+                    #gi.calculate_total()
+                    try:
+                        s.ed.final_score += c.weight * sum([sc.score for sc in Score.objects.filter(student=s, gradingItem=gi)]) / len(gis) / 100
+                    except:
+                        pass
             s.save()
         scores = [s.ed.final_score for s in students]
         scores.sort(reverse=True)
@@ -218,6 +349,10 @@ class GradingCategory(models.Model):
         return self.cid
     def __str__(self):
         return self.classPtr.name+' '+self.name
+    #def subtotal(self, student):
+    #    gis=GradingItem.objects.filter(category=self)
+    #    scores=[Score.objects.get(gradingItem=gi, student=student).score for gi in gis]
+    #    return sum(scores)/float(len(scores))
     
 class GradingItem(models.Model):
     name = models.CharField(max_length=64)
@@ -230,6 +365,9 @@ class GradingItem(models.Model):
     median = models.FloatField(null=True)
     assignmentDescr = models.TextField(blank=True, default='')
     duedate = models.DateField(null=True, verbose_name='Due date', )
+
+    def the_date(self):
+        return  self.date if self.date else self.duedate
 
     def calculate_statistics(self):
         num_students= len(self.students)
@@ -298,8 +436,8 @@ class GradingItem(models.Model):
 
 
     def download_url(self):
-        path=self.download_path()
-        path=path.replace('\\','')
+        path=self.download_path().replace('\\','')
+
         b='http://homework.nwcsny.org/index.php?folder=' 
         
         encoded_path=base64.b64encode(path)

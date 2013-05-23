@@ -75,7 +75,8 @@ def semesters(request):
 
     sform = SemesterForm(request.POST)
     if sform.is_valid():
-        sform.save()
+        new_sem=sform.save()
+        new_sem.copy_semester()
     else:
         print 'form not valid'
     return my_render_to_response(request, 'semesters.html', locals())
@@ -137,7 +138,7 @@ def classlist(request, sem_id):
 
 def create_default_grading_categories(theClass):
     order = 1
-    for name, weight, assignment in [('Quiz', 30, False), ('Exam', 40, False), ('Home Work', 30, True), ('Other', 0, False)]:
+    for name, weight, assignment in [('Quiz', 30, False), ('Exam', 40, False), ('Home Work', 30, True), ('Other1', 0, False), ('Other2', 0, False)]:
         #gc,created = GradingCategory.objects.get_or_create(classPtr=theClass, name=name )
         gcs = GradingCategory.objects.filter(classPtr=theClass, name=name )
         if len(gcs)>0:
@@ -187,6 +188,36 @@ def semester(request, sid):
 
 
 @superuser_required
+def edit_class(request, sem_id, class_id=0):
+
+    create_class =  class_id
+    semester=Semester.objects.get(id=id_decode(sem_id))
+    if class_id:
+        theClass = Class.objects.get(id=id_decode(class_id))
+    if request.method == 'POST':
+        if class_id:
+            #theClass = Class.objects.get(id=int(class_id))
+            form = ClassForm(request.POST  , instance=theClass)
+        else:
+            form = ClassForm(request.POST)
+        print 'post'
+        if form.is_valid():
+            print 'is_valid'
+            form.instance.semester=semester
+            new_class = form.save()
+            create_default_grading_categories(new_class)
+            return HttpResponseRedirect('/classlist/%s' % (new_class.semester.eid(),))
+    else:
+        if class_id:
+            form = ClassForm(instance=theClass)
+        else:
+            form = ClassForm()
+
+    return my_render_to_response(request,'edit_class.html', locals())
+
+
+'''
+@superuser_required
 def edit_class(request, class_id=0):
     print 'class_id', class_id
 
@@ -211,6 +242,8 @@ def edit_class(request, class_id=0):
             form = ClassForm()
 
     return my_render_to_response(request,'edit_class.html', locals())
+
+'''
 
 @login_required
 def sisadmin(request):
@@ -345,7 +378,7 @@ def teacher_directory(request):
 
 
 def offered_classes(request):
-    sem = current_reg_semester()
+    sem = current_record_semester()
     if not sem:
         sem= current_record_semester()
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
@@ -380,7 +413,7 @@ def system_config(request):
 
 @superuser_required 
 def class_enrollment(request):
-    sem = current_reg_semester()
+    sem = current_record_semester()
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
     for c in classes:
         c.count = len(EnrollDetail.objects.filter(classPtr=c))

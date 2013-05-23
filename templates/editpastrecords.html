@@ -6,18 +6,19 @@
 {% block title %}  Teacher's Home {% endblock %}
 {% block content %} 
 <div class="teacher">
-    <h2 class="title">Managed Classes</h2><br />
+    <h2 class="title">Past Semesters</h2><br />
     <table class="red_table">
         <tr>
+            <th><i class="icon-book"></i> Semester </th>
             <th><i class="icon-book"></i> Class </th>
-	    <th><i class="icon-group"></i> Record</th>
-            <th><i class="icon-list-alt"></i> Assign</th>
+	    <th><i class="icon-group"></i> Attendance</th>
 	    <th><i class="icon-ok-circle"></i> Record Grading</th>
 	    <th><i class="icon-phone"></i> Student</th>
 	    <th><i class="icon-table"></i> Report</th>
         </tr>
-        {% for c in teaches %}
+        {% for c in teached %}
         <tr>
+            <td> {{c.semester}} </td>
             {% if c.recordGrade %} 
             <td><a href='{% url 'grading_policy' cid=c.eid%}' style="text-decoration:underline;">{{c.name}}</a></td>  
             {% else %}
@@ -25,15 +26,10 @@
             {% endif %}
             <td> 
                 {% if c.recordAttendance %} 
-                <a href='{% url 'record_attendance' class_id=c.eid  %}' style="text-decoration:underline;"> Attendance </a> 
+                <a href='{% url 'record_attendance' class_id=c.eid  %}' style="text-decoration:underline;"> Record </a> 
                 {% else %}
                 -
                 {% endif %} 
-            </td> 
-            <td> 
-                {% for gc in c.assignment_categories %}
-                <a href='{% url 'assignments' cat_id=gc.eid %}' style="text-decoration:underline;"> {{ gc.name }} <br/></a> 
-                {% endfor %}
             </td> 
             <td>
                 {% if c.recordGrade %} 
@@ -56,7 +52,6 @@
         </tr> 
         {% endfor %}
     </table> 
-   <a href="/editpastrecords"> Past Semesters </a>
 </div>
 {% endblock %} 
 

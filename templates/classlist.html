@@ -33,7 +33,7 @@
                 <th>Elective<br/>discount </th> 
             </tr>
             {% for c in classes %}
-            <tr> <td> <a href='{% url 'edit_class' c.eid %}'>{{c}}</a>  </td>
+            <tr> <td> <a href='/edit_class/{{sem.eid}}/{{c.eid}}'>{{c}}</a>  </td>
                 <td>$<input type="text" name="basecc_{{c.eid}}" value="{{c.fee.basecc}}" id="id_basecc_{{c.eid}}" /></td>
                 <td>$<input type="text" name="basechk_{{c.eid}}" value="{{c.fee.basechk}}" id="id_basechk_{{c.eid}}" /></td>
                 <td>$<input type="text" name="book_{{c.eid}}" value="{{c.fee.book}}" id="id_book_{{c.eid}}" /></td>
@@ -54,7 +54,7 @@
     </form>
     {% endif %}
 
-    <a href='{% url 'edit_class' %}'> Add new class </a>
+    <a href='{% url 'add_class' sem_id=sem.eid %}'> Add new class </a>
 
     <hr/>
     <form class="classform" action='{% url 'classlist'  sem.eid %}' method='post'>
