@@ -10,6 +10,7 @@ if onLinux:
 else:
      DEBUG = True
 DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = DEBUG
 
