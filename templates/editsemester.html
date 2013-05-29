@@ -37,7 +37,7 @@
     <form method='post' action='/edit_semester{%if sem %}/{{sem.eid}}{% endif %}'> 
         {{ sform.as_p }}
         {% csrf_token %}
-        <input type="submit" name="Add Semester" value="Update" />
+        <input class="btn btn-success" type="submit" name="Add Semester" value="     Update     " />
 
 
     </form> 

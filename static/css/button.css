@@ -33,6 +33,10 @@ a.adminbutton, a.adminbutton:visited {
 
 a.adminbutton:hover {
         border-color:#00688B;
+        color: white;
+	text-decoration: none;
+        background-color:#1A7599;
+	
 }
 
 a.adminbutton:active {

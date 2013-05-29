@@ -11,7 +11,7 @@
     <form method='post' action='/edit_class{%if theClass %}/{{theClass.eid}}{% endif %}'> 
         {{ form.as_p }}
         {% csrf_token %}
-        <input type="submit" name="Add/Edit Class" value="Update" />
+        <input class="btn btn-success" type="submit" name="Add/Edit Class" value="     Update     " />
     </form>
 
     {% if theClass %}

@@ -25,23 +25,24 @@
         <table class="table table-bordered table-striped table-condensed" style="font-size:0.9em;">
             <tr>
                 <th>Class </th>
-                <th>Base (Credit Card)</th>
-                <th>Base (Check/Cash)</th>
+                <th>Base<br/>(Credit Card)</th>
+                <th>Base<br/>(Check/Cash)</th>
                 <th>Book</th>
                 <th>Material</th>
                 <th>Misc</th>
-                <th>Elective<br/>discount </th> 
+                <th>Elective Discount </th> 
             </tr>
             {% for c in classes %}
             <tr> <td> <a href='{% url 'edit_class' c.eid %}'>{{c}}</a>  </td>
-                <td>$<input type="text" name="basecc_{{c.eid}}" value="{{c.fee.basecc}}" id="id_basecc_{{c.eid}}" /></td>
-                <td>$<input type="text" name="basechk_{{c.eid}}" value="{{c.fee.basechk}}" id="id_basechk_{{c.eid}}" /></td>
-                <td>$<input type="text" name="book_{{c.eid}}" value="{{c.fee.book}}" id="id_book_{{c.eid}}" /></td>
-                <td>$<input type="text" name="material_{{c.eid}}" value="{{c.fee.material}}" id="id_material_{{c.eid}}" /></td>
-                <td>$<input type="text" name="misc_{{c.eid}}" value="{{c.fee.misc}}" id="id_misc_{{c.eid}}" /></td>
+  		<td><span>$ </span><input type="text" class="span1" name="basecc_{{c.eid}}" value="{{c.fee.basecc}}" id="id_basecc_{{c.eid}}" />
+		</td>
+                <td><span>$</span><input type="text" class-"span1" name="basechk_{{c.eid}}" value="{{c.fee.basechk}}" id="id_basechk_{{c.eid}}" /></td>
+                <td><span>$ </span><input type="text" class="span1" name="book_{{c.eid}}" value="{{c.fee.book}}" id="id_book_{{c.eid}}" /></td>
+                <td><span>$ </span><input type="text" class="span1" name="material_{{c.eid}}" value="{{c.fee.material}}" id="id_material_{{c.eid}}" /></td>
+                <td><span>$ </span><input type="text" class="span1" name="misc_{{c.eid}}" value="{{c.fee.misc}}" id="id_misc_{{c.eid}}" /></td>
                 <td>
                     {% if c.elective %}
-                    $<input type="text" name="mdiscount_{{c.eid}}" value="{{c.fee.mdiscount}}" id="id_mdiscount_{{c.eid}}" />
+                    <span>$ </span><input type="text" class="span1" name="mdiscount_{{c.eid}}" value="{{c.fee.mdiscount}}" id="id_mdiscount_{{c.eid}}" />
                     {% endif %}
                 </td>
 
@@ -50,14 +51,14 @@
             {% endfor %}
 
         </table>
-        <input type='submit' name='feeupdate' value='Update'/>
+        <input class="btn btn-success" type='submit' name='feeupdate' value='    Update    '/>
     </form>
     {% endif %}
-
-    <a href='{% url 'edit_class' %}'> Add new class </a>
-
     <hr/>
-    <form class="classform" action='{% url 'classlist'  sem.eid %}' method='post'>
+    <a class="span2" href='{% url 'edit_class' %}'><button class="btn btn-info" type="button"> Add new class </button></a>
+    <br /><br />
+    <hr/>
+	<form class="classform" action='{% url 'classlist'  sem.eid %}' method='post'>
         {% csrf_token %}
         <table>
             <tr>
@@ -82,7 +83,7 @@
         {{feeconfigform.semester}}
         Late fee: ${{feeconfigform.lateFee}} (0 means no late fee. )<br/>
         Late registration starting date: {{feeconfigform.lateDate}} <br/> 
-        <input type='submit' name='feeconfigupdate' value='Update'/>
+        <input class="btn btn-success" type='submit' name='feeconfigupdate' value='    Update    '/>
         {{form.errors}}
     </form>
 </div>
