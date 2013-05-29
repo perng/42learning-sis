@@ -33,7 +33,7 @@
                 <th>Elective Discount </th> 
             </tr>
             {% for c in classes %}
-            <tr> <td> <a href='{% url 'edit_class' c.eid %}'>{{c}}</a>  </td>
+            <tr> <td> <a href='{% url 'edit_class' sem_id=sem.eid class_id=c.eid %}'>{{c}}</a>  </td>
   		<td><span>$ </span><input type="text" class="span1" name="basecc_{{c.eid}}" value="{{c.fee.basecc}}" id="id_basecc_{{c.eid}}" />
 		</td>
                 <td><span>$</span><input type="text" class-"span1" name="basechk_{{c.eid}}" value="{{c.fee.basechk}}" id="id_basechk_{{c.eid}}" /></td>
@@ -58,7 +58,7 @@
     <a href='{% url 'add_class' sem_id=sem.eid %}'> Add new class </a>
 
     <hr/>
-    <a class="span2" href='{% url 'edit_class' %}'><button class="btn btn-info" type="button"> Add new class </button></a>
+    <a class="span2" href='{% url 'add_class' sem_id=sem.eid %}'><button class="btn btn-info" type="button"> Add new class </button></a>
     <br /><br />
     <hr/>
 	<form class="classform" action='{% url 'classlist'  sem.eid %}' method='post'>
