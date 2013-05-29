@@ -114,11 +114,7 @@ def edit_student(request, sid=0):
 @login_required
 def student_score(request, sid):
     student = Student.objects.get(id=id_decode(sid))
-<<<<<<< HEAD
     semester=current_record_semester(request.session['school'])
-=======
-    semester=current_record_semester()
->>>>>>> 103878b268c4eb176d1352ecb7727c86589656dd
     student.enrolledClasses = student.enroll.filter(semester=semester)
     
     for aclass in student.enrolledClasses:
@@ -139,11 +135,7 @@ def student_score(request, sid):
 
 @login_required
 def enroll_form(request, errors=[]):
-<<<<<<< HEAD
     semester = current_reg_semester(request.session['school'])
-=======
-    semester = current_reg_semester()
->>>>>>> 103878b268c4eb176d1352ecb7727c86589656dd
     error = None
     if not semester:
         enrollment_not_open = True
@@ -172,11 +164,7 @@ def enroll_form(request, errors=[]):
 
 @login_required
 def enroll(request):
-<<<<<<< HEAD
     semester = current_reg_semester(request.session['school'])
-=======
-    semester = current_reg_semester()
->>>>>>> 103878b268c4eb176d1352ecb7727c86589656dd
     students = get_children(request)
     mclasses = Class.objects.filter(semester=semester, elective=False)
     eclasses = Class.objects.filter(semester=semester, elective=True)
@@ -310,11 +298,7 @@ def review_tuition(request, howtopay):
     today = datetime.date.today()
     paypal = howtopay == 'paypal'
     family = request.user.get_profile()
-<<<<<<< HEAD
     semester = current_reg_semester(request.session['school']) # the semester open for registration
-=======
-    semester = current_reg_semester() # the semester open for registration
->>>>>>> 103878b268c4eb176d1352ecb7727c86589656dd
     c = cal_tuition(family, semester, paypal)
     tuition, _created = Tuition.objects.get_or_create(family=family, semester=semester)
     tuition.due = c['total']
@@ -336,11 +320,7 @@ def review_tuition(request, howtopay):
     return my_render_to_response(request, 'review_tuition.html', c)
 
 def help(request):
-<<<<<<< HEAD
     semester = current_reg_semester(request.session['school']) # the semester open for registration
-=======
-    semester = current_reg_semester() # the semester open for registration
->>>>>>> 103878b268c4eb176d1352ecb7727c86589656dd
     try:
         sis_contact= Config.objects.get(name='sis_contact').emailValue
     except:

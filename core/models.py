@@ -60,22 +60,19 @@ class School(models.Model, SISModel):
         return self.name 
 
 
-class Semester(models.Model, SISModel):
-    school = models.ForeignKey(School)
 
-class Role(models.Model):
-    user= models.OneToOneField(User)
-    school = models.ForeignKey(School)
-    is_admin = models.BooleanField(default=False)
-    is_dean = models.BooleanField(default=False)
-    is_registrar = models.BooleanField(default=False)
-    is_staff1 = models.BooleanField(default=False)
-    is_staff2 = models.BooleanField(default=False)
+#class Role(models.Model):
+#    user= models.OneToOneField(User)
+#    school = models.ForeignKey(School)
+#    is_admin = models.BooleanField(default=False)
+#    is_dean = models.BooleanField(default=False)
+#    is_registrar = models.BooleanField(default=False)
+#    is_staff1 = models.BooleanField(default=False)
+#    is_staff2 = models.BooleanField(default=False)
 
 
 class Semester(models.Model):
     #school = models.ForeignKey(School)
->>>>>>> 103878b268c4eb176d1352ecb7727c86589656dd
     schoolYear = models.CharField(max_length=20, choices=SEMESTER_YEAR_CHOICES)
     semester = models.CharField(max_length=20, choices=SEMESTER_CHOICES)
     need_enroll = models.BooleanField()   # If enrollment is needed. set false to 2nd semester which has not change
@@ -114,7 +111,7 @@ class Role(models.Model, SISModel):
         return ' '.join([self.title, self.user.username])
 
 
-class Family(models.Model, SISModel):
+
 STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
 class Family(models.Model):
     schools = models.ManyToManyField(School)    

@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from sis.core.models import School
-from sis.core.views_admin import signup, new_school_info
+#from sis.core.views_admin import signup, new_school_info
 
 from sis.core.models import School, Role, Family
 from sis.core.views_admin import signup, edit_school_info
@@ -17,6 +17,7 @@ def is_teacher(request):
 
 class GetSchool(object):
     def process_view(self, request, view_func, view_args, view_kwargs):
+        return
         #print 'precess_view', view_func, view_args, view_kwargs, request.META
         path=request.META['PATH_INFO'] 
         host = request.META['HTTP_HOST'] 

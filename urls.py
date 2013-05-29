@@ -4,7 +4,7 @@ from sis.core.views import *
 from sis.core.views_parent import *
 from sis.core.views_teacher import *
 from sis.core.views_admin import *
-from sis.core.api import *
+#from sis.core.api import *
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin as aadmin
@@ -104,7 +104,7 @@ urlpatterns = patterns('',
      url(r'^admin/', include(aadmin.site.urls)),
      
      ###########################################################################
-     url(r'api/schools', api_schools, name='api_schools' ),
+     #url(r'api/schools', api_schools, name='api_schools' ),
      
 
 
