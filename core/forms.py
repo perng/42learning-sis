@@ -39,7 +39,7 @@ class UserForm(forms.ModelForm):
 class SemesterForm(forms.ModelForm):
 	class Meta:
 		model = Semester
-		fields = ('schoolYear', 'semester', 'need_enroll', 'copyFrom', 'regStart', 'regEnd', 'recordStart', 'recordEnd')
+		fields = ('schoolYear', 'semester', 'copyFrom', 'regStart', 'regEnd', 'recordStart', 'recordEnd', 'need_enroll' )
 
 class ClassForm(forms.ModelForm):
 	class Meta:
