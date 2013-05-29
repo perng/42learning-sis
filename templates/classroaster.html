@@ -4,7 +4,7 @@
 
 
 {% block theme %} <link href="{% static_path %}/css/red.css" rel="stylesheet" type="text/css" /> {% endblock %}
-{% block title %}  Class Roaster {% endblock %}
+{% block title %}  Class Roster {% endblock %}
 {% block content %} 
 <div class="teacher">
     <h2 class="title">Class Roster</h2>
@@ -29,14 +29,15 @@
                 <td> {{s.gender}} </td>
                 <td> {{s.homeLanguage}} </td>
                 <td> {{s.family.parent1FirstName}} {{s.family.parent1LastName}},<br/>{{s.family.parent2FirstName}} {{s.family.parent2LastName}}  </td> 
-                <td> <a href='mailto:{{s.family.user.email}}'> {{s.family.user.email}}</a>   </td> 
+                <td> <a href='mailto:{{s.family.emails}}'> {{s.family.emails}}</a>   </td> 
             </tr>
             {% endfor %}
         </table> 
         <br/>
-        <a href='mailto:{% for s in students %}{{s.family.user.email}},{% endfor %}'> Email all students </a> 
+        <a href='mailto:{{emails}}'> Email all students. </a> <br/> 
+        <a href='mailto:{{emails}}?cc={{theClass.teacher_emails}}'> Email all students and cc teachers. </a> 
         <div> 
-            All emails: {% for s in students %}{{s.family.user.email}},{% endfor %}
+            All emails: {{emails}}
         </div> 
     </div>
     {% else %}

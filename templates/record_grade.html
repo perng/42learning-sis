@@ -29,7 +29,7 @@
         {% for gi in gis %}
 	    <tr>
 		<td> {{gi.name}} </td>
-		<td> {{gi.date| date:"y-m-d"}} </td>
+		<td> {{gi.the_date| date:"y-m-d"}} </td>
 		<td> <a href="{% url 'edit_grade' gi.eid %}" class="btn btn-warning btn-mini" style="text-decoration: none; color: white;" > <i class="icon-pencil"> </i> Edit&nbsp; </a></td>
 		<td> <a href="{% url 'del_grade' gi.eid %}" class="btn btn-danger btn-mini" style="text-decoration: none; color: white;"> <i class="icon-trash"></i> Delete&nbsp; </a> </td>
             </tr>

@@ -8,8 +8,26 @@
 
 <div class="admin2">
     <br/>
-    <form method='post' action='/edit_class{%if theClass %}/{{theClass.eid}}{% endif %}'> 
-        {{ form.as_p }}
+
+ {% if theClass %}
+    <form method='post' action='/edit_class/{{semester.eid}}/{{theClass.eid}}'>
+ {% else %}
+    <form method='post' action='/edit_class/{{semester.eid}}'> 
+ 
+ {% endif %} 
+         <p> <label> Official Class Name </label>: {{ form.name }} </p>
+         <p> <label> Semester </label>: {{ form.semester }} </p>
+         <p> <label> Elective </label>: {{ form.elective }} </p>
+         <p> <label> Mandate </label>: {{ form.mandate }} </p>
+         <p> <label> Elective required </label>: {{ form.elective_required }} </p> 
+         <p> <label> Head teacher </label>: {{ form.headTeacher }} </p>
+         <p> <label> Assoc. teacher 1 </label>: {{ form.assocTeacher1 }} </p>
+         <p> <label> Assoc. teacher 2 </label>: {{ form.assocTeacher2 }} </p>
+         <p> <label> Record attendance </label>: {{ form.recordAttendance }} </p>
+         <p> <label> Record grade </label>: {{ form.recordGrade }} </p>
+         <p> <label> Description </label>: {{ form.description }} </p>
+ 
+        {# {{ form.as_p }} #}
         {% csrf_token %}
         <input class="btn btn-success" type="submit" name="Add/Edit Class" value="     Update     " />
     </form>

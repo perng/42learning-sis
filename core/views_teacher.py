@@ -21,6 +21,15 @@ from django.contrib.sites.models import Site
 
 
 @login_required
+def add_grading_category(request, cid):
+    classid = id_decode(cid)
+    theClass = get_object_or_404(Class,id=classid)
+    cat=GradingCategory(classPtr=theClass, name='', weight=0)
+    cat.save()
+    return grading_policy(request, cid)
+
+	
+@login_required
 def grading_policy(request, cid):
     k='HTTP_HOST'
     print k, request.META[k]
@@ -66,6 +75,12 @@ def classroaster(request, cid):
     classid = id_decode(cid)
     theClass = get_object_or_404(Class,id=classid)
     students = theClass.student_set.order_by('lastName')
+    emails ={}
+    for s in students:
+        emails[s.family.user.email]=None
+        if s.family.altEmail:
+            emails[s.family.altEmail]=None
+    emails=','.join(emails.keys())
     return my_render_to_response(request, 'classroaster.html', locals())
 
 @login_required
@@ -133,7 +148,7 @@ def add_new_grade(request,  cat_id):
     ens = theClass.enrolldetail_set.all()
     students = [en.student for en in ens]
     date=datetime.datetime.today()
-    category.gradingitems = category.gradingitem_set.order_by('date')
+    category.gradingitems = category.gradingitem_set.order_by('-id')
     #serial = len(category.gradingitems) + 1
     name = '' # category.name+' '+str(serial)
     if request.method=='POST':
@@ -166,7 +181,7 @@ def record_grade(request,  cat_id):
     category = GradingCategory.objects.get(id=id_decode(cat_id))
     theClass = category.classPtr
     print 'category', category.name
-    gis = category.gradingitem_set.order_by('date')
+    gis = category.gradingitem_set.order_by('-id')
     return my_render_to_response(request, 'record_grade.html', locals())
     
     
@@ -284,21 +299,22 @@ def assignments(request, cat_id):
     due_date = DateField().widget.render('due_date', due, attrs={'id':'due_date'})
     
 
-    gditems = GradingItem.objects.filter(category=category).order_by('-duedate')
+    gditems = GradingItem.objects.filter(category=category).order_by('-id')
     category.serial = len(gditems) + 1
     return my_render_to_response(request, 'assignments.html', locals())
 
 @login_required
 def view_assignments(request, cat_id):
-    category = GradingCategory.objects.get(id=id_decode(cat_id))
-    gditems = GradingItem.objects.filter(category=category).order_by('-duedate')  
+    category = get_object_or_404(GradingCategory, id=id_decode(cat_id))
+    #gditems = GradingItem.objects.filter(category=category).order_by('-duedate')  
+    gditems = GradingItem.objects.filter(category=category).order_by('-id')  
     return my_render_to_response(request, 'view_assignments.html', locals())
 
 
 @login_required
 def new_assignment(request, cid):
     category = GradingCategory.objects.get(id=id_decode(cid))
-    gditems = GradingItem.objects.filter(category=category).order_by('duedate')
+    gditems = GradingItem.objects.filter(category=category).order_by('-id')
     category.serial = len(gditems) + 1
     if request.method=='POST':
         print request.POST
@@ -337,7 +353,7 @@ def edit_assignment(request, aid):
             giform=HomeWorkForm(request.POST, instance=gi)
             #name=request.POST['Name']
             gi.date=None #request.POST['assign_date']
-            gi.duedate= datetime.datetime.strptime( request.POST['due_date'] ,'%m-%d-%y')
+            gi.duedate= datetime.datetime.strptime( request.POST['due_date'] ,'%m-%d-%Y')
             gi.assignmentDescr=request.POST['Description']
 
             try:   
@@ -355,7 +371,7 @@ def edit_assignment(request, aid):
     request.method='GET'
     return my_render_to_response(request, 'assignment_edit.html', locals())
 
-
+'''
 @login_required
 def prepare_report(request, class_id):
     classid = id_decode(class_id)
@@ -364,6 +380,7 @@ def prepare_report(request, class_id):
     for s in students:
         s.enrollment=s.enrolldetail_set.get( classPtr=theClass)
     return my_render_to_response(request, 'prepare_report.html', locals())
+'''
 
 @login_required
 def evaluation_comment(request, enrolldetail_id):
@@ -372,7 +389,7 @@ def evaluation_comment(request, enrolldetail_id):
         return my_render_to_response(request, 'evaluation_comment.html', locals())
     en.note = request.POST['comment']
     en.save()
-    return prepare_report(request, en.classPtr.eid())
+    return report_summary(request, en.classPtr.eid())
 
 att_dict={'P':'Present', 'A':'Absent', 'L':'Late'}
 
@@ -398,35 +415,48 @@ def get_score(student,item):
         
 @login_required
 def report_card(request, enrolldetail_id):
-    en=EnrollDetail.objects.get(id=id_decode(enrolldetail_id))
+    en=get_object_or_404(EnrollDetail, id=id_decode(enrolldetail_id))
     theClass=en.classPtr
     student=en.student
     semester = en.classPtr.semester
     sessions=theClass.classsession_set.all()
     num_sessions=len(sessions)
     attendances=[(session.date, get_attendance(student, session)) for session in sessions]
-    attendances_rows=make_rows(attendances, 7)
-    num_absent =len([a for a in attendances if a[1]=='A'])
-    num_late =len([a for a in attendances if a[1]=='L'])
+    num_absent =len([a for a in attendances if a[1]==att_dict['A']])
+    num_late =len([a for a in attendances if a[1]==att_dict['L']])
+    attendances_rows=make_rows(attendances, 7) if attendances else []
     num_present=num_sessions-num_absent
 
     categories = theClass.gradingcategory_set.filter(weight__gt= 0)
     student.final_score=0
     for cat in categories:
-        items= cat.gradingitem_set.all()        
+        items= cat.gradingitem_set.order_by('id')        
         scores=[(item, get_score(student, item) ) for item in items]
-        print scores
-        cat.score_rows= make_rows(scores, 7)
+        if scores:
+            cat.score_rows= make_rows(scores, 7)
+        else:
+            cat.score_rows=None
         if not scores:
             cat.avg_score=0
         else:
             cat.avg_score = sum([(score[1] if score[1]!=None else 0) for score in scores])/len(scores)
-        cat.class_avg = sum([(item.average if item.average!=None else 0) for item in items])/len(scores)
-
+        try:
+            cat.class_avg = sum([(item.average if item.average!=None else 0) for item in items])/len(scores)
+        except:
+            cat.class_avg = 0
         cat.weighted_score = cat.avg_score * cat.weight /100.0
         student.final_score += cat.weighted_score
     
     return my_render_to_response(request, 'reportcard.html', locals())
+
+@login_required
+def toggle_final_grade_ready(request, class_id):
+    theClass = Class.objects.get(id=id_decode(class_id))
+    theClass.total_ready = not theClass.total_ready
+    theClass.save()
+    if theClass.total_ready :
+        theClass.calculate_total()
+    return report_summary(request, class_id)
 
 
 @login_required
@@ -445,3 +475,69 @@ def notify_report_card(request, class_id):
     
         en.student.family.user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
     return generic_message(request, 'Parents Notified', 'teacher', 'Parents have been notified that report cards are ready.' )
+
+
+@login_required
+def report_summaries(request,sem_id):
+    semester = get_object_or_404(Semester, id=id_decode(sem_id))
+    classes = Class.objects.filter(semester=semester, elective=False, )
+    return my_render_to_response(request, 'report_summaries.html', locals())
+
+def category_average(student, category):
+    scores=[get_score(student, gi) for gi in category.gis]
+    return 0 if not scores else float(sum(scores))/len(scores)
+
+def uid(user):
+    try:
+        return user.id
+    except:
+        pass
+    return -1
+
+@login_required
+def report_summary(request, class_id):
+    theClass = Class.objects.get(id=id_decode(class_id))
+    is_teacher = request.user.id in [uid(theClass.headTeacher), uid(theClass.assocTeacher1), uid(theClass.assocTeacher2)]
+    categories= [c for c in theClass.gradingcategory_set.all() if c.weight]
+    weights= [c.weight for c in categories]
+    for cat in categories:
+       cat.gis=GradingItem.objects.filter(category=cat)
+    ens= EnrollDetail.objects.filter(classPtr=theClass)
+    students=[en.student for en in ens]
+    for en in ens:
+        en.student.enrollment=en
+    for student in students:
+        student.grades=[category_average(student, cat) for cat in categories]
+        student.total=sum([a*b for a,b in zip(student.grades, weights)])/100.0
+    grades=[(s.total, s) for s in students]
+    grades.sort(reverse=True)
+    prev_grade=1000 
+    rank=1
+    for i in range(len(grades)):
+        grade, student = grades[i]
+        if grade < prev_grade:
+            rank=student.rank=i+1
+        else:
+            student.rank=rank
+        prev_grade=grade
+    students.sort(key=lambda s: s.rank)
+
+    # Attendance
+    sessions=theClass.classsession_set.all()
+    num_sessions=float(len(sessions))
+    for student in students:
+        attendances=[(session.date, get_attendance(student, session)) for session in sessions]
+        num_absent =float(len([a for a in attendances if a[1]==att_dict['A']]))
+        num_late =len([a for a in attendances if a[1]==att_dict['L']])
+        #num_present=num_sessions-num_absent
+        student.attendance_rate = 0.0 if not num_sessions else (num_sessions- num_absent - 0.5*num_late)/num_sessions * 100.0
+
+
+    return my_render_to_response(request, 'report_summary.html', locals())
+
+@login_required
+def editpastrecords(request):
+    teached = request.user.get_profile().teached()
+    
+    return my_render_to_response(request, 'editpastrecords.html', locals())
+

@@ -35,7 +35,16 @@
 <div class="admin2"
     <br/>
     <form method='post' action='/edit_semester{%if sem %}/{{sem.eid}}{% endif %}'> 
-        {{ sform.as_p }}
+        <p> <label> School Year </label>: {{ sform.schoolYear }} </p> 
+        <p> <label> Semester </label>: {{ sform.semester }} </p> 
+        <p> <label> Copy from </label>: {{ sform.copyFrom }} </p> 
+        <p> <label> Registration start </label>: {{ sform.regStart }} </p> 
+        <p> <label> Registration end </label>: {{ sform.regEnd }} </p> 
+        <p> <label> Record start </label>: {{ sform.recordStart }} </p> 
+        <p> <label> Record end </label>: {{ sform.recordEnd }} </p> 
+        <p> <label> Enroll required</label>: {{ sform.need_enroll }} </p> 
+
+        {# {{ sform.as_p }} #}
         {% csrf_token %}
         <input class="btn btn-success" type="submit" name="Add Semester" value="     Update     " />
 

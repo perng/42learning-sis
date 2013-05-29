@@ -5,7 +5,7 @@
 
 {% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
 
-{% block title %}  Dashboard {% endblock %}
+{% block title %}  Parent Home {% endblock %}
 {% block content %} 
 <div class="parent">
     <h2 class="title">Manage Students</h2>
@@ -15,6 +15,9 @@
                 <th class="btn-green"><i class="icon-user"></i> Students</th>
 		<th class="btn-green"><i class="icon-table"></i> Check</th> 
 		<th class="btn-green"><i class="icon-file"></i> Assignment </th>
+		<th class="btn-green"><i class="icon-file"></i> Report </th>
+		<th class="btn-green"><i class="icon-file"></i> Past Report </th>
+
             </tr>
             {% for student in students %}
             <tr>
@@ -26,6 +29,14 @@
                     {% endfor %}
 
                 </td>
+                <td> 
+                    {% for report_class in student.reports %}
+                    <a target="_blank" href="{% url 'report_card' enrolldetail_id=report_class.enroll_detail.eid %}" style="text-decoration:underline;"> {{report_class}} {% if report_class.total_ready %} Final  {% else %} Progress {% endif %} Report </a> <br/>
+                    {% endfor %}
+
+                </td>
+		<td> <a href="/pastreports/{{student.eid}}"> Past Report </a> 
+		</td>
             </tr>
             {% endfor %}
         </table>

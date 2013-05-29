@@ -30,6 +30,10 @@
         {% csrf_token %}
         <input class="button" type="submit"  value="Update" />
     </form>
+
+<button class="btn btn-warning" type="button">
+	<a href="/add_grading_category/{{theClass.eid}}"> Add category </a> <br/>
+</button> 
 </div>
 
 {% endblock %}

@@ -9,8 +9,6 @@ if onLinux:
      DEBUG = False
 else:
      DEBUG = True
-DEBUG = True
-DEBUG = False
 
 TEMPLATE_DEBUG = DEBUG
 
@@ -24,7 +22,7 @@ if not onLinux:
     DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'sis.db',                      # Or path to database file if using sqlite3.
+        'NAME': 'msis.db',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -215,3 +213,6 @@ LOGIN_REDIRECT_URL='/accounts/login/?next=/'
 if SESSION_COOKIE_SECURE:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
     SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = True
+
+
+BASE_SITE='.learning42.com'

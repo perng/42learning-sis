@@ -54,6 +54,9 @@
         <input class="btn btn-success" type='submit' name='feeupdate' value='    Update    '/>
     </form>
     {% endif %}
+
+    <a href='{% url 'add_class' sem_id=sem.eid %}'> Add new class </a>
+
     <hr/>
     <a class="span2" href='{% url 'edit_class' %}'><button class="btn btn-info" type="button"> Add new class </button></a>
     <br /><br />

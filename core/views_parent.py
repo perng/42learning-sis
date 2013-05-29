@@ -67,6 +67,7 @@ def familyinfo(request):
 
     try:
         family = request.user.get_profile()
+        family.cache()
         family.user = request.user
         form = FamilyForm(request.POST, instance=family)
     except:
@@ -281,6 +282,7 @@ class Email_on_enroll(threading.Thread):
               EMAIL_HOST_USER,
               ['charles.perng@gmail.com'], fail_silently=False)
 
+@login_required
 def review_tuition(request, howtopay):
     today = datetime.date.today()
     paypal = howtopay == 'paypal'
@@ -307,7 +309,7 @@ def review_tuition(request, howtopay):
     return my_render_to_response(request, 'review_tuition.html', c)
 
 def help(request):
-    semester = current_reg_semester() # the semester open for registration
+    semester = current_record_semester() # the semester open for registration
     try:
         sis_contact= Config.objects.get(name='sis_contact').emailValue
     except:
@@ -318,3 +320,26 @@ def help(request):
         registrar_contact= "charles@perng.com"
      
     return my_render_to_response(request, 'help.html', locals())
+
+
+@login_required
+def semesterlistx(request):
+    semesters = Semester.objects.order_by('id')
+    return my_render_to_response(request, 'semesterlist.html', locals())
+
+@login_required
+def semesterswitch(request, sem_id):
+    semester = Semesters.objects.get(id=decode_id(sem_id))
+    request.session['semester']=semester.id
+    #return my_render_to_response(request, 'semesterlist.html', locals())
+    return HttpResponseRedirect('/')
+
+
+@login_required
+def pastreports(request, sid):
+    student = Student.objects.get(id=id_decode(sid))
+    #semesters = Semester.object.order__by("id")
+    ens = EnrollDetail.objects.filter(student=student).order_by("id")
+    ens = [en for en in ens if en.classPtr.recordGrade]
+    return my_render_to_response(request, 'pastreports.html', locals())
+
