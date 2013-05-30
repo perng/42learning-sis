@@ -15,21 +15,23 @@
     <form method='post' action='/edit_class/{{semester.eid}}'> 
  
  {% endif %} 
-         <p> <label> Official Class Name </label>: {{ form.name }} </p>
-         <p> <label> Semester </label>: {{ form.semester }} </p>
-         <p> <label> Elective </label>: {{ form.elective }} </p>
-         <p> <label> Mandate </label>: {{ form.mandate }} </p>
-         <p> <label> Elective required </label>: {{ form.elective_required }} </p> 
-         <p> <label> Head teacher </label>: {{ form.headTeacher }} </p>
-         <p> <label> Assoc. teacher 1 </label>: {{ form.assocTeacher1 }} </p>
-         <p> <label> Assoc. teacher 2 </label>: {{ form.assocTeacher2 }} </p>
-         <p> <label> Record attendance </label>: {{ form.recordAttendance }} </p>
-         <p> <label> Record grade </label>: {{ form.recordGrade }} </p>
-         <p> <label> Description </label>: {{ form.description }} </p>
- 
+		<label> Official Class Name: </label>{{ form.name }} <br />
+                <label> Semester: </label>{{ form.semester }} <br /> 
+		<label> Elective:</label>  {{ form.elective }} <br />
+         	<label> Mandate: </label> {{ form.mandate }} <br />
+         	<label> Elective Required:</label>{{ form.elective_required }} <br /> 
+                <label> Head Teacher: </label> {{ form.headTeacher }} <br />
+                <label> Assoc. Teacher 1: </label> {{ form.assocTeacher1 }} <br />
+                <label> Assoc. Teacher 2: </label> {{ form.assocTeacher2 }} <br />
+                <label> Record Attendance:</label>{{ form.recordAttendance }}<br />
+                 <label> Record Grade:</label> {{ form.recordGrade }}<br />
+		 <label> Description: </label> {{ form.description }}
+		<br /> 
         {# {{ form.as_p }} #}
         {% csrf_token %}
-        <input class="btn btn-success" type="submit" name="Add/Edit Class" value="     Update     " />
+        <br/><input class="btn btn-success" type="submit" name="Add/Edit Class" value="     Update     " />
+	</div>
+	</div>
     </form>
 
     {% if theClass %}

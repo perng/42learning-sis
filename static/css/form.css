@@ -47,6 +47,13 @@ form input#reset {
 	margin-left:0px; /* set margin-left back to zero on reset button (set above) */
 }
 
+form input[type=checkbox] {
+	margin:5px 0 0 10px; 
+	width: 24px;
+    	height: 24px;
+    	vertical-align: bottom;
+}
+
 textarea { overflow: auto; }
 
 form small {

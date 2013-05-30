@@ -81,15 +81,16 @@
                 </div> <!-- #header -->
                 <!-- don't know what msg is yet -->
                 <div class="clearfix">
+{% comment %}
                     {% if messages %}
                     {{ messages }}
                     <ul class="messages">
                         {% for message in messages %}
-                        message
                         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
                         {% endfor %}
                     </ul>
                     {% endif %}
+{% endcomment %}
                 </div><!-- end don't know -->
 
                 <div class="clearfix">

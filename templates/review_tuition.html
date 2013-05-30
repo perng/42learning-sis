@@ -1,10 +1,4 @@
-{% extends 'base.html' %} 
-{% load core_tags %}
-{% load url from future %}
-
-{% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
-
-
+{% extends 'base.html' %} {% load core_tags %} {% load url from future %} {% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %} 
 {% block title %}  Review Tuition {% endblock %}
 {% block content %} 
 <script language="javascript">
@@ -88,6 +82,9 @@ function Clickheretoprint(){
     child(ren) is(are) attending the Northern Westchester Chinese School.<br/>
     <br/>
 
+    <h1 xml:lang="en" lang="en" align="center">Release and Consent</h1>
+I hereby certify that I am the parent / lawful guardian of my child(ren) registered at the Northern Westchester Chinese School (“the School”). I hereby consent and permit to use my child(ren)’s names, portrait, photographs, images, depictions, and/or voice in the such matters as the School’s yearbook, website, newsletters, or other School related publications. <BR>
+
     {% if paypal %}
 
 </strong>
@@ -100,13 +97,13 @@ function Clickheretoprint(){
         <input type="hidden" name="business" value="paypal@nwcsny.org">
         <input type="hidden" name="item_name_1" value="NWCS Tuition {{semester}}, {{parent_name}}({{family.id}}) ">
         <input type="hidden" name="amount_1" value="{{total}}">
-        <input type="submit" value="We agree to follow the NWCS code of conduct. Proceed to Pay by PayPal or credit card">
+        <input type="submit" value="We agree to follow the NWCS code of conduct and Release Consent. Proceed to Payment."> <br/>
 
         Date: {{today}}
     </form>
 </div>
 <!-- PayPal Logo -->
-<table border="0" cellpadding="10" cellspacing="0" align="center">
+         <input type="submit" value="We agree to follow the NWCS code of conduct and release consent. Proceed to Pay by PayPal or credit card"> <br/>
     <tr><td align="center"></td></tr>
     <tr><td align="center">
             {# <a href="#" onclick="javascript:window.open('https://www.paypal.com/us/cgi-bin/webscr?cmd=xpt/Marketing/popup/OLCWhatIsPayPal-outside','olcwhatispaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=400, height=350');"> #}
@@ -124,5 +121,4 @@ Parent/Guardian: ______________________________      Date: _____________________
 
 </div>
 {% endblock %} 
-
 
