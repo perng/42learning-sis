@@ -8,6 +8,7 @@ from operator import  attrgetter #, itemgetter
 
 from django.contrib.localflavor.us.models import  PhoneNumberField #, USPostalCodeField
 from sis.core.util import id_encode, median #, det_encode
+#from sis.core.views_admin import create_default_grading_categories
 
 
 
@@ -48,16 +49,16 @@ class School(models.Model):
     #    return det_encode(self.id)
     def __repr__(self):
         return self.name
-'''
-class Role(models.Model):
-    user= models.OneToOneField(User)
-    school = models.ForeignKey(School)
-    is_admin = models.BooleanField(default=False)
-    is_dean = models.BooleanField(default=False)
-    is_registrar = models.BooleanField(default=False)
-    is_staff1 = models.BooleanField(default=False)
-    is_staff2 = models.BooleanField(default=False)
-'''
+
+#class Role(models.Model):
+#    user= models.OneToOneField(User)
+#    school = models.ForeignKey(School)
+#    is_admin = models.BooleanField(default=False)
+#    is_dean = models.BooleanField(default=False)
+#    is_registrar = models.BooleanField(default=False)
+#    is_staff1 = models.BooleanField(default=False)
+#    is_staff2 = models.BooleanField(default=False)
+
 
 class Semester(models.Model):
     #school = models.ForeignKey(School)
@@ -81,12 +82,9 @@ class Semester(models.Model):
         unique_together = (('schoolYear', 'semester'))
 
     def copy_semester(self):
-        if not self.copyFrom:
-            assert False
-            return
         for theClass in  self.copyFrom.class_set.all():
             theClass.copy_class(self)
-
+    
 
 STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
 class Family(models.Model):
@@ -216,24 +214,47 @@ class Class(models.Model):
 
     def copy_class(self, semester):
         theClass = self
+        ## get enrolls and categories before pk reset 
         enrolls = self.enrolldetail_set.all()
         categories = self.gradingcategory_set.all()
         theClass.pk = None
         theClass.semester=semester
         theClass.total_ready = False
         theClass.highest=theClass.lowest=theClass.average=theClass.median=0.0 
-        theClass.save() # get a new pk 
-        for en in enrolls:
-            en.pk=None
-            en.classPtr=theClass
-            en.final_score=en.rank=None
-            en.note=''
-            en.save()
-        for gc in categories:
-            gc.pk=None
-            gc.classPtr=theClass
+        theClass.save() # get a new pk
+
+
+        print theClass.name, 'copied' 
+        if semester.need_enroll:
+            self.create_default_grading_categories()
+        else:
+            for gc in categories:
+                gc.pk=None
+                gc.classPtr=theClass
+                gc.save()
+            for en in enrolls:
+                en.pk=None
+                en.classPtr=theClass
+                en.final_score=en.rank=None
+                en.note=''
+                en.save()
+    def create_default_grading_categories(self):
+        order = 1
+        for name, weight, assignment in [('Quiz', 30, False), ('Exam', 40, False), ('Home Work', 30, True), ('Other1', 0, False), ('Other2', 0, False)]:
+            #gc,created = GradingCategory.objects.get_or_create(classPtr=theClass, name=name )
+            gcs = GradingCategory.objects.filter(classPtr=self, name=name )
+            if len(gcs)>0:
+                gc=gcs[0]
+                for g in gcs[1:]:
+                    g.delete()
+            else:
+                gc=GradingCategory(classPtr=self, name=name, order=order )        
+            gc.order=order
+            gc.weight=weight
+            gc.hasAssignment=assignment
             gc.save()
-    
+            order += 1
+   
 
     def __str__(self):
         return self.name

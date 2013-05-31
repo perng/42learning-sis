@@ -75,7 +75,7 @@ urlpatterns = patterns('',
      #url(r'^semesterlist', semesterlist, name='semesterlist'),
      url(r'^editpastrecords', editpastrecords, name='editpastrecords'),
      # Admin
-     url(r'^semester$', semesters, name='semesters'),
+     #url(r'^semester$', semesters, name='semesters'),
      url(r'^edit_semester$', edit_semester, name='edit_semester'),
      url(r'^edit_semester/(?P<sem_id>[0-9]+)$', edit_semester, name='edit_semester'),
      url(r'^semester/(?P<sid>[0-9]+)$', semester, name='semester'),

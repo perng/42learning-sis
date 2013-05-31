@@ -44,8 +44,11 @@ def edit_semester(request, sem_id=0):
     if request.method == 'POST':
         sform = SemesterForm(request.POST, instance=sem)
         if sform.is_valid():
-            sform.save()
+            sem=sform.save()
+            if sem.copyFrom:
+                sem.copy_semester()
             messages.info(request, 'Semester updated')
+            
             return HttpResponseRedirect('/semesterlist')
         else:
             messages.error(request, 'form not valid')
@@ -60,26 +63,26 @@ def semesterlist(request):
 
     return my_render_to_response(request, 'semesterlist.html', locals())
 
-def semesters(request):
-    semesters = list(Semester.objects.all()[:])
-    semesters.sort(key=id)
-    if request.method == 'GET':
-        sem = semesters[-1] if semesters else None
-        if sem:
-            classes = Class.objects.filter(semester=sem)
-            sform = SemesterForm(instance=sem)
-        else:
-            sform = SemesterForm()
-
-        return my_render_to_response(request, 'semesters.html', locals())
-
-    sform = SemesterForm(request.POST)
-    if sform.is_valid():
-        new_sem=sform.save()
-        new_sem.copy_semester()
-    else:
-        print 'form not valid'
-    return my_render_to_response(request, 'semesters.html', locals())
+#def semesters(request):
+#    semesters = list(Semester.objects.all()[:])
+#    semesters.sort(key=id)
+#    if request.method == 'GET':
+#        sem = semesters[-1] if semesters else None
+#        if sem:
+#            classes = Class.objects.filter(semester=sem)
+#            sform = SemesterForm(instance=sem)
+#        else:
+#            sform = SemesterForm()
+#
+#        return my_render_to_response(request, 'semesters.html', locals())
+#
+#    sform = SemesterForm(request.POST)
+#    if sform.is_valid():
+#        new_sem=sform.save()        
+#        new_sem.copy_semester(not new_sem.need_enroll)
+#    else:
+#        print 'form not valid'
+#    return my_render_to_response(request, 'semesters.html', locals())
 
 
 @superuser_required
@@ -136,22 +139,6 @@ def classlist(request, sem_id):
     feeconfigform = FeeConfigForm(instance=feeconfig)
     return my_render_to_response(request, 'classlist.html', locals())
 
-def create_default_grading_categories(theClass):
-    order = 1
-    for name, weight, assignment in [('Quiz', 30, False), ('Exam', 40, False), ('Home Work', 30, True), ('Other1', 0, False), ('Other2', 0, False)]:
-        #gc,created = GradingCategory.objects.get_or_create(classPtr=theClass, name=name )
-        gcs = GradingCategory.objects.filter(classPtr=theClass, name=name )
-        if len(gcs)>0:
-            gc=gcs[0]
-            for g in gcs[1:]:
-                g.delete()
-        else:
-            gc=GradingCategory(classPtr=theClass, name=name, order=order )        
-        gc.order=order
-        gc.weight=weight
-        gc.hasAssignment=assignment
-        gc.save()
-        order += 1
 
 
 
@@ -175,7 +162,7 @@ def semester(request, sid):
         form = ClassForm(request.POST)
         if form.is_valid():
             new_class = form.save()
-            create_default_grading_categories(new_class)
+            new_class.create_default_grading_categories()
         else:
             print request.POST
             print 'form not valid'
