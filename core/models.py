@@ -82,6 +82,7 @@ class Semester(models.Model):
         unique_together = (('schoolYear', 'semester'))
 
     def copy_semester(self):
+        self.copyFrom.feeconfig.copy(self)
         for theClass in  self.copyFrom.class_set.all():
             theClass.copy_class(self)
     
@@ -217,12 +218,13 @@ class Class(models.Model):
         ## get enrolls and categories before pk reset 
         enrolls = self.enrolldetail_set.all()
         categories = self.gradingcategory_set.all()
+        fee = self.fee
         theClass.pk = None
         theClass.semester=semester
         theClass.total_ready = False
         theClass.highest=theClass.lowest=theClass.average=theClass.median=0.0 
         theClass.save() # get a new pk
-
+        fee.copy(theClass)
 
         print theClass.name, 'copied' 
         if semester.need_enroll:
@@ -508,6 +510,10 @@ class Fee(models.Model):
     def eid(self):
         self.cid= id_encode(self.id)
         return self.cid
+    def copy(self, new_class):
+        self.pk=None
+        self.classPtr=new_class
+        self.save()
 
 
 class FeeConfig(models.Model):
@@ -535,6 +541,12 @@ class FeeConfig(models.Model):
     def eid(self):
         self.cid= id_encode(self.id)
         return self.cid
+    def copy(self, new_semester):
+        self.pk=None
+        self.semester=new_semester
+        self.lateDate = None
+        self.save()
+        
 
 class Tuition(models.Model):
     family = models.ForeignKey(Family)
