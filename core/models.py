@@ -515,6 +515,8 @@ class Fee(models.Model):
         self.classPtr=new_class
         self.save()
 
+    def __str__(self):
+        return self.classPtr.semester.schoolYear+' '+self.classPtr.semester.semester+' '+self.classPtr.name
 
 class FeeConfig(models.Model):
     semester = models.OneToOneField(Semester)
@@ -546,6 +548,8 @@ class FeeConfig(models.Model):
         self.semester=new_semester
         self.lateDate = None
         self.save()
+    def __str__(self):
+        return self.semester.schoolYear+' '+self.semester.semester+' Fee Config'
         
 
 class Tuition(models.Model):
