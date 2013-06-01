@@ -41,11 +41,12 @@ def superuser_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, l
 @superuser_required
 def edit_semester(request, sem_id=0):
     sem = Semester.objects.get(id=id_decode(sem_id)) if sem_id else None
+    is_new= not sem 
     if request.method == 'POST':
         sform = SemesterForm(request.POST, instance=sem)
         if sform.is_valid():
             sem=sform.save()
-            if sem.copyFrom:
+            if sem.copyFrom and is_new:
                 sem.copy_semester()
             messages.info(request, 'Semester updated')
             
@@ -192,7 +193,7 @@ def edit_class(request, sem_id, class_id=0):
             print 'is_valid'
             form.instance.semester=semester
             new_class = form.save()
-            create_default_grading_categories(new_class)
+            new_class.create_default_grading_categories()
             return HttpResponseRedirect('/classlist/%s' % (new_class.semester.eid(),))
     else:
         if class_id:
@@ -256,7 +257,7 @@ def sisadmin(request):
 @superuser_required
 def family_tuition(request, fid):
     family = Family.objects.get(id=id_decode(fid))
-    semester = current_record_semester() # the semester open for registration
+    semester = current_reg_semester() # the semester open for registration
     tuition, created = Tuition.objects.get_or_create(family=family, semester=semester)
 
     c = cal_tuition(family, semester, tuition.pay_credit)
@@ -275,7 +276,7 @@ def unpaid_payment(request):
 
 @superuser_required
 def payment(request, filter=None):
-    semester = current_record_semester() # the semester open for registration
+    semester = current_reg_semester() # the semester open for registration
     if not semester:
         print 'no record semester, use the last one'
         semester = Semester.objects.order_by('-id')[0]
@@ -365,9 +366,7 @@ def teacher_directory(request):
 
 
 def offered_classes(request):
-    sem = current_record_semester()
-    if not sem:
-        sem= current_record_semester()
+    sem = current_reg_semester() # the semester open for registration
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
     return my_render_to_response(request, 'offered_classes.html', locals())
     
@@ -400,7 +399,7 @@ def system_config(request):
 
 @superuser_required 
 def class_enrollment(request):
-    sem = current_record_semester()
+    sem = current_reg_semester()
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
     for c in classes:
         c.count = len(EnrollDetail.objects.filter(classPtr=c))
