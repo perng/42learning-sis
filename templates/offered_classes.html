@@ -11,7 +11,7 @@
     <h3 class="title"> No class information. </h3>
 
 {% else %}
-    <h3 class="title"> Semester: <a href='{% url 'semester'  sem.id %}'> {{sem}} </a> </h3>
+    <h3 class="title"> Semester: {{sem}} </h3>
     {% if classes %}
     <table border="1" >
         {% for c in classes %}
