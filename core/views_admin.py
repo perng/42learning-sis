@@ -192,7 +192,7 @@ def edit_class(request, sem_id, class_id=0):
             print 'is_valid'
             form.instance.semester=semester
             new_class = form.save()
-            create_default_grading_categories(new_class)
+            new_class.create_default_grading_categories()
             return HttpResponseRedirect('/classlist/%s' % (new_class.semester.eid(),))
     else:
         if class_id:
