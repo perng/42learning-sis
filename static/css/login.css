@@ -35,7 +35,7 @@
 	font-size:11px;
 	}
 #login p{margin:.5em 25px;}
-#login div{
+#login div#log{
 	margin:.5em 25px;
 	background:#eee;
 	padding:4px;

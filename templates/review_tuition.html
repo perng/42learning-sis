@@ -13,7 +13,15 @@ function Clickheretoprint(){
    docprint.document.write(content_vlue);
    docprint.document.write('</body></html>');
    docprint.document.close();   docprint.focus();
-}</script>
+}
+
+$(document).ready(function() {
+	$('.consent').click(function() {
+		$('.register').toggle();
+	});
+});
+
+</script>
 
 <div class="parent" id="print_content">
     {% if error %}
@@ -104,17 +112,16 @@ I hereby certify that I am the parent / lawful guardian of my child(ren) registe
 </td></tr></table><!-- PayPal Logo -->
 {% endcomment %}
 {% else %}
-
-<input type="checkbox">     
-My family member(s) ({{student_names}})  and I ({{parent_name}}) have 
-reviewed the Code of Conduct and release consent for NWCS Students and we accept them.<br/>
-
+<div style="border: 1px; background:#B0E0E6; margin:5px, 5px, 5px, 5px">
+<input type="checkbox" class="consent" style="width: 30px; height: 30px; margin-left: 3px; margin-bottom:3px;">     
+<b>My family member(s) ({{student_names}})  and I ({{parent_name}}) have 
+reviewed the Code of Conduct and release consent for NWCS Students and we accept them. 
  </input> 
+</div>
 
 
 
-<div>  
-this is the div to be shown after the above checkbox is clicked.  delete this line after completion. 
+<div class="register" style="display: none; margin: 5px, 5px, 5px, 5px; border: 1px; background:#B0E0E6;">  
     <h3> Please  mail your check to Registrar at <br/> 
         {% if school_mailing_addr %}
         {{school_mailing_addr}}.
@@ -123,11 +130,11 @@ this is the div to be shown after the above checkbox is clicked.  delete this li
         {% endif %}<br/>
         Please put a note on the check "Family id {{family.id}}".
     </h3> 
+<b> <a href="javascript:Clickheretoprint()"> Print this page </a> </b> 
 </div>
 {% comment %}
 Parent/Guardian: ______________________________      Date: ______________________ <br/><br/> 
 {% endcomment %}
-<b> <a href="javascript:Clickheretoprint()"> Print this page </a> </b> 
 
 {% endif %}
 {% endif %}

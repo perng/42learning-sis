@@ -6,13 +6,12 @@
 <form id="login" method="post" action=".">
     {% csrf_token %}
     <h1> Login to your account</h1>
-    <div>
+    <div id="log">
         <label for="id_username">Email</label> 
         <input type="text" name="username" id="id_username" class="field required" placeholder="Your username" title="Please provide your username" />
-    </div>			
-
-    <div>
-        <label for="id_password">Password</label>
+    </div>
+    <div id="log">
+	<label for="id_password">Password</label>
         <input type="password" name="password" id="id_password" class="field required" placeholder="Your password" title="Password is required" />
     </div>			
     <p class="forgot"> Forgot password? <a href="{% url 'auth_password_reset' %}">Reset it</a>!</p>
