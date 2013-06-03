@@ -25,17 +25,11 @@ function Clickheretoprint(){
     {% include "tuition.html" %}
 
     {% if paypal %}
-    <h3> Please review the tuition and read the code of conduct before click the payment button at the bottom of this page </h3> 
+    <h3> Please review the tuition, read the code of conduct and, Release Consent,  before click the payment button at the bottom of this page </h3> 
 
 
     {% else %} 
-    <h3> Please review the tuition, read the code of conduct, then print and mail this form with your check to Registrar at <br/> 
-        {% if school_mailing_addr %}
-        {{school_mailing_addr}}
-        {% else %}
-        <b> ??? </b> 
-        {% endif %}
-    </h3> 
+    <h3> Please review the tuition, read the code of conduct, then  follow the instructions at the bottom of the page </h3>
     {% endif %}
 
 
@@ -69,13 +63,9 @@ function Clickheretoprint(){
         <li>If the situation does not improve, a meeting will be required between parents and Principal.</li>
         <li>If the situation does not improve further, the student will be expelled from this school.</li>
     </ol>
-    My family member(s) ({{student_names}})  and I ({{parent_name}}) have reviewed the Code of Conduct for NWCS Students and we accept it.<br/>
     <br/>
     <br/>
 
-    <p>I allow the school to publish name/street address/e-mail address in the NWCS School Directory, for internal
-    use only.
-    </p>
     Waiver / Release of Liability: I, {{parent_name}} (Parent/ Guardian), waive
     any and all claims against Northern Westchester Chinese School, its Board of Directors, Administrative
     Staff and the teachers in the event of any injury, sickness, or death resulting from any accident while my
@@ -85,6 +75,7 @@ function Clickheretoprint(){
     <h1 xml:lang="en" lang="en" align="center">Release and Consent</h1>
 I hereby certify that I am the parent / lawful guardian of my child(ren) registered at the Northern Westchester Chinese School (“the School”). I hereby consent and permit to use my child(ren)’s names, portrait, photographs, images, depictions, and/or voice in the such matters as the School’s yearbook, website, newsletters, or other School related publications. <BR>
 
+<br/>
     {% if paypal %}
 
 </strong>
@@ -102,6 +93,7 @@ I hereby certify that I am the parent / lawful guardian of my child(ren) registe
         Date: {{today}}
     </form>
 </div>
+{% comment %}
 <!-- PayPal Logo -->
          <input type="submit" value="We agree to follow the NWCS code of conduct and release consent. Proceed to Pay by PayPal or credit card"> <br/>
     <tr><td align="center"></td></tr>
@@ -110,10 +102,31 @@ I hereby certify that I am the parent / lawful guardian of my child(ren) registe
                 <img  src="https://www.paypal.com/en_US/i/bnr/horizontal_solution_PPeCheck.gif" border="0" alt="Solution Graphics">
                 {# </a> #}
 </td></tr></table><!-- PayPal Logo -->
+{% endcomment %}
 {% else %}
 
-Parent/Guardian: ______________________________      Date: ______________________ <br/><br/> 
+<input type="checkbox">     
+My family member(s) ({{student_names}})  and I ({{parent_name}}) have 
+reviewed the Code of Conduct and release consent for NWCS Students and we accept them.<br/>
 
+ </input> 
+
+
+
+<div>  
+this is the div to be shown after the above checkbox is clicked.  delete this line after completion. 
+    <h3> Please  mail your check to Registrar at <br/> 
+        {% if school_mailing_addr %}
+        {{school_mailing_addr}}.
+        {% else %}
+        <b> ??? </b> 
+        {% endif %}<br/>
+        Please put a note on the check "Family id {{family.id}}".
+    </h3> 
+</div>
+{% comment %}
+Parent/Guardian: ______________________________      Date: ______________________ <br/><br/> 
+{% endcomment %}
 <b> <a href="javascript:Clickheretoprint()"> Print this page </a> </b> 
 
 {% endif %}

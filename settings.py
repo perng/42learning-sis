@@ -135,8 +135,8 @@ TEMPLATE_CONTEXT_PROCESSORS= (
     'django.contrib.messages.context_processors.messages',
     )
 
-#MESSAGE_STORAGE =  'django.contrib.messages.storage.session.SessionStorage'
-MESSAGE_STORAGE =  'django.contrib.messages.storage.cookie.CookieStorage'
+MESSAGE_STORAGE =  'django.contrib.messages.storage.session.SessionStorage'
+#MESSAGE_STORAGE =  'django.contrib.messages.storage.cookie.CookieStorage'
 
 ROOT_URLCONF = 'sis.urls'
 
