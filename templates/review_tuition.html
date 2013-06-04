@@ -19,6 +19,10 @@ $(document).ready(function() {
 	$('.consent').click(function() {
 		$('.register').toggle();
 	});
+
+	$('.consentpaypal').click(function() {
+		$('.paypalbutton').toggle();
+	});
 });
 
 </script>
@@ -88,6 +92,12 @@ I hereby certify that I am the parent / lawful guardian of my child(ren) registe
 
 </strong>
 
+<div class="well">
+<input type="checkbox" class="consentpaypal" style="width: 30px; height: 30px; margin-left: 3px; margin-bottom:3px;">
+<b>My family member(s) ({{student_names}})  and I ({{parent_name}}) have 
+reviewed and agreed the Code of Conduct and release consent for NWCS Students.
+ </input> 
+</div>
 
 <div id="wrapper">
     <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
@@ -96,8 +106,10 @@ I hereby certify that I am the parent / lawful guardian of my child(ren) registe
         <input type="hidden" name="business" value="paypal@nwcsny.org">
         <input type="hidden" name="item_name_1" value="NWCS Tuition {{semester}}, {{parent_name}}({{family.id}}) ">
         <input type="hidden" name="amount_1" value="{{total}}">
-        <input type="submit" value="We agree to follow the NWCS code of conduct and Release Consent. Proceed to Payment."> <br/>
-
+	<div class="paypalbutton span4 offset2" style="display:none; ">
+        	<input type="submit" class="btn btn-large btn-info" value="Proceed to Payment"> 
+	</div>
+	<br />
         Date: {{today}}
     </form>
 </div>
@@ -112,26 +124,30 @@ I hereby certify that I am the parent / lawful guardian of my child(ren) registe
 </td></tr></table><!-- PayPal Logo -->
 {% endcomment %}
 {% else %}
-<div style="border: 1px; background:#B0E0E6; margin:5px, 5px, 5px, 5px">
+<div class="well">
 <input type="checkbox" class="consent" style="width: 30px; height: 30px; margin-left: 3px; margin-bottom:3px;">     
 <b>My family member(s) ({{student_names}})  and I ({{parent_name}}) have 
-reviewed the Code of Conduct and release consent for NWCS Students and we accept them. 
+reviewed and agreed the Code of Conduct and release consent for NWCS Students.
  </input> 
 </div>
 
 
 
-<div class="register" style="display: none; margin: 5px, 5px, 5px, 5px; border: 1px; background:#B0E0E6;">  
-    <h3> Please  mail your check to Registrar at <br/> 
+<div class="register well" style="display:none">  
+    <p>
+    <strong> Please  mail your check to:</strong><br/> 
+	<address>
+	<strong>Registrar</strong><br>
         {% if school_mailing_addr %}
         {{school_mailing_addr}}.
         {% else %}
         <b> ??? </b> 
         {% endif %}<br/>
-        Please put a note on the check "Family id {{family.id}}".
-    </h3> 
-<b> <a href="javascript:Clickheretoprint()"> Print this page </a> </b> 
+	</address>
+        <strong>Please put a note on the check "Family id {{family.id}}".</strong>
+    </p> 
 </div>
+ <p><a href="javascript:Clickheretoprint()"> Print this page </a> </p> 
 {% comment %}
 Parent/Guardian: ______________________________      Date: ______________________ <br/><br/> 
 {% endcomment %}
