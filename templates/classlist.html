@@ -34,15 +34,15 @@
             </tr>
             {% for c in classes %}
             <tr> <td> <a href='{% url 'edit_class' sem_id=sem.eid class_id=c.eid %}'>{{c}}</a>  </td>
-  		<td><span>$</span><input type="text" class="input-block-level" name="basecc_{{c.cid}}" value="{{c.fee.basecc}}" id="id_basecc_{{c.cid}}" />
+  		<td><span>$</span><input type="text" class="input-block-level" name="basecc_{{c.fee.eid}}" value="{{c.fee.basecc}}" id="id_basecc_{{c.fee.cid}}" />
 		</td>
-                <td><span>$</span><input type="text" class-"input-block-level" name="basechk_{{c.cid}}" value="{{c.fee.basechk}}" id="id_basechk_{{c.cid}}" /></td>
-                <td><span>$</span><input type="text" class="input-block-level" name="book_{{c.cid}}" value="{{c.fee.book}}" id="id_book_{{c.cid}}" /></td>
-                <td><span>$</span><input type="text" class="input-block-level" name="material_{{c.cid}}" value="{{c.fee.material}}" id="id_material_{{c.cid}}" /></td>
-                <td><span>$</span><input type="text" class="input-block-level" name="misc_{{c.cid}}" value="{{c.fee.misc}}" id="id_misc_{{c.cid}}" /></td>
+                <td><span>$</span><input type="text" class-"input-block-level" name="basechk_{{c.fee.cid}}" value="{{c.fee.basechk}}" id="id_basechk_{{c.fee.cid}}" /></td>
+                <td><span>$</span><input type="text" class="input-block-level" name="book_{{c.fee.cid}}" value="{{c.fee.book}}" id="id_book_{{c.fee.cid}}" /></td>
+                <td><span>$</span><input type="text" class="input-block-level" name="material_{{c.fee.cid}}" value="{{c.fee.material}}" id="id_material_{{c.fee.cid}}" /></td>
+                <td><span>$</span><input type="text" class="input-block-level" name="misc_{{c.fee.cid}}" value="{{c.fee.misc}}" id="id_misc_{{c.fee.cid}}" /></td>
                 <td>
                     {% if c.elective %}
-                    <span>$</span><input type="text" class="input-block-level" name="mdiscount_{{c.cid}}" value="{{c.fee.mdiscount}}" id="id_mdiscount_{{c.cid}}" />
+                    <span>$</span><input type="text" class="input-block-level" name="mdiscount_{{c.fee.cid}}" value="{{c.fee.mdiscount}}" id="id_mdiscount_{{c.fee.cid}}" />
                     {% endif %}
                 </td>
 
@@ -89,6 +89,7 @@
         <input class="btn btn-success" type='submit' name='feeconfigupdate' value='    Update    '/>
         {{form.errors}}
     </form>
+ {{err}}
 </div>
 {% endblock %} 
 
