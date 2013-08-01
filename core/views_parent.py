@@ -253,9 +253,16 @@ def cal_tuition(family, semester, paypal):
     reg_fee = semester.feeconfig.familyFee if semester.feeconfig.familyFee else 0
     
     today = datetime.date.today()
-    lateFee= semester.feeconfig.lateFee if (semester.feeconfig.lateDate and today> semester.feeconfig.lateDate) else 0
+
+    new_family= family.enroll.exclude(semester=semester).count()<=1
+
+    if new_family:
+        lateFee= semester.feeconfig.lateFee if (semester.feeconfig.lateDate and today> semester.feeconfig.lateDate) else 0
+        total += lateFee
+    else:
+        lateFee=0
         
-    total += reg_fee - discount + lateFee
+    total += reg_fee - discount 
     return locals()
 
 @login_required

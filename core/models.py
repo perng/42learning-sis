@@ -108,6 +108,9 @@ class Family(models.Model):
     participation = models.CharField(blank=True, max_length=20, help_text='Participation')
     enroll = models.ManyToManyField('Semester', through='Tuition')
 
+    def is_new_family(self):
+        return self.enroll.all().count()<2
+
     def cache(self):
         self._cached_copy=copy.deepcopy(vars(self))
     

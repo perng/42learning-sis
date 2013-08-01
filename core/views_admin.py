@@ -188,6 +188,7 @@ def edit_class(request, sem_id, class_id=0):
             form = ClassForm(request.POST  , instance=theClass)
         else:
             form = ClassForm(request.POST)
+        form.fields["mandate"].queryset = Class.objects.filter(semester=semester)
         print 'post'
         if form.is_valid():
             print 'is_valid'
@@ -198,6 +199,7 @@ def edit_class(request, sem_id, class_id=0):
     else:
         if class_id:
             form = ClassForm(instance=theClass)
+            form.fields["mandate"].queryset = Class.objects.filter(semester=semester)
         else:
             form = ClassForm()
 
