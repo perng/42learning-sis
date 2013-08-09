@@ -43,7 +43,7 @@
     </div>
     <div class="inCenter">
         <a class="btn btn-medium btn-green" href='{% url 'edit_student' %}'> <i class="icon-plus"></i> Add Student </a> 
-        <a class="btn btn-medium btn-green" href={% url 'enroll_form' %}><i class="icon-edit"></i> Enroll </a> <br/>
+        <a class="btn btn-medium btn-green" href={% url 'enroll_form' family_id=family.eid %}><i class="icon-edit"></i> Enroll </a> <br/>
     </div> 
 </div>
 {% endblock %} 

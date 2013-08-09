@@ -9,6 +9,7 @@
     <h2 class="title">Manage School</h2><br />
     <div class="admin">
         <a class="adminbutton" href="{% url 'semesterlist' %}">Manage Semesters and Classes</a> <br/><br/> 
+        {% comment %} <a class="adminbutton" href="{% url 'manage_enrollment' %}">Manage Enrollment</a> <br/><br/> {% endcomment %} 
         <a class="adminbutton" href="{% url 'payment' %}"> All Payment</a> <br/> <br />
         <a class="adminbutton" href="{% url 'unpaid_payment' %}"> Outstanding Due</a> <br/> <br />
         <a class="adminbutton" href="{% url 'class_enrollment' %}"> Class Enrollment</a> <br/> <br /> 

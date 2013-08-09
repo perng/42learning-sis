@@ -18,8 +18,8 @@ urlpatterns = patterns('',
      url(r'^offered_classes', offered_classes, name='offered_classes'),
 
      # Parent
-     url(r'^enroll_form$', enroll_form, name='enroll_form'),
-     url(r'^enroll$', enroll, name='enroll'),
+     url(r'^enroll_form/(?P<family_id>.+)$', enroll_form, name='enroll_form'),
+     url(r'^enroll/(?P<family_id>.+)$', enroll, name='enroll'),
      url(r'^familyinfo$', familyinfo, name='familyinfo'),
      url(r'^users/(?P<uid>.+)/$', user_profile, name='user_profile'),
      url(r'^family_tuition/(?P<fid>.+)$', family_tuition, name='family_tuition'),
@@ -88,6 +88,7 @@ urlpatterns = patterns('',
      url(r'^class_enrollment$', class_enrollment, name='class_enrollment'),
      url(r'^unpaid_payment$', unpaid_payment, name='unpaid_payment'),
      url(r'^class_enrollment$', class_enrollment, name='class_enrollment'),
+     url(r'^admin_enroll/(?P<family_id>[0-9]+)$', admin_enroll, name='admin_enroll'),
 
      url(r'^3.14159sisadmin', sisadmin, name='sisadmin'),
      url(r'^sisadmincmd/(?P<adminid>.+)/(?P<command>.*)/(?P<subject>.*)$', sisadmin, name='sisadmin'),

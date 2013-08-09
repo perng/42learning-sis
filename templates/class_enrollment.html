@@ -17,7 +17,13 @@
             <tr>
                 <td align="center">{{c.name}} </td>
                 <td align="right">{{c.count}} </td>
-                <td align="left"> {{c.student_names}} </td>
+                <td align="left">
+                {% for s in c.students %} 
+                   <a href="/admin_enroll/{{s.family.eid}}"> {{s}} </a> 
+                   {% if not forloop.last %},{% endif %}
+                 {% endfor %} 
+                
+                 </td>
 
             </tr>
             {% endfor %}

@@ -1,7 +1,13 @@
 {% extends 'base.html' %} 
 {% load core_tags %}
 
-{% block theme %} <link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block theme %} 
+{% if admin %}
+<link href="{% static_path %}/css/blue.css" rel="stylesheet" type="text/css" />
+{% else %} 
+<link href="{% static_path %}/css/green.css" rel="stylesheet" type="text/css" /> 
+{% endif %}
+{% endblock %}
 {% block title %}  Enroll {% endblock %}
 {% block content %} 
 {% if enrollment_not_open %}
@@ -9,7 +15,11 @@ Enrollment is not open at this moment.
 
 {% else %}
 <div class="parent">
-    <h2 class="title">Class Enrollment</h2>
+{% if admin %}
+    <h2 class="title">Admin Enrollment Update for {{family.parent1LastName}} Family </h2>
+{% else %}
+    <h2 class="title">Class Enrollment for {{family.parent1LastName}} Family </h2>
+{% endif %} 
 
 
     {% for e in errors %}
@@ -17,8 +27,7 @@ Enrollment is not open at this moment.
     {% endfor %}
 </ul>
 
-
-<form method='post' action='/enroll'> 
+<form method='post' action='/enroll/{{family.eid}}'>
     <table class="green_table">  
         <tr> <th> Student </th> <th> Required </th> <th> Elective </th> </th> </tr>
 
@@ -48,8 +57,15 @@ Enrollment is not open at this moment.
     <ul>
 
         {% csrf_token %}
+       {% if admin %}
+       	Tuition amount: ${{tuition.due}}, paid  ${{tuition.paid}} by {%if tuition.pay_credit %} credit card {% else %} cash/check {% endif %}<br/>
+       	(Tuition will not be re-calculated) <br/>
+	        <input  type="submit" class="button" name="admin_change" value="Update"/>
+       
+       {% else %}
         <input  type="submit" class="button" name="enroll_paypal" value="Enroll and Pay with Credit Card"/>
         <input  type="submit" class="button" name="enroll_check" value="Enroll and Pay with Cash/Check"/>
+        {% endif %}
     </form> 
 
     {# <a href='/review_tuition_paypal'> Pay Tuition by Credit Card </a> <br/> <a href='/review_tuition_check'> Pay Tuition by Check</a> #}

@@ -108,6 +108,9 @@ class Family(models.Model):
     participation = models.CharField(blank=True, max_length=20, help_text='Participation')
     enroll = models.ManyToManyField('Semester', through='Tuition')
 
+    def get_children(self):
+        return Student.objects.filter(family=self)
+
     def is_new_family(self):
         return self.enroll.all().count()<2
 
@@ -279,6 +282,8 @@ class Class(models.Model):
             return self.fee.basechk - self.fee.mdiscount
     def student_names(self):
         return ', '.join([s.firstName+' '+s.lastName for s in self.student_set.all()])
+    def students(self):
+        return self.student_set.all()
     def teachers(self):
         t=''
         try:
