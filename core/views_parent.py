@@ -18,6 +18,7 @@ from django.contrib.auth.decorators import login_required #, user_passes_test
 from sis.core.models import *
 from sis.core.forms import *
 from sis.core.util import id_decode, lookup, my_render_to_response
+from sis.core.views_admin import manage_enrollment
 
 def get_children(request):
     try:
@@ -134,13 +135,18 @@ def student_score(request, sid):
 
 
 @login_required
-def enroll_form(request, errors=[]):
+def enroll_form(request, family_id,  errors=[]):
+    #family = request.user.get_profile()
+    family = Family.objects.get(id=id_decode(family_id))
+
     semester = current_reg_semester()
     error = None
     if not semester:
         enrollment_not_open = True
         return my_render_to_response(request, 'enroll.html', locals())
-    students = get_children(request)
+    #students = get_children(request)
+    students = family.get_children()
+
     print students
     if not students:
         error = 'No student listed under this account'
@@ -163,9 +169,12 @@ def enroll_form(request, errors=[]):
     return my_render_to_response(request, 'enroll.html', locals())
 
 @login_required
-def enroll(request):
+def enroll(request, family_id):
+    #family = request.user.get_profile()
+    family = Family.objects.get(id=id_decode(family_id))
+
     semester = current_reg_semester()
-    students = get_children(request)
+    students = family.get_children()
     print request.POST
     mclasses = Class.objects.filter(semester=semester, elective=False)
     eclasses = Class.objects.filter(semester=semester, elective=True)
@@ -222,7 +231,12 @@ def enroll(request):
 
     if 'enroll_paypal' in request.POST:
         return review_tuition_paypal(request)
-    return review_tuition_check(request)
+    if 'enroll_paycheck' in request.POST:
+        return review_tuition_check(request)
+    #return my_render_to_response(request, 'enroll.html', locals())
+    return manage_enrollment(request)
+    #return review_tuition(request, 'admin')
+
 
 
 

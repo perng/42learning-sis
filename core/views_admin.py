@@ -19,7 +19,6 @@ import pprint
 from sis.core.models import *
 from sis.core.forms import *
 from sis.core.util import *
-from sis.core.views_parent import cal_tuition
 
 from django.contrib.auth import REDIRECT_FIELD_NAME
 def superuser_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
@@ -407,3 +406,43 @@ def class_enrollment(request):
         c.count = len(EnrollDetail.objects.filter(classPtr=c))
     return my_render_to_response(request, 'class_enrollment.html', locals())
     
+@superuser_required 
+def manage_enrollment(request):
+    sem = current_reg_semester()
+    classes = Class.objects.filter(semester=sem).order_by( "elective","name")
+    #students= Student.Objects.
+    for c in classes:
+        c.count = len(EnrollDetail.objects.filter(classPtr=c))
+    return my_render_to_response(request, 'class_enrollment.html', locals())
+
+@superuser_required 
+def admin_enroll(request, family_id, errors=[]):
+    admin=True
+    family = Family.objects.get(id=id_decode(family_id))
+    semester = current_reg_semester()
+    tuition=Tuition.objects.get(family=family, semester=semester)
+    error = None
+    if not semester:
+        enrollment_not_open = True
+        return my_render_to_response(request, 'enroll.html', locals())
+    students = Student.objects.filter(family=family)
+    print students
+    if not students:
+        error = 'No student listed under this account'
+        return my_render_to_response(request, 'enroll.html', locals())
+    mclasses = Class.objects.filter(semester=semester, elective=False)
+    eclasses = Class.objects.filter(semester=semester, elective=True)
+
+    for s in students:
+        s.mclass = s.eclass = 0
+    for c in mclasses:
+        for s in students:
+            if s in c.student_set.all():
+                s.mclass = c.id
+
+    for c in eclasses:
+        for s in students:
+            if s in c.student_set.all():
+                s.eclass = c.id
+
+    return my_render_to_response(request, 'enroll.html', locals())
