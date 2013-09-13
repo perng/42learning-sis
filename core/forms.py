@@ -18,7 +18,13 @@ class FamilyForm(ModelForm):
 	class Meta:
 		model = Family
 		fields = ('streetNumber', 'city', 'state', 'zipcode', 'homePhone', 'mobilePhone', 'altEmail', 'parent1FirstName', 'parent1LastName', 'parent1ChineseFullName', 'parent2FirstName', 'parent2LastName', 'parent2ChineseFullName', 'participation')
-		widgets = { 'streetNumber': TextInput(attrs={'size': 60}), }
+		widgets = { 'streetNumber': TextInput(attrs={'size': 60,'class': 'required'}), 
+		'parent1FirstName': TextInput(attrs={'class': 'required'}), 
+		'parent1LastName': TextInput(attrs={'class': 'required'}), 
+		'homePhone': TextInput(attrs={'class': 'required'}), 
+		'city': TextInput(attrs={'class': 'required'}), 
+		'zipcode': TextInput(attrs={'class': 'required'}), 
+	}
 
 class StudentForm(ModelForm):
 	class Meta:

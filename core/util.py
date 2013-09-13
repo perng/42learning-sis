@@ -4,6 +4,10 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 from django.http import HttpResponseRedirect
 
+import logging
+
+logging.basicConfig(filename='/tmp/sis.log',level=logging.INFO)
+
 def secure_required(view_func):
     """Decorator makes sure URL is accessed over https."""
     def _wrapped_view_func(request, *args, **kwargs):
@@ -62,7 +66,8 @@ def id_decode(did):
     r = len(did) % 3
     if not r:
         return -1
-    m = int(did[-r:])
+    #logging.info('did-r='+str(did[-r:]))
+    m = int(str(did[-r:]))
     
     m = int(m)
     n = len(did) / 3

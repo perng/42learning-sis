@@ -6,6 +6,9 @@
 <form id="login" method="post" action=".">
     {% csrf_token %}
     <h1> Login to your account</h1>
+    {% if form.errors %}
+            <p class="error" style="left:5%;top:-30px;">Your username and password didn't match, please try again.</p>
+    {% endif %}
     <div id="log">
         <label for="id_username">Email</label> 
         <input type="text" name="username" id="id_username" class="field required" placeholder="Your username" title="Please provide your username" />

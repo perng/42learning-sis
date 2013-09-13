@@ -4,70 +4,94 @@
 {% block title %} Family {% endblock %}
 
 {% block content %}
+<script>
+            jQuery(function($){
+
+                $('#profile').submit(function(){
+                    var valid = true;
+                    var errormsg = 'This field is required!';
+                    var errorcn = 'error';
+
+                    $('.' + errorcn, this).remove();
+
+                    $('.required', this).each(function(){
+                        var parent = $(this).parent();
+                        if( $(this).val() == '' ){
+                            var msg = $(this).attr('title');
+                            msg = (msg != '') ? msg : errormsg;
+                            msg = errormsg;
+                            $('<span class="'+ errorcn +'">'+ msg +'</span>')
+                            .appendTo(parent) 
+                            .fadeIn('fast')
+                            .click(function(){ $(this).remove(); })
+                            valid = false;
+                        };
+                    });
+
+                    return valid;
+                });
+
+            })
+ </script>
+
 <div class="parent">
+    <br />
     <h2 class="title">My Family Profile </h2>
-    <form action="/familyinfo"  method="POST"> 
-    {# <form action="{% url 'familyinfo' %}" method="POST">  #}
+    <form id="profile" action="/familyinfo"  method="POST"> 
         {{ form.non_field_errorss }}
 	<div class="row-fluid">
-        <fieldset class="well the-fieldset span6" >
-            <legend class="the-legend">My Information </legend>  
-            <label id="required" {% if form.parent1FirstName.errors%} class="warning" {% endif %} > 
-                {{form.parent1FirstName.help_text}}* </label> {{form.parent1FirstName}} <br/>
-
-            <label id="required" {% if form.parent1LastName.errors%} class="warning" {% endif %} > 
-                {{form.parent1LastName.help_text}}* </label> {{form.parent1LastName}} <br/>
-
-            <label>{{form.parent1ChineseFullName.help_text}}</label>{{form.parent1ChineseFullName}} {{form.parent1ChineseFullName.errors}} 
-        </fieldset>
-        <fieldset class="well the-fieldset span6" >
+	<fieldset class="the-fieldset span12 well">
+            <legend class="the-legend">My Information </legend> 
+            <div><label id="required" > 
+                {{form.parent1FirstName.help_text}}* </label> {{form.parent1FirstName}}</div> 
+            <div><label id="required"> 
+                {{form.parent1LastName.help_text}}* </label> {{form.parent1LastName}}</div> 
+            <div><label>{{form.parent1ChineseFullName.help_text}}</label>{{form.parent1ChineseFullName}} {{form.parent1ChineseFullName.errors}} </div>
+	    </fieldset> <!--fieldset-->
+	</div>
+	<div class="row-fluid">
+        <fieldset class="the-fieldset span12 well" >
             <legend class="the-legend">Spouse Information</legend>   
-            <label> {{form.parent2FirstName.help_text}}</label>{{form.parent2FirstName}} {{form.parent2FirstName.errors}} <br />
-            <label> {{form.parent2LastName.help_text}}</label> {{form.parent2LastName}} {{form.parent2LastName.errors}} <br />
-            <label> {{form.parent2ChineseFullName.help_text}}</label>{{form.parent2ChineseFullName}} {{form.parent2ChineseFullName.errors}} 
+            <div><label> {{form.parent2FirstName.help_text}}</label>{{form.parent2FirstName}} {{form.parent2FirstName.errors}} </div>
+            <div><label> {{form.parent2LastName.help_text}}</label> {{form.parent2LastName}} {{form.parent2LastName.errors}} </div>
+            <div><label> {{form.parent2ChineseFullName.help_text}}</label>{{form.parent2ChineseFullName}} {{form.parent2ChineseFullName.errors}} </div>
         </fieldset>
 	</div>
 	<div class="row-fluid">
-        <fieldset class="well the-fieldset span12">
+        <fieldset class="the-fieldset span12 well">
             <legend class="the-legend">Address</legend>
-            <label id="required" {% if form.streetNumber.errors%} class="warning" {% endif %} > 
-                {{form.streetNumber.help_text}}* </label>  {{form.streetNumber}} <br /> 
+            <div><label id="required" > 
+                {{form.streetNumber.help_text}}* </label>  {{form.streetNumber}} </div> 
 
-            <label id="required" {% if form.city.errors%} class="warning" {% endif %} > 
-                {{form.city.help_text}}* </label> {{form.city}}  <br /> 
+            <div><label id="required" > 
+                {{form.city.help_text}}* </label> {{form.city}}  </div> 
 
-            <label id="required" {% if form.state.errors%} class="warning" {% endif %} > 
-                {{form.state.help_text}}* </label>  {{form.state}} <br />  
+            <div><label id="required" > 
+                {{form.state.help_text}}* </label>  {{form.state}} </div>  
 
-            <label id="required" {% if form.zipcode.errors%} class="warning" {% endif %} > 
-                {{form.zipcode.help_text}}*</label> {{form.zipcode}} <br />   
+            <div><label id="required" > 
+                {{form.zipcode.help_text}}*</label> {{form.zipcode}} </div>   
         </fieldset>
 	</div>
 	<div class="row-fluid">
-        <fieldset class="well the-fieldset span12">
+        <fieldset class="the-fieldset span12 well">
             <legend class="the-legend">Phones and Email</legend>
-            <label id="required" {% if form.homePhone.errors%} class="warning" {% endif %} > 
-                {{form.homePhone.help_text}}* </label>  {{form.homePhone}} <br />
-            <label> {{form.mobilePhone.help_text}}</label> {{form.mobilePhone}} 	<br /> 
-            <label>Email</label>  {{request.user.email}} <br />
-            <label>{{form.altEmail.help_text}} </label>{{form.altEmail}}  <br />
+            <div><label id="required" > 
+                {{form.homePhone.help_text}}* </label>  {{form.homePhone}} </div>
+            <div><label> {{form.mobilePhone.help_text}}</label> {{form.mobilePhone}} </div> 
+            <div><label>Email</label>  <input type="text" class="input-large" value="{{request.user.email}}" disabled> </div>
+            <div><label>{{form.altEmail.help_text}} </label>{{form.altEmail}}  </div>
             {#  {{form.participation.help_text}}  {{form.participation}} <label class="warning" >  {{form.participation.errors.as_text}}</label>   #}
-        </fieldset>
-        * required <br/>
+        </fieldparent2FirstNamoset>
+        * Required <br/>
 	</div>
         {% csrf_token %}
 	<div class="row-fluid">
-  	<button type="submit" class="btn btn-info span4 offset3">Submit</button>
+  	<input type="submit" class="btn btn-info span4 offset3" value="Submit" />
 	</div>
 
-        {% if form.non_field_errors %} <ul class="errorlist">  {{form.non_field_errors.as_ul }} </ul> {% endif %}
     </form> 
     <br />
-    {% if form.errorss %}
-    <p style="color: red;">
-    Please correct the errors{{ form.errorss|pluralize }} below.
-    </p>
-    {% endif %}
 </div>
 
 {% endblock %}

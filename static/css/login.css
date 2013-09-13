@@ -37,7 +37,7 @@
 #login p{margin:.5em 25px;}
 #login div#log{
 	margin:.5em 25px;
-	background:#eee;
+	/*background:#eee; */
 	padding:4px;
 	-moz-border-radius:3px;
 	-webkit-border-radius:3px;
@@ -45,6 +45,18 @@
 	text-align:right;
 	position:relative;
 	}	
+
+#login div#reg{
+        margin:.5em 25px;
+        padding:4px;
+        -moz-border-radius:3px;
+        -webkit-border-radius:3px;
+        border-radius:3px;
+        text-align:right;
+        position:relative;
+}
+
+
 #login label{
 	float:left;
 	line-height:30px;

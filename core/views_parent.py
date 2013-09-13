@@ -227,7 +227,7 @@ def enroll(request, family_id):
                 errors.append("%s is required to take an elective class when taking %s." % (s, s.mclass ))
 
     if errors:    
-        return enroll_form(request,errors)
+        return enroll_form(request,family_id=family.eid(), errors=errors)
 
     if 'enroll_paypal' in request.POST:
         return review_tuition_paypal(request)
