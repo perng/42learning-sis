@@ -19,6 +19,7 @@ import pprint
 from sis.core.models import *
 from sis.core.forms import *
 from sis.core.util import *
+from sis.core.views_parent import cal_tuition
 
 from django.contrib.auth import REDIRECT_FIELD_NAME
 def superuser_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):
@@ -255,7 +256,7 @@ def sisadmin(request):
     return my_render_to_response(request, 'sisadmin.html', locals())
 
 
-@superuser_required
+@login_required
 def family_tuition(request, fid):
     family = Family.objects.get(id=id_decode(fid))
     semester = current_reg_semester() # the semester open for registration
@@ -319,11 +320,9 @@ def payment(request, filter=None):
 def active_directory(request, active_only=True):
     semester = current_record_semester()
     classes = semester.class_set.all()
-    print 'classes', classes
     families = {}
     for c in classes:
         eds = EnrollDetail.objects.filter(classPtr=c)
-        print 'eds', eds
         for ed in eds:
             try:
                 family = families[ed.student.family.id]
@@ -406,7 +405,8 @@ def class_enrollment(request):
         c.count = len(EnrollDetail.objects.filter(classPtr=c))
     return my_render_to_response(request, 'class_enrollment.html', locals())
     
-@superuser_required 
+#@superuser_required 
+@login_required
 def manage_enrollment(request):
     sem = current_reg_semester()
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")

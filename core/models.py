@@ -265,7 +265,7 @@ class Class(models.Model):
    
 
     def __str__(self):
-        return self.name
+        return self.name+self.semester.__str__()
     def num_students(self):
         return len(self.student_set.all())
     class Meta:
@@ -277,9 +277,10 @@ class Class(models.Model):
     def assignment_categories(self):
         return GradingCategory.objects.filter(classPtr=self, hasAssignment=True)
     def discounted_base_cc(self):
-            return self.fee.basecc - self.fee.mdiscount
+            return self.fee.basecc - (self.fee.mdiscount if self.fee.mdiscount else 0)
+
     def discounted_base_chk(self):
-            return self.fee.basechk - self.fee.mdiscount
+            return self.fee.basechk - (self.fee.mdiscount if self.fee.mdiscount else 0)
     def student_names(self):
         return ', '.join([s.firstName+' '+s.lastName for s in self.student_set.all()])
     def students(self):

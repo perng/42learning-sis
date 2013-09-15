@@ -22,7 +22,9 @@
             {% for f in families.values %}
             <tr>
                 <td align="center">{{f.id}} </td>
-                <td align="center"><a href='{% url 'family_tuition' fid=f.eid %}'> {{ f.parent1}} </a> </td>
+                <td align="center"><a href='{% url 'family_tuition' fid=f.eid %}'>
+                        {{ f.parent1}} 
+                        {% if f.parent2 %}, {{f.parent2}} {%endif%}</a> </td>
                 <td align="center">
                     {% if f.tuition %}
                     <a href='{% url 'family_tuition' fid=f.eid  %}'> ${{ f.tuition.due}}</a></td>

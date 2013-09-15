@@ -18,7 +18,13 @@ from django.contrib.auth.decorators import login_required #, user_passes_test
 from sis.core.models import *
 from sis.core.forms import *
 from sis.core.util import id_decode, lookup, my_render_to_response
-from sis.core.views_admin import manage_enrollment
+#from sis.core.views_admin import manage_enrollment
+
+import logging
+
+logging.basicConfig(filename='/tmp/sis.log',level=logging.INFO)
+
+
 
 def get_children(request):
     try:
@@ -172,6 +178,7 @@ def enroll_form(request, family_id,  errors=[]):
 def enroll(request, family_id):
     #family = request.user.get_profile()
     family = Family.objects.get(id=id_decode(family_id))
+    logging.info("enroll familyid=%d" %(family.id,))
 
     semester = current_reg_semester()
     students = family.get_children()
@@ -227,14 +234,20 @@ def enroll(request, family_id):
                 errors.append("%s is required to take an elective class when taking %s." % (s, s.mclass ))
 
     if errors:    
+        logging.warning("enrollment form error for family %d" %(family.id,))
         return enroll_form(request,family_id=family.eid(), errors=errors)
 
-    if 'enroll_paypal' in request.POST:
+    if u'enroll_paypal' in request.POST:
         return review_tuition_paypal(request)
-    if 'enroll_paycheck' in request.POST:
+    if u'enroll_check' in request.POST:
         return review_tuition_check(request)
-    #return my_render_to_response(request, 'enroll.html', locals())
-    return manage_enrollment(request)
+    for key in request.POST:
+        logging.info("key: %s, type:%s" %(key, str(type(key))))
+    logging.warning("None of paypal or paycheck in POST")
+    assert(False)
+    
+    return my_render_to_response(request, 'enroll.html', locals())
+    #return manage_enrollment(request)
     #return review_tuition(request, 'admin')
 
 
@@ -270,7 +283,7 @@ def cal_tuition(family, semester, paypal):
 
     new_family= family.enroll.exclude(semester=semester).count()<=1
 
-    if new_family:
+    if not new_family:
         lateFee= semester.feeconfig.lateFee if (semester.feeconfig.lateDate and today> semester.feeconfig.lateDate) else 0
         total += lateFee
     else:
