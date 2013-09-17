@@ -9,14 +9,17 @@
     {#<div>        <label for="id_username">Username:</label>         <input type="text" name="username" id="id_username" class="field required" title="Please provide your username" />     </div> #}
 
     <div id="reg">
+	{% if form.email.errors%}{{form.errors.email}}{% endif %}
         <label for="id_email">E-mail:</label> 
         <input id="id_email" type="text" class="field required" name="email" title="Please provide your email address" />
     </div>
     <div id="reg">
+	{% if form.password1.errors%}{{form.errors.password1}}{% endif %}
         <label for="id_password1">Password:</label> 
         <input id="id_password1" type="password" class="field required" name="password1" title="Password is required"/>
     </div>
     <div id="reg">
+	{% if form.password2.errors%}{{form.errors.password2}}{% endif %}
         <label for="id_password2">Confirm&nbsp;Password:</label> 
         <input id="id_password2" type="password" class="field required" name="password2" title="Type your password again"/>
     </div>

@@ -26,8 +26,8 @@ form label {
 	display: block;  /* block float the labels to left column, set a width */
 	float: left; 
 	width: 150px;
-	padding: 1px 1px 1px 2px; 
-	margin: 5px 0 0; /* set top margin same as form input - textarea etc. elements */
+	padding: 4px 1px 1px 2px; 
+	margin: 5px 0 0px; /* set top margin same as form input - textarea etc. elements */
 	text-align: right; 
 }
 

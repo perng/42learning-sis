@@ -16,10 +16,10 @@
             {% for c in classes%}
             <tr>
                 <td align="center">{{c.name}} </td>
-                <td align="right">{{c.count}} </td>
+                <td align="center">{{c.count}} </td>
                 <td align="left">
                 {% for s in c.students %} 
-                   <a href="/admin_enroll/{{s.family.eid}}"> {{s}} </a> 
+                   <a href="/admin_enroll/{{s.family.eid}}" style="text-decoration:underline;"> {{s}} </a> 
                    {% if not forloop.last %},{% endif %}
                  {% endfor %} 
                 

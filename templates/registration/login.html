@@ -3,11 +3,43 @@
 {% load url from future %}
 {% block title %} Login{% endblock %}
 {% block content %}
+<script>
+
+            jQuery(function($){
+
+                // simple jQuery validation script
+                $('#login').submit(function(){
+
+                    var valid = true;
+                    var errormsg = 'This field is required!';
+                    var errorcn = 'error';
+
+                    $('.' + errorcn, this).remove();
+
+                    $('.required', this).each(function(){
+                        var parent = $(this).parent();
+                        if( $(this).val() == '' ){
+                            var msg = $(this).attr('title');
+                            msg = (msg != '') ? msg : errormsg;
+                            $('<span class="'+ errorcn +'">'+ msg +'</span>')
+                            .appendTo(parent)
+                            .fadeIn('fast')
+                            .click(function(){ $(this).remove(); })
+                            valid = false;
+                        };
+                    });
+
+                    return valid;
+                });
+
+            })
+</script>
+
 <form id="login" method="post" action=".">
     {% csrf_token %}
     <h1> Login to your account</h1>
     {% if form.errors %}
-            <p class="error" style="left:5%;top:-30px;">Your username and password didn't match, please try again.</p>
+            <p class="error" style="left:5%;top:-30px;">Please enter a correct username and password.</p>
     {% endif %}
     <div id="log">
         <label for="id_username">Email</label> 

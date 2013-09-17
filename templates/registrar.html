@@ -22,12 +22,12 @@
             {% for f in families.values %}
             <tr>
                 <td align="center">{{f.id}} </td>
-                <td align="center"><a href='{% url 'family_tuition' fid=f.eid %}'>
+                <td align="center"><a href='{% url 'family_tuition' fid=f.eid %}' style="text-decoration:underline;">
                         {{ f.parent1}} 
                         {% if f.parent2 %}, {{f.parent2}} {%endif%}</a> </td>
                 <td align="center">
                     {% if f.tuition %}
-                    <a href='{% url 'family_tuition' fid=f.eid  %}'> ${{ f.tuition.due}}</a></td>
+                    <a href='{% url 'family_tuition' fid=f.eid  %}' style="text-decoration:underline;"> ${{ f.tuition.due}}</a></td>
                 {% else %} 
                 $0
                 {% endif %}
@@ -38,7 +38,7 @@
             </tr>
             {% endfor %}
         </table>
-        <input type="submit"  name="submit" Value="Update">
+        <button class="btn btn-info" type="submit"  name="submit">Update </button>
     </form>
 </div>
 {% endblock %} 

@@ -15,7 +15,7 @@
         {% for c in classes %}
         <tr>
 	  <td> {{c}} -- {{c.headTeacher.get_profile.parent1_fullname}}  </td> 
-	  <td> <a href="/grade_summary/{{c.eid}}"> {% if c.total_ready %} Final {% else %} Progress {% endif %} Report  </a> </td> 
+	  <td> <a href="/grade_summary/{{c.eid}}" style="text-decoration:underline;"> {% if c.total_ready %} Final {% else %} Progress {% endif %} Report  </a> </td> 
         </tr> 
         {% endfor %}
     </table> 

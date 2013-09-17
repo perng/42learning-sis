@@ -59,8 +59,9 @@
 
 #login label{
 	float:left;
-	line-height:30px;
-	padding-left:10px;
+	line-height:26px;
+	padding:0px 0px 0px 10px;
+
 	}
 #login .field{
 	border:1px solid #ccc;

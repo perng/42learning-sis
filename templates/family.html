@@ -4,36 +4,6 @@
 {% block title %} Family {% endblock %}
 
 {% block content %}
-<script>
-            jQuery(function($){
-
-                $('#profile').submit(function(){
-                    var valid = true;
-                    var errormsg = 'This field is required!';
-                    var errorcn = 'error';
-
-                    $('.' + errorcn, this).remove();
-
-                    $('.required', this).each(function(){
-                        var parent = $(this).parent();
-                        if( $(this).val() == '' ){
-                            var msg = $(this).attr('title');
-                            msg = (msg != '') ? msg : errormsg;
-                            msg = errormsg;
-                            $('<span class="'+ errorcn +'">'+ msg +'</span>')
-                            .appendTo(parent) 
-                            .fadeIn('fast')
-                            .click(function(){ $(this).remove(); })
-                            valid = false;
-                        };
-                    });
-
-                    return valid;
-                });
-
-            })
- </script>
-
 <div class="parent">
     <br />
     <h2 class="title">My Family Profile </h2>
@@ -42,10 +12,16 @@
 	<div class="row-fluid">
 	<fieldset class="the-fieldset span12 well">
             <legend class="the-legend">My Information </legend> 
-            <div><label id="required" > 
-                {{form.parent1FirstName.help_text}}* </label> {{form.parent1FirstName}}</div> 
-            <div><label id="required"> 
-                {{form.parent1LastName.help_text}}* </label> {{form.parent1LastName}}</div> 
+            <div>
+		<label id="required" > 
+                {{form.parent1FirstName.help_text}}* </label> {{form.parent1FirstName}} 
+	        {% if form.parent1FirstName.errors%} {{form.errors.parent1FirstName}}{% endif %}
+	    </div>
+            <div>
+		<label id="required"> 
+                {{form.parent1LastName.help_text}}* </label> {{form.parent1LastName}}
+		{% if form.parent1LastName.errors%}{{form.errors.parent1LastName}}{% endif %}
+	   </div> 
             <div><label>{{form.parent1ChineseFullName.help_text}}</label>{{form.parent1ChineseFullName}} {{form.parent1ChineseFullName.errors}} </div>
 	    </fieldset> <!--fieldset-->
 	</div>
@@ -61,23 +37,33 @@
         <fieldset class="the-fieldset span12 well">
             <legend class="the-legend">Address</legend>
             <div><label id="required" > 
-                {{form.streetNumber.help_text}}* </label>  {{form.streetNumber}} </div> 
+                {{form.streetNumber.help_text}}* </label>  {{form.streetNumber}} 
+		{% if form.streetNumber.errors%}{{form.errors.streetNumber}}{% endif %}
+	    </div> 
 
             <div><label id="required" > 
-                {{form.city.help_text}}* </label> {{form.city}}  </div> 
+                {{form.city.help_text}}* </label> {{form.city}}  
+		{% if form.city.errors%}{{form.errors.city}}{% endif %}
+	    </div> 
 
             <div><label id="required" > 
-                {{form.state.help_text}}* </label>  {{form.state}} </div>  
+                {{form.state.help_text}}* </label>  {{form.state}}   
+		{% if form.state.errors%}<br/><br/>{{form.errors.state}}{% endif %}
+	    </div>
 
             <div><label id="required" > 
-                {{form.zipcode.help_text}}*</label> {{form.zipcode}} </div>   
+                {{form.zipcode.help_text}}*</label> {{form.zipcode}} 
+		{% if form.zipcode.errors%}{{form.errors.zipcode}}{% endif %}
+	    </div>   
         </fieldset>
 	</div>
 	<div class="row-fluid">
         <fieldset class="the-fieldset span12 well">
             <legend class="the-legend">Phones and Email</legend>
             <div><label id="required" > 
-                {{form.homePhone.help_text}}* </label>  {{form.homePhone}} </div>
+                {{form.homePhone.help_text}}* </label>  {{form.homePhone}} 
+		{% if form.homePhone.errors%}{{form.errors.homePhone}}{% endif %}
+	   </div>
             <div><label> {{form.mobilePhone.help_text}}</label> {{form.mobilePhone}} </div> 
             <div><label>Email</label>  <input type="text" class="input-large" value="{{request.user.email}}" disabled> </div>
             <div><label>{{form.altEmail.help_text}} </label>{{form.altEmail}}  </div>

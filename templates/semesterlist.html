@@ -13,9 +13,9 @@
         </tr>
         {% for sem in semesters %}
         <tr>
-            <td><a href='/edit_semester/{{sem.eid }}'> {{sem.schoolYear }} {{sem.semester}} </a> </td> 
-            <td><a href='{% url 'classlist' sem_id=sem.eid %}'> Manage Classes </a> </td> 
-            <td><a href='/grade_summaries/{{sem.eid}}'> Dean's Report </a> </td> 
+            <td><a href='/edit_semester/{{sem.eid }}' style="text-decoration:underline;"> {{sem.schoolYear }} {{sem.semester}} </a> </td> 
+            <td><a href='{% url 'classlist' sem_id=sem.eid %}' style="text-decoration:underline;"> Manage Classes </a> </td> 
+            <td><a href='/grade_summaries/{{sem.eid}}' style="text-decoration:underline;"> Dean's Report </a> </td> 
         </tr>{% endfor %}
     </table>
     <a class="adminbutton" href='{% url 'edit_semester' %}'> Add new semester </a>

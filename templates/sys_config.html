@@ -20,17 +20,16 @@
             <tr>
 
                 <td> <input id="name-{{c.name}}"  type="text" 
-                    name="name-{{c.name}}" 	value="{{c.verbose_name}}"  size="60" maxlength="100"/>
+                    name="name-{{c.name}}" 	value="{{c.verbose_name}}" size="48" maxlength="60"/>
                 </td> 
                 <td> <input id="value-{{c.name}}"  type="text" 
-                    name="value-{{c.name}}" 	value="{{c.value}}"  size="60" maxlength="100"/>
+                    name="value-{{c.name}}" 	value="{{c.value}}" size="48" maxlength="60"/>
                 </td> 
 
             </tr>
             {% endifnotequal %}
             {% endfor %}
         </table>
-
 
         {% for c in configs %}
         {% ifequal c.valueType 'text'%}
@@ -43,7 +42,7 @@
         {% endfor %}
 
 
-        <input type='submit' name="Update" value="Update"/> 
+        <button class="btn btn-info" type='submit' name="Update">Update </button>
     </form> 
 
 </div>

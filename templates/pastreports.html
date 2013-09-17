@@ -19,7 +19,7 @@
             {% for en in ens %}
             <tr> 
 		<td> {{en.classPtr.semester}} </td> 
-           <td> <a href="/report_card/{{en.eid}}"> {{en.classPtr}}   {% ifnotequal True en.classPtr.total_ready %} (Progress Report) {% endifnotequal %} </a> 
+           <td> <a href="/report_card/{{en.eid}}" style="text-decoration:underline;"> {{en.classPtr}}   {% ifnotequal True en.classPtr.total_ready %} (Progress Report) {% endifnotequal %} </a> 
             </td> </tr>
             {% endfor %}
         </table>

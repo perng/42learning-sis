@@ -29,7 +29,7 @@
         </tr>
         {% for student in students %}
         <tr>
-	  <td> <a href="/report_card/{{student.enrollment.eid}}" target="_blank"> {{student}} </a>  </td> 
+	  <td> <a href="/report_card/{{student.enrollment.eid}}" target="_blank" style="text-decoration:underline;"> {{student}} </a>  </td> 
 	  <td> {{student.attendance_rate|floatformat:0}}%  </td> 
 	    {% for grade in student.grades%}
 	    <td> {{grade|floatformat:1}} </td>
@@ -37,9 +37,9 @@
 	    <td> {{student.total|floatformat:1}}  </td>
 	    <td> {{student.rank}}  </td>
             {% if is_teacher %}
-            <td> <a href="{% url 'evaluation_comment' enrolldetail_id=student.enrollment.eid %}"> Comment </a> </td>
+            <td> <a href="{% url 'evaluation_comment' enrolldetail_id=student.enrollment.eid %}" style="text-decoration:underline;"> Comment </a> </td>
            {% endif %}
-            <td> <a href="{% url 'report_card' enrolldetail_id=student.enrollment.eid %}" target="_blank"> View </a> </td>
+            <td> <a href="{% url 'report_card' enrolldetail_id=student.enrollment.eid %}" target="_blank" style="text-decoration:underline;"> View </a> </td>
 
         </tr> 
         {% endfor %}
