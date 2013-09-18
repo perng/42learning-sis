@@ -33,7 +33,8 @@ function Clickheretoprint(id){
                                 <div class="row-fluid">
                                         <div class="span4" style="padding-left: 15px;"><h5>Name </h5></div>
                                         <div class="span4"><h5>Due Date  </h5></div>
-                                        <div class="span4"><h5>Files  </h5></div>
+					<!-- Temp removed download files feature since not used any more -->
+                                        <!-- <div class="span4"><h5>Files  </h5></div> -->
                                 </div>
                         </div>
           </div>
@@ -48,10 +49,10 @@ function Clickheretoprint(id){
                                 </a>
                              </div>
                              <div class="span4" style="padding-top: 5px;" >{{gditem.duedate.isoformat}}</div>
-                             <div class="span4" style="padding-top: 5px;">
+                             <!--<div class="span4" style="padding-top: 5px;">
                                 <a href="{{gditem.download_url}}"  target="_blank" >
                                         <button class="btn btn-small btn-info" type="button">Download Supporting Files</i></button></a>
-                            </div>
+                            </div> -->
                          </div>
                         </div>
                         <div id="{{gditem.cid}}" class="accordion-body collapse">

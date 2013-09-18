@@ -18,7 +18,7 @@ from django.contrib.auth.decorators import login_required #, user_passes_test
 from sis.core.models import *
 from sis.core.forms import *
 from sis.core.util import id_decode, lookup, my_render_to_response
-#from sis.core.views_admin import manage_enrollment
+from sis.core.views_admin import manage_enrollment
 
 import logging
 
@@ -244,10 +244,9 @@ def enroll(request, family_id):
     for key in request.POST:
         logging.info("key: %s, type:%s" %(key, str(type(key))))
     logging.warning("None of paypal or paycheck in POST")
-    assert(False)
     
-    return my_render_to_response(request, 'enroll.html', locals())
-    #return manage_enrollment(request)
+    #return my_render_to_response(request, 'enroll.html', locals())
+    return manage_enrollment(request)
     #return review_tuition(request, 'admin')
 
 
