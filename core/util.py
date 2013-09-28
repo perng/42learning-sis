@@ -3,10 +3,52 @@ from django.shortcuts import render_to_response
 
 from django.conf import settings
 from django.http import HttpResponseRedirect
-
+import datetime
 import logging
 
 logging.basicConfig(filename='/tmp/sis.log',level=logging.INFO)
+
+
+
+def cal_tuition(family, semester, paypal):
+    students = family.student_set.order_by("-birthday")
+    total = 0
+    parent_name = family.parent1FirstName + ' ' + family.parent1LastName
+    student_names = ','.join([s.__str__() for s in students])
+    enrolled = {}
+    for s in students:
+        s.total = 0
+        s.classes = s.enroll.filter(semester=semester).order_by('elective', 'name')
+        s.numClass = len(s.classes)
+        for c in s.classes:
+            has_mandatory = [cc for cc in s.classes if not cc.elective]
+            if has_mandatory:
+                c.base = c.discounted_base_cc() if paypal else c.discounted_base_chk()
+            else:
+                c.base = c.fee.basecc if paypal else c.fee.basechk
+
+            c.total = c.base + c.fee.book + c.fee.material + c.fee.misc
+            if c.total > 0:
+                enrolled[s.id] = None
+            total += c.total
+    num_enrolled = len(enrolled)
+    discount = semester.feeconfig.get_discount(num_enrolled)
+    discount = discount if discount else 0
+    reg_fee = semester.feeconfig.familyFee if semester.feeconfig.familyFee else 0
+    
+    today = datetime.date.today()
+
+    new_family= family.enroll.exclude(semester=semester).count()<=1
+
+    if not new_family:
+        lateFee= semester.feeconfig.lateFee if (semester.feeconfig.lateDate and today> semester.feeconfig.lateDate) else 0
+        total += lateFee
+    else:
+        lateFee=0
+        
+    total += reg_fee - discount 
+    return locals()
+
 
 def secure_required(view_func):
     """Decorator makes sure URL is accessed over https."""

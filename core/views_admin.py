@@ -19,7 +19,7 @@ import pprint
 from sis.core.models import *
 from sis.core.forms import *
 from sis.core.util import *
-from sis.core.views_parent import cal_tuition
+from sis.core.util import cal_tuition
 
 from django.contrib.auth import REDIRECT_FIELD_NAME
 def superuser_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None):

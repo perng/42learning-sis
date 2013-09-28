@@ -649,3 +649,37 @@ class Config(models.Model):
             self.emailValue = str(value)
         
 
+class EnrollHistory(models.Model):
+    ADD = 'add'
+    DEL = 'del'
+    CHG = 'chg'
+    ENROLL_CHANGE_TYPE_CHOICES = ((CHG, CHG), (ADD,ADD), (DEL,DEL))
+    changeType =  models.CharField(max_length=3,choices=ENROLL_CHANGE_TYPE_CHOICES, default=ADD)
+    student = models.ForeignKey(Student)
+    semester = models.ForeignKey(Semester)
+    classPtr = models.ForeignKey(Class)
+    elective = models.BooleanField()
+    date = models.DateField(auto_now_add=True)
+    note = models.TextField()
+
+    @classmethod
+    def create(self,student, semester, classPtr, elective, note=''):
+        eds = student.enrolldetail_set.all()
+        oldClasses= [e.classPtr for e in eds if e.classPtr.elective==elective and e.classPtr.semester.id==semester.id] # at most one
+        ctype=None
+        if not oldClasses: 
+            if classPtr:
+                ctype=EnrollHistory.ADD
+        else:
+            if not classPtr:
+                ctype=EnrollHistory.DEL
+            elif classPtr.id!=oldClasses[0].id:
+                ctype=EnrollHistory.CHG
+        if ctype:  # some change
+            return EnrollHistory(changeType=ctype, student=student, semester=semester, 
+                                 classPtr=classPtr, elective=elective, note=note)
+            
+        
+        oldClassPtr=EnrollDetail.objects.filter(student=student, )
+    def __str__(self):
+        return self.student+' enrolled '+self.classPtr+' at '+date
