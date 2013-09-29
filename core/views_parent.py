@@ -1,12 +1,3 @@
-
-#import datetime, copy
-#from django.template.loader import get_template
-#from django.template import *
-#from django.core import serializers
-#from django.template import Template
-#from django.template.defaultfilters import floatformat
-#from django.views.generic import TemplateView
-
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 #from django.contrib.auth.models import User
@@ -17,8 +8,9 @@ from django.contrib.auth.decorators import login_required #, user_passes_test
 
 from sis.core.models import *
 from sis.core.forms import *
-from sis.core.util import id_decode, lookup, my_render_to_response
-from sis.core.views_admin import manage_enrollment
+#from sis.core.views_admin import manage_enrollment
+from sis.core.util import id_decode, lookup, my_render_to_response, cal_tuition
+#from sis.core.views_admin import manage_enrollment
 
 import logging
 
@@ -42,7 +34,6 @@ def student_access(user, student):
     try:
         family = user.get_profile()
         return student.family == family   # if student is empty, raise exception here too
-        return True
     except:
         pass
 
@@ -182,7 +173,57 @@ def enroll(request, family_id):
 
     semester = current_reg_semester()
     students = family.get_children()
-    print request.POST
+    
+    enrolled={}
+    for s in students:
+        ens=EnrollDetail.objects.filter(student=s)
+        classes=[en.classPtr for en in ens if en.classPtr.semester.id==semester.id]
+        for c in classes:
+            enrolled[(s.id, c.elective)] = c.id
+    
+    enrolls ={}
+    for k in request.POST:
+        v = request.POST[k]
+        k = str(k)
+        if  'class' not in k:
+            continue
+        elective = k.startswith('classe')            
+        sid = id_decode(k.split('-')[1])
+        if v == '---':
+            cid = None
+            theClass = None
+        else:
+            cid = id_decode(v)
+            theClass = Class.objects.get(id=cid)
+        enrolls[(sid, elective)]= cid    
+    for s in students:
+        for e in [False, True]:
+            oldclass=enrolled[(s.id,e)] if (s.id,e) in enrolled else None
+            newclass=enrolls[(s.id,e)] if (s.id,e) in enrolls else None
+            newClassPtr= Class.objects.get(id=newclass) if newclass else None 
+            if newClassPtr:
+                if newClassPtr.elective:
+                    s.eclass=newClassPtr.id
+                else:
+                    s.mclass=newClassPtr.id
+            if oldclass!=newclass:                
+                if oldclass:
+                    oldClassPtr=Class.objects.get(id=oldclass)
+                    en=EnrollDetail.objects.get(student=s, classPtr=oldClassPtr)
+                    if newclass:
+                        en.classPtr=newClassPtr
+                        en.save()
+                    else:
+                        en.delete()
+                else:
+                    en=EnrollDetail(student=s,classPtr= newClassPtr)
+                    en.save()                                                
+                eh=EnrollHistory.create(student=s, semester=semester, classPtr=newClassPtr, elective=e)
+                en.save()
+     
+    
+    #this part is not done yet!
+    
     mclasses = Class.objects.filter(semester=semester, elective=False)
     eclasses = Class.objects.filter(semester=semester, elective=True)
     for s in students:
@@ -192,38 +233,6 @@ def enroll(request, family_id):
             EnrollDetail.objects.filter(student=s, classPtr=c).delete()
 
 
-    for k in request.POST:
-            v = request.POST[k]
-            print k, v
-            k = str(k)
-            if  'class' not in k or v == '---':
-                continue
-            cid = id_decode(v)
-            theClass = Class.objects.get(id=cid)
-            sid = id_decode(k.split('-')[1])
-            student = lookup(sid, students)
-            if k.startswith('classm'):
-                    if s.mclass:
-                        oldm = Class.objects.get(id=s.mclass.id)
-                        #oldm.student_set.remove(student)
-                        EnrollDetail.objects.filter(classPtr=oldm, student=student).delete()
-                    #theClass.student_set.add(student)
-                    ed = EnrollDetail(student=student, classPtr=theClass)
-                    ed.save()
-                    student.mclass=theClass
-                    theClass.save()
-
-            elif k.startswith('classe'):
-                    if s.eclass:
-                        oldm = Class.objects.get(id=s.eclass.id)
-                        #oldm.student_set.remove(student)
-                        EnrollDetail.objects.filter(classPtr=oldm, student=student).delete()
-                    #theClass.student_set.add(student)
-                    ed = EnrollDetail(student=student, classPtr=theClass)
-                    ed.save()
-                    student.eclass=theClass
-                    #print 'add class', student, theClass
-                    theClass.save()
     errors=[]
     for s in students:
         print s, s.mclass, s.eclass
@@ -247,49 +256,9 @@ def enroll(request, family_id):
     
     #return my_render_to_response(request, 'enroll.html', locals())
     return manage_enrollment(request)
-    #return review_tuition(request, 'admin')
 
 
 
-
-def cal_tuition(family, semester, paypal):
-    students = family.student_set.order_by("-birthday")
-    total = 0
-    parent_name = family.parent1FirstName + ' ' + family.parent1LastName
-    student_names = ','.join([s.__str__() for s in students])
-    enrolled = {}
-    for s in students:
-        s.total = 0
-        s.classes = s.enroll.filter(semester=semester).order_by('elective', 'name')
-        s.numClass = len(s.classes)
-        for c in s.classes:
-            has_mandatory = [cc for cc in s.classes if not cc.elective]
-            if has_mandatory:
-                c.base = c.discounted_base_cc() if paypal else c.discounted_base_chk()
-            else:
-                c.base = c.fee.basecc if paypal else c.fee.basechk
-
-            c.total = c.base + c.fee.book + c.fee.material + c.fee.misc
-            if c.total > 0:
-                enrolled[s.id] = None
-            total += c.total
-    num_enrolled = len(enrolled)
-    discount = semester.feeconfig.get_discount(num_enrolled)
-    discount = discount if discount else 0
-    reg_fee = semester.feeconfig.familyFee if semester.feeconfig.familyFee else 0
-    
-    today = datetime.date.today()
-
-    new_family= family.enroll.exclude(semester=semester).count()<=1
-
-    if not new_family:
-        lateFee= semester.feeconfig.lateFee if (semester.feeconfig.lateDate and today> semester.feeconfig.lateDate) else 0
-        total += lateFee
-    else:
-        lateFee=0
-        
-    total += reg_fee - discount 
-    return locals()
 
 @login_required
 def review_tuition_paypal(request):
