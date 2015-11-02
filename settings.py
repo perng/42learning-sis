@@ -10,6 +10,7 @@ if onLinux:
 else:
      DEBUG = True
 
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -158,7 +159,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #'django_extensions',
-    'django.contrib.markup',
+    #'django.contrib.markup',
     'sis.registration',
     #'registration',
     'sis.core',

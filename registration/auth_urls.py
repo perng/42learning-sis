@@ -23,7 +23,7 @@ consult a specific backend's documentation for details.
 
 """
 
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, url, include
 
 from django.contrib.auth import views as auth_views
 

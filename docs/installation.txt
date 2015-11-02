@@ -4,3 +4,7 @@ http://packages.python.org/django-extensions/installation_instructions.html
 
 django_debug_toolbar
 pip install django_debug_toolbar
+
+
+phonenumber
+https://github.com/stefanfoulis/django-phonenumber-field
