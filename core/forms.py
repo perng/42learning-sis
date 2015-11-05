@@ -11,7 +11,7 @@ from django.forms.extras.widgets import SelectDateWidget
 from sis.core.models import *
 
 
-STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
+STATE_CHOICES = (('CA', 'CA'), ('NY', 'NY'), ('CT', 'CT'))
 PARTICIPATION_CHOICES = (('Breakfast', 'Breakfast Club'), ('IT', 'IT Support'), ('Event', 'Event Planning'))
 
 class SchoolForm(ModelForm):

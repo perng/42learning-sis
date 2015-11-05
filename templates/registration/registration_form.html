@@ -5,12 +5,15 @@
 {% block content %}
 <form id="login" method="post" action=".">
     {% csrf_token %}
-    {{ form.username }}
     <h1> Register Account </h1>  
-    {#<div>        <label for="id_username">Username:</label>         <input type="text" name="username" id="id_username" class="field required" title="Please provide your username" />     </div> #}
+    <div>        
+       <label for="id_username">Username:</label>         
+       <input type="text" name="username" id="username" class="field required" 
+              title="Please provide your username" />     
+    </div> 
 
     <div>
-        <label for="id_email">E-mail:</label> 
+        <label for="email">E-mail:</label> 
         <input id="email" type="text" class="field required" name="email" title="Please provide your email address" />
     </div>
     <div>

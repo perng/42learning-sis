@@ -47,7 +47,7 @@ urlpatterns = patterns('',
      url(r'^accounts/profile', profile, name='profile'),
      #(r'^accounts/', include('sis.registration.urls')),
      #(r'^accounts/', include('sis.registration.backends.default.urls')),
-     url(r'^accounts/', include('registration.backends.hmac.urls')),
+     url(r'^accounts/', include('registration.backends.simple.urls')),
      url(r'^del_attendance/(?P<cs_id>.+)$', del_attendance, name='del_attendance'),
      url(r'^edit_attendance/(?P<cs_id>.+)$', edit_attendance, name='edit_attendance'),
 

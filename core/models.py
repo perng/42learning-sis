@@ -19,7 +19,7 @@ MONTH_CHOICES = ((1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr'), (5, 'May'), (6,
         (9, 'Sep'), (10, 'Oct'), (11, 'Nov'), (12, 'Dec'))
 DAY_CHOICES = tuple([(n, n) for n in range(1, 32)])
 SEMESTER_CHOICES = (('Fall', 'Fall'), ('Spring', 'Spring'), ('Summer', 'Summer'))
-STATE_CHOICES = (('NY', 'NY'), ('CT', 'CT'))
+STATE_CHOICES = (('CA', 'CA'), ('CT', 'CT'), ('NY', 'NY'))
 
 class School(models.Model):
     name = models.CharField(max_length=30, verbose_name='School Name')
