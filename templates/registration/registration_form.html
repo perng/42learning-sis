@@ -5,20 +5,21 @@
 {% block content %}
 <form id="login" method="post" action=".">
     {% csrf_token %}
+    {{ form.username }}
     <h1> Register Account </h1>  
     {#<div>        <label for="id_username">Username:</label>         <input type="text" name="username" id="id_username" class="field required" title="Please provide your username" />     </div> #}
 
     <div>
         <label for="id_email">E-mail:</label> 
-        <input id="id_email" type="text" class="field required" name="email" title="Please provide your email address" />
+        <input id="email" type="text" class="field required" name="email" title="Please provide your email address" />
     </div>
     <div>
         <label for="id_password1">Password:</label> 
-        <input id="id_password1" type="password" class="field required" name="password1" title="Password is required"/>
+        <input id="password1" type="password" class="field required" name="password1" title="Password is required"/>
     </div>
     <div>
         <label for="id_password2">Confirm&nbsp;Password:</label> 
-        <input id="id_password2" type="password" class="field required" name="password2" title="Type your password again"/>
+        <input id="password2" type="password" class="field required" name="password2" title="Type your password again"/>
     </div>
     <div class="submit">
         <input class="button" type="submit" value="{% trans 'Submit' %}" />

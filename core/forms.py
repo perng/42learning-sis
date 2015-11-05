@@ -29,7 +29,7 @@ class FamilyForm(ModelForm):
 class StudentForm(ModelForm):
 	class Meta:
 		model = Student
-		fields = ('firstName', 'lastName', 'chineseFullName', 'birthday', 'homeLanguage', 'gender')
+		fields = ['firstName', 'lastName', 'chineseFullName', 'birthday', 'homeLanguage', 'gender']
 		widgets = {'birthday': SelectDateWidget(years=range( datetime.date.today().year-2, 1960, -1))}
 
 class UserForm(forms.ModelForm):
@@ -45,27 +45,28 @@ class UserForm(forms.ModelForm):
 class SemesterForm(forms.ModelForm):
 	class Meta:
 		model = Semester
-		fields = ('schoolYear', 'semester', 'need_enroll', 'copyFrom', 'regStart', 'regEnd', 'recordStart', 'recordEnd')
+		fields = ['schoolYear', 'semester', 'need_enroll', 'copyFrom', 'regStart', 'regEnd', 'recordStart', 'recordEnd']
 
 class ClassForm(forms.ModelForm):
 	class Meta:
 		model = Class
-		fields = ('name',  'elective', 'mandate', 'elective_required', 'headTeacher', 'assocTeacher1', 'assocTeacher2', 'recordAttendance', 'recordGrade', 'description')
+		fields = ['name',  'elective', 'mandate', 'elective_required', 'headTeacher', 'assocTeacher1', 'assocTeacher2', 'recordAttendance', 'recordGrade', 'description']
 
 class ClassFeeForm(forms.ModelForm):
 	class Meta:
 		model = Fee
-		fields = ('basecc', 'basechk', 'book', 'material', 'misc',)
+		fields = ['basecc', 'basechk', 'book', 'material', 'misc',]
 
 class FeeConfigForm(forms.ModelForm):
 	class Meta:
 		model = FeeConfig
 		widgets = {'semester': HiddenInput()}
+                exclude = []
 
 class HomeWorkForm(forms.ModelForm):
 	class Meta:
 		model = GradingItem
-		fields = ('name', 'assignmentDescr', 'duedate', )
+		fields = ['name', 'assignmentDescr', 'duedate', ]
 		widgets = {'duedate': SelectDateWidget()}
 #class UserAdmin(UserAdmin):
 #    form = UserForm

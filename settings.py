@@ -19,7 +19,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-if not onLinux:
+if DEBUG:
     DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -160,7 +160,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     #'django_extensions',
     #'django.contrib.markup',
-    'sis.registration',
+    #'sis.registration',
     #'registration',
     'sis.core',
     #'south',

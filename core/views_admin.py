@@ -7,7 +7,7 @@ from django.template import Template
 from django.template.defaultfilters import floatformat
 from django.views.generic import TemplateView
 
-from sis.registration.forms import RegistrationForm
+from registration.forms import RegistrationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.contrib.auth.models import User
