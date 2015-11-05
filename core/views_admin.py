@@ -373,9 +373,10 @@ def teacher_directory(request):
 
 
 def offered_classes(request):
-    sem = current_reg_semester()
+    school=request.session['school']
+    sem = current_reg_semester(school)
     if not sem:
-        sem= current_record_semester()
+        sem= current_record_semester(school)
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
     if not sem or not classes:
         error=['No Class Information Yet. ']
@@ -519,7 +520,8 @@ def signup(request):
 
 @superuser_required
 def class_enrollment(request):
-    sem = current_record_semester()
+    school=request.session['school']
+    sem = current_record_semester(school)
     classes = Class.objects.filter(semester=sem).order_by( "elective","name")
     for c in classes:
         c.count = len(EnrollDetail.objects.filter(classPtr=c))
