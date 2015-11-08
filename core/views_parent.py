@@ -11,7 +11,7 @@ from sis.core.util import id_decode, lookup, my_render_to_response
 
 def get_children(request):
   try:
-    family = request.user.get_profile()
+    family = request.user.profile
     return Student.objects.filter(family=family)
   except:
     pass
@@ -24,7 +24,7 @@ def student_access(user, student):
     return True
   # if parent of the student
   try:
-    family = user.get_profile()
+    family = user.profile
     return student.family == family  # if student is empty, raise exception here too
     return True
   except:
@@ -37,7 +37,7 @@ def student_access(user, student):
 @login_required
 def profile(request):
   try:
-    _family = request.user.get_profile()
+    family = request.user.profile
     return HttpResponseRedirect('/')
   except:
     return HttpResponseRedirect('/familyinfo')
@@ -50,31 +50,51 @@ def user_profile(request, uid):
 
 @login_required
 def familyinfo(request):
+  print 'familyinfo'
+  print request.method
+
   if request.method == 'GET':
+    print 'GET'
     try:
-      family = request.user.get_profile()
+      family = request.user.profile
+      print 'got family'
       form = FamilyForm(instance=family)
+      print 'got form'
       students = family.student_set.order_by('-birthday')
+      print 'got students'
+
     except:
       form = FamilyForm()
+    print 'Get Done'
     return my_render_to_response(request, 'family.html', locals())
 
   try:
-    family = request.user.get_profile()
+    print 'Non-GET'
+    print request.user
+    family = request.user.profile
+    print 'Got family'
     family.cache()
+    print 'done cache'
     family.user = request.user
+    print 'got user'
     form = FamilyForm(request.POST, instance=family)
+    print 'Put try succeed'
   except:
+    print 'except'
     family = Family()
     family.user = request.user
     form = FamilyForm(request.POST, instance=family)
+    print 'done except'
   students = family.student_set.order_by('-birthday')
   if form.is_valid():
+    print 'form is valid'
     family.school = request.session['school']
     form.save()
     messages.info(request, 'Family Information Updated.')
     return HttpResponseRedirect('/')
   else:
+    print 'form is not valid'
+    print  form.errors.as_data()
     messages.error(request, 'Please fix errors')
     return my_render_to_response(request, 'family.html', locals())
 
@@ -101,7 +121,7 @@ def edit_student(request, sid=0):
   else:  # POST
     if not sid:
       student = Student(studentID=next_student_id(),
-                        family=request.user.get_profile())
+                        family=request.user.profile)
     form = StudentForm(request.POST, instance=student)
     if form.is_valid():
       form.save()
@@ -298,8 +318,9 @@ class Email_on_enroll(threading.Thread):
 def review_tuition(request, howtopay):
   today = datetime.date.today()
   paypal = howtopay == 'paypal'
-  family = request.user.get_profile()
-  semester = current_reg_semester(request)  # the semester open for registration
+  family = request.user.profile
+  # the semester open for registration
+  semester = current_reg_semester(request)
   c = cal_tuition(family, semester, paypal)
   tuition, _created = Tuition.objects.get_or_create(family=family,
                                                     semester=semester)
@@ -320,7 +341,8 @@ def review_tuition(request, howtopay):
 
 
 def help(request):
-  semester = current_reg_semester(request)  # the semester open for registration
+  # the semester open for registration
+  semester = current_reg_semester(request)
   try:
     sis_contact = Config.objects.get(name='sis_contact').emailValue
   except:

@@ -106,3 +106,7 @@ if __name__ == '__main__':
   for i in range(100000):
     if i != det_decode(det_encode(i)):
       print i
+
+
+def get_school():
+  return School.objects.all()[0]

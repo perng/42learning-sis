@@ -123,11 +123,12 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'sis.core.middleware.GetSchool',
 )
 
 AUTHENTICATION_BACKENDS = (
-'sis.core.authbackends.EmailOrUsernameModelBackend',
-'django.contrib.auth.backends.ModelBackend'
+# 'sis.core.authbackends.EmailOrUsernameModelBackend',
+'django.contrib.auth.backends.ModelBackend',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS= (

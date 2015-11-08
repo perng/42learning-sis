@@ -16,7 +16,7 @@ def home(request):
 
   request.session.set_expiry(0)
   try:
-    family = request.user.get_profile()
+    family = request.user.family
   except:
     return HttpResponseRedirect('/familyinfo')
   if 'view' in request.session:

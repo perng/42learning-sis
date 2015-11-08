@@ -104,7 +104,7 @@ class Semester(models.Model):
 
 class Family(models.Model):
   schools = models.ManyToManyField(School)
-  user = models.OneToOneField(User)
+  user = models.OneToOneField(User, related_name="profile")
   staff_role = models.CharField(max_length=50)
   streetNumber = models.CharField(max_length=50, help_text='Street')
   city = models.CharField(max_length=50, help_text='City')
@@ -112,7 +112,7 @@ class Family(models.Model):
                            help_text='State')
   zipcode = models.CharField(max_length=10, help_text='Zip Code')
   homePhone = PhoneNumberField(help_text='Home Phone')
-  mobilePhone = PhoneNumberField(help_text='Cell Phone')
+  mobilePhone = PhoneNumberField(blank=True, help_text='Cell Phone')
   altEmail = models.EmailField(blank=True, help_text='Alt. Email')
   parent1FirstName = models.CharField(max_length=20, help_text='First Name')
   parent1LastName = models.CharField(max_length=20, help_text='Last Name')
