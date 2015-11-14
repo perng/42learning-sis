@@ -206,7 +206,7 @@ ACCOUNT_ACTIVATION_DAYS=7
 
 EMAIL_HOST='smtp.gmail.com'
 EMAIL_HOST_USER='webmaster@nwcsny.org'
-EMAIL_HOST_PASSWORD='chinese'
+EMAIL_HOST_PASSWORD='<still not the actual password>'
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
 
